@@ -4,8 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>mybatis-squirrel-parent</artifactId>
-        <groupId>in.hocg</groupId>
+        <groupId>in.hocg.squirrel</groupId>
         <version>${revision}</version>
+        <relativePath>../mybatis-squirrel-parent/pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 

@@ -9,16 +9,17 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>in.hocg</groupId>
+    <groupId>in.hocg.squirrel</groupId>
     <artifactId>mybatis-squirrel-project</artifactId>
 
     <modules>
         <module>mybatis-squirrel-parent</module>
         <module>mybatis-squirrel-samples</module>
         <module>mybatis-squirrel</module>
+        <module>mybatis-squirrel-plugins</module>
     </modules>
 
-    <name>Mybatis Squirrel :: Project</name>
+    <name>Squirrel :: Project</name>
     <packaging>pom</packaging>
     <version>${revision}</version>
 
