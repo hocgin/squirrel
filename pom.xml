@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>org.apache</groupId>
+        <artifactId>apache</artifactId>
+        <version>19</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>in.hocg</groupId>
+    <artifactId>mybatis-squirrel-project</artifactId>
+
+    <modules>
+        <module>mybatis-squirrel-parent</module>
+        <module>mybatis-squirrel-samples</module>
+        <module>mybatis-squirrel</module>
+    </modules>
+
+    <name>Mybatis Squirrel :: Project</name>
+    <packaging>pom</packaging>
+    <version>${revision}</version>
+
+    <properties>
+        <maven_javadoc_version>3.0.1</maven_javadoc_version>
+        <maven_surefire_version>2.19.1</maven_surefire_version>
+        <revision>2.7.1</revision>
+    </properties>
+
+</project>
