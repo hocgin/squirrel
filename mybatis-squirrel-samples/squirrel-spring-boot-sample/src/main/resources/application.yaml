@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: spring-boot-mybatis
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    schema:
+    - classpath:db/schema-maria.sql
+    data:
+    - classpath:db/data-maria.sql
+    initialization-mode: ALWAYS
+    druid:
+      validation-query: SELECT 1
+      test-while-idle: true
+  profiles:
+    active: dev
+mybatis:
+  mapper-locations: classpath:mapper/*.xml

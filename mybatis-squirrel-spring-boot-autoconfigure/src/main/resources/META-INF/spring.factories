@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  in.hocg.squirrel.spring.boot.autoconfigure.MybatisAutoConfiguration

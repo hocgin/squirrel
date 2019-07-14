@@ -17,6 +17,8 @@
         <module>mybatis-squirrel-samples</module>
         <module>mybatis-squirrel</module>
         <module>mybatis-squirrel-plugins</module>
+        <module>mybatis-squirrel-spring-boot-autoconfigure</module>
+        <module>mybatis-squirrel-spring-boot-starter</module>
     </modules>
 
     <name>Squirrel :: Project</name>
@@ -24,8 +26,6 @@
     <version>${revision}</version>
 
     <properties>
-        <maven_javadoc_version>3.0.1</maven_javadoc_version>
-        <maven_surefire_version>2.19.1</maven_surefire_version>
         <revision>2.7.1</revision>
     </properties>
 

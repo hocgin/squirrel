@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="in.hocg.squirrel.sample.module.mapper.ExampleMapper">
+
+    <sql id="columns">
+        ${alias}.id,
+        ${alias}.createdAt
+    </sql>
+
+    <select id="findFirst" resultType="in.hocg.squirrel.sample.module.domain.Example">
+        SELECT te.*
+        FROM t_example te
+        LIMIT 1
+    </select>
+</mapper>
