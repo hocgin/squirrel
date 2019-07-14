@@ -1,5 +1,5 @@
 /**
- *    Copyright 2015-2019 the original author or authors.
+ *    Copyright 2015-2018 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package in.hocg.squirrel.spring.boot.autoconfigure;
 
-import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ExecutorType;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -58,8 +57,8 @@ public class MybatisProperties {
   private String typeAliasesPackage;
 
   /**
-   * The super class for filtering type alias. If this not specifies, the MyBatis deal as type alias all classes that
-   * searched from typeAliasesPackage.
+   * The super class for filtering type alias.
+   * If this not specifies, the MyBatis deal as type alias all classes that searched from typeAliasesPackage.
    */
   private Class<?> typeAliasesSuperType;
 
@@ -79,18 +78,13 @@ public class MybatisProperties {
   private ExecutorType executorType;
 
   /**
-   * The default scripting language driver class. (Available when use together with mybatis-spring 2.0.2+)
-   */
-  private Class<? extends LanguageDriver> defaultScriptingLanguageDriver;
-
-  /**
    * Externalized properties for MyBatis configuration.
    */
   private Properties configurationProperties;
 
   /**
-   * A Configuration object for customize default settings. If {@link #configLocation} is specified, this property is
-   * not used.
+   * A Configuration object for customize default settings. If {@link #configLocation}
+   * is specified, this property is not used.
    */
   @NestedConfigurationProperty
   private Configuration configuration;
@@ -164,20 +158,6 @@ public class MybatisProperties {
   }
 
   /**
-   * @since 2.1.0
-   */
-  public Class<? extends LanguageDriver> getDefaultScriptingLanguageDriver() {
-    return defaultScriptingLanguageDriver;
-  }
-
-  /**
-   * @since 2.1.0
-   */
-  public void setDefaultScriptingLanguageDriver(Class<? extends LanguageDriver> defaultScriptingLanguageDriver) {
-    this.defaultScriptingLanguageDriver = defaultScriptingLanguageDriver;
-  }
-
-  /**
    * @since 1.2.0
    */
   public Properties getConfigurationProperties() {
@@ -201,7 +181,8 @@ public class MybatisProperties {
 
   public Resource[] resolveMapperLocations() {
     return Stream.of(Optional.ofNullable(this.mapperLocations).orElse(new String[0]))
-        .flatMap(location -> Stream.of(getResources(location))).toArray(Resource[]::new);
+        .flatMap(location -> Stream.of(getResources(location)))
+        .toArray(Resource[]::new);
   }
 
   private Resource[] getResources(String location) {

@@ -1,6 +1,6 @@
 spring:
   application:
-    name: spring-boot-mybatis
+    name: spring-boot-squirrel
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     schema:
