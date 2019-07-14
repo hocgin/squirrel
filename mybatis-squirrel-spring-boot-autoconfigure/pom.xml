@@ -27,14 +27,6 @@
         </dependency>
         <!--MyBatis With Spring dependence-->
         <dependency>
-            <groupId>org.mybatis</groupId>
-            <artifactId>mybatis-spring</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.mybatis</groupId>
-            <artifactId>mybatis</artifactId>
-        </dependency>
-        <dependency>
             <groupId>in.hocg.squirrel</groupId>
             <artifactId>mybatis-squirrel</artifactId>
         </dependency>

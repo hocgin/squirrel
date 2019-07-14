@@ -18,7 +18,6 @@ package in.hocg.squirrel.spring.boot.autoconfigure;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.mapping.DatabaseIdProvider;
 import org.apache.ibatis.plugin.Interceptor;
-import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -88,8 +87,6 @@ public class MybatisAutoConfiguration implements InitializingBean {
 
   private final TypeHandler[] typeHandlers;
 
-  private final LanguageDriver[] languageDrivers;
-
   private final ResourceLoader resourceLoader;
 
   private final DatabaseIdProvider databaseIdProvider;
@@ -97,13 +94,12 @@ public class MybatisAutoConfiguration implements InitializingBean {
   private final List<ConfigurationCustomizer> configurationCustomizers;
 
   public MybatisAutoConfiguration(MybatisProperties properties, ObjectProvider<Interceptor[]> interceptorsProvider,
-      ObjectProvider<TypeHandler[]> typeHandlersProvider, ObjectProvider<LanguageDriver[]> languageDriversProvider,
+      ObjectProvider<TypeHandler[]> typeHandlersProvider,
       ResourceLoader resourceLoader, ObjectProvider<DatabaseIdProvider> databaseIdProvider,
       ObjectProvider<List<ConfigurationCustomizer>> configurationCustomizersProvider) {
     this.properties = properties;
     this.interceptors = interceptorsProvider.getIfAvailable();
     this.typeHandlers = typeHandlersProvider.getIfAvailable();
-    this.languageDrivers = languageDriversProvider.getIfAvailable();
     this.resourceLoader = resourceLoader;
     this.databaseIdProvider = databaseIdProvider.getIfAvailable();
     this.configurationCustomizers = configurationCustomizersProvider.getIfAvailable();
