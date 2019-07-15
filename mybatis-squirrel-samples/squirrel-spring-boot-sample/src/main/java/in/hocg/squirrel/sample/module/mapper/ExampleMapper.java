@@ -1,5 +1,6 @@
 package in.hocg.squirrel.sample.module.mapper;
 
+import in.hocg.squirrel.mapper.CrudMapper;
 import in.hocg.squirrel.sample.module.domain.Example;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -12,7 +13,7 @@ import java.util.Optional;
  * @author hocgin
  */
 @Mapper
-public interface ExampleMapper {
+public interface ExampleMapper extends CrudMapper<Example, Long> {
     
     
     /**
