@@ -15,7 +15,7 @@
  */
 package in.hocg.squirrel.spring.boot.autoconfigure;
 
-import in.hocg.squirrel.IClassPathMapperScanner;
+import in.hocg.squirrel.SquirrelClassPathMapperScanner;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.mapping.DatabaseIdProvider;
 import org.apache.ibatis.plugin.Interceptor;
@@ -202,7 +202,7 @@ public class MybatisAutoConfiguration implements InitializingBean {
         packages.forEach(pkg -> logger.debug("Using auto-configuration base package '{}'", pkg));
       }
 
-      ClassPathMapperScanner scanner = new IClassPathMapperScanner(registry);
+      ClassPathMapperScanner scanner = new SquirrelClassPathMapperScanner(registry);
       if (this.resourceLoader != null) {
         scanner.setResourceLoader(this.resourceLoader);
       }
