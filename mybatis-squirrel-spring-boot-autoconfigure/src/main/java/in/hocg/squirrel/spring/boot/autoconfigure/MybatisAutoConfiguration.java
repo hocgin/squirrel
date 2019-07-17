@@ -24,7 +24,6 @@ import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
-import org.mybatis.spring.mapper.ClassPathMapperScanner;
 import org.mybatis.spring.mapper.MapperFactoryBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -201,8 +200,8 @@ public class MybatisAutoConfiguration implements InitializingBean {
       if (logger.isDebugEnabled()) {
         packages.forEach(pkg -> logger.debug("Using auto-configuration base package '{}'", pkg));
       }
-
-      ClassPathMapperScanner scanner = new SquirrelClassPathMapperScanner(registry);
+  
+      SquirrelClassPathMapperScanner scanner = new SquirrelClassPathMapperScanner(registry);
       if (this.resourceLoader != null) {
         scanner.setResourceLoader(this.resourceLoader);
       }
