@@ -17,6 +17,12 @@ public class EntityHelper {
     private static final Map<String, Class<?>> ENTITY_CLASS_CACHE = Maps.newHashMap();
     
     
+    /**
+     * 从接口上获取实体的类型
+     *
+     * @param mapperClass
+     * @return
+     */
     public static Class<?> getEntityClass(Class<?> mapperClass) {
         String mapperClassName = mapperClass.getName();
         if (ENTITY_CLASS_CACHE.containsKey(mapperClassName)) {
@@ -24,7 +30,13 @@ public class EntityHelper {
         }
         return getMapperEntityClass(mapperClass);
     }
-
+    
+    /**
+     * 从接口上获取实体的类型
+     *
+     * @param mapperClass
+     * @return
+     */
     public static Class<?> getMapperEntityClass(Class<?> mapperClass) {
         Type[] types = mapperClass.getGenericInterfaces();
         ParameterizedType targetType = null;

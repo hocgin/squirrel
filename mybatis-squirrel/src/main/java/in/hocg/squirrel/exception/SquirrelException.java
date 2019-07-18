@@ -14,4 +14,8 @@ public class SquirrelException extends RuntimeException {
     public SquirrelException(String message) {
         super(message);
     }
+    
+    public static SquirrelException wrap(String message) {
+        return new SquirrelException(message);
+    }
 }

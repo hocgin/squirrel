@@ -1,5 +1,9 @@
 package in.hocg.squirrel.mapper.delete;
 
+import in.hocg.squirrel.provider.delete.DeleteOneProvider;
+import org.apache.ibatis.annotations.DeleteProvider;
+import org.apache.ibatis.annotations.Param;
+
 import java.io.Serializable;
 
 /**
@@ -9,4 +13,14 @@ import java.io.Serializable;
  * @author hocgin
  */
 public interface DeleteOneMapper<T, Id extends Serializable> {
+    
+    /**
+     * 删除
+     *
+     * @param id
+     * @return
+     */
+    @DeleteProvider(type = DeleteOneProvider.class, method = "method")
+    Integer deleteOne(@Param("id") Id id);
+    
 }
