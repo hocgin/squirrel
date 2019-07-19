@@ -20,6 +20,11 @@ import java.util.Objects;
 @Slf4j
 public class ProviderHelper {
     
+    /**
+     * 获取函数上面的 Provider.class 注解
+     * @param method
+     * @return
+     */
     public static Class<?> getProviderClass(Method method) {
         Class<?> providerClass = null;
         if (method.isAnnotationPresent(SelectProvider.class)) {
