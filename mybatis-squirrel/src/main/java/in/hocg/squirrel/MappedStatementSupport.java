@@ -18,6 +18,11 @@ import java.util.Collection;
 @Slf4j
 public class MappedStatementSupport {
     
+    /**
+     * 生成 MappedStatement
+     *
+     * @param mappedStatements
+     */
     public void support(Collection<Object> mappedStatements) {
         for (Object mappedStatement : mappedStatements) {
             if (!(mappedStatement instanceof MappedStatement)) {
@@ -29,10 +34,13 @@ public class MappedStatementSupport {
             MappedStatementHelper.addMappedStatement(statement);
         }
         // ..
-        preMappedStatement();
+        handleProviderMethod();
     }
     
-    private void preMappedStatement() {
+    /**
+     * 处理标记 @XXProvider 映射的函数生成 MappedStatement
+     */
+    private void handleProviderMethod() {
         Collection<MappedStatement> mappedStatements = MappedStatementHelper.getMappedStatement();
         for (MappedStatement mappedStatement : mappedStatements) {
             String mappedStatementId = mappedStatement.getId();
