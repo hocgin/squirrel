@@ -14,6 +14,10 @@ import java.util.Objects;
  * @author hocgin
  */
 public class EntityHelper {
+    
+    /**
+     * 实体类信息缓存 <Mapper类全名, 实体类>
+     */
     private static final Map<String, Class<?>> ENTITY_CLASS_CACHE = Maps.newHashMap();
     
     
