@@ -1,5 +1,6 @@
 package in.hocg.squirrel.sample.module;
 
+import in.hocg.squirrel.exception.SquirrelException;
 import in.hocg.squirrel.sample.module.mapper.ExampleMapper;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,7 +28,7 @@ public class Main {
             }
         }
         if (Objects.isNull(targetType)) {
-            throw new RuntimeException("targetType is NULL");
+            throw SquirrelException.wrap("targetType is NULL");
         }
         
         Type[] actualTypeArguments = targetType.getActualTypeArguments();

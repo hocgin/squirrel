@@ -1,6 +1,7 @@
 package in.hocg.squirrel.core.helper;
 
 import com.google.common.collect.Maps;
+import in.hocg.squirrel.exception.SquirrelException;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -52,13 +53,13 @@ public class EntityHelper {
         }
         
         if (Objects.isNull(targetType)) {
-            throw new RuntimeException("找不到泛型参数");
+            throw SquirrelException.wrap("Mapper 接口文件: " + mapperClass + " 中找不到实体泛型");
         }
-    
+        
         Type[] actualTypeArguments = targetType.getActualTypeArguments();
         Class<?> entityClass = (Class<?>) actualTypeArguments[0];
         ENTITY_CLASS_CACHE.put(entityClass.getName(), entityClass);
         return entityClass;
     }
-
+    
 }

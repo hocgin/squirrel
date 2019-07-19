@@ -2,6 +2,7 @@ package in.hocg.squirrel.core.helper;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import in.hocg.squirrel.exception.SquirrelException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.decorators.SoftCache;
@@ -49,7 +50,7 @@ public class MappedStatementHelper {
     public static String getMethodName(String statementId) {
         if (!statementId.contains(".")) {
             log.error("Statement Id = {}，不包含.", statementId);
-            throw new RuntimeException("statementId 错误");
+            throw SquirrelException.wrap("statementId 错误");
         }
         return statementId.substring(statementId.lastIndexOf(".") + 1);
     }
@@ -57,7 +58,7 @@ public class MappedStatementHelper {
     public static Class<?> getMapperClass(String statementId) {
         if (!statementId.contains(".")) {
             log.error("Statement Id = {}，不包含.", statementId);
-            throw new RuntimeException("statementId 错误");
+            throw SquirrelException.wrap("statementId 错误");
         }
         String mapperClassName = statementId.substring(0, statementId.lastIndexOf("."));
         

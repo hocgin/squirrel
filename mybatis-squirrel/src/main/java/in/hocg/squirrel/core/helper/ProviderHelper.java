@@ -1,5 +1,6 @@
 package in.hocg.squirrel.core.helper;
 
+import in.hocg.squirrel.exception.SquirrelException;
 import in.hocg.squirrel.provider.BaseProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.DeleteProvider;
@@ -55,15 +56,15 @@ public class ProviderHelper {
         Class<?> providerClass = ProviderHelper.getProviderClass(method);
         
         if (Objects.isNull(providerClass)) {
-            throw new RuntimeException("该函数" + statementId + "没有实现方式");
+            throw SquirrelException.wrap("该函数" + statementId + "没有实现方式");
         }
         
         BaseProvider provider = null;
         try {
             provider = (BaseProvider) providerClass.getConstructor(Class.class, Class.class, Method.class).newInstance(mapperClass, entityClass, method);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-            e.printStackTrace();
             log.error("创建 Provider(Class: {}, 参数: {}, {}, {}) 实例失败, 错误信息: {}", providerClass, mapperClass, entityClass, method, e);
+            e.printStackTrace();
         }
         
         return provider;

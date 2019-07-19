@@ -1,5 +1,7 @@
 package in.hocg.squirrel.core.helper;
 
+import in.hocg.squirrel.exception.SquirrelException;
+
 import java.lang.reflect.Method;
 
 /**
@@ -24,6 +26,6 @@ public class MapperHelper {
             }
         }
     
-        throw new RuntimeException("接口: " + mapperClass + "未找到函数" + methodName + "的映射");
+        throw SquirrelException.wrap("接口: " + mapperClass + "未找到函数" + methodName + "的映射");
     }
 }
