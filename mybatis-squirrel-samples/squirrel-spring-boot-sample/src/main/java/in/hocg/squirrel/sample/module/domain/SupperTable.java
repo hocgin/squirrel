@@ -9,6 +9,6 @@ import in.hocg.squirrel.core.annotation.Column;
  * @author hocgin
  */
 public abstract class SupperTable {
-    @Column
+    @Column(name = "other")
     private String other;
 }

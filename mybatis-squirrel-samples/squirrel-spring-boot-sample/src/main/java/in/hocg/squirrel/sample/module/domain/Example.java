@@ -23,9 +23,9 @@ public class Example extends SupperTable {
     @Id
     private Long id;
     
-    @Column
+    @Column(name = "name")
     private String name;
     
-    @Column
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 }

@@ -11,4 +11,7 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class Constants {
     public static final String COMMA = ".";
+    
+    public static final String MAPPED_STATEMENT_FIELD__RESULT_MAPS = "resultMaps";
+    public static final String MAPPED_STATEMENT_FIELD__SQL_SOURCE = "sqlSource";
 }

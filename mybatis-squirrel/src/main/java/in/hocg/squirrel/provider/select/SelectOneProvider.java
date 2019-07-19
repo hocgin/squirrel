@@ -1,5 +1,6 @@
 package in.hocg.squirrel.provider.select;
 
+import in.hocg.squirrel.metadata.struct.Table;
 import in.hocg.squirrel.provider.BaseProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -20,6 +21,14 @@ public class SelectOneProvider extends BaseProvider {
     }
     
     public void selectOne(MappedStatement mappedStatement) {
-        log.debug("初始化 {}", mappedStatement.getId());
+        // 0. 表信息
+        Table tableStruct = getTableStruct();
+        
+        // 1. sqlSource
+        injectSqlSource(mappedStatement, "");
+        
+        // 2. resultMaps
+        injectResultMaps(mappedStatement);
     }
+    
 }

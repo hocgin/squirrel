@@ -1,14 +1,24 @@
 package in.hocg.squirrel.provider;
 
+import com.google.common.collect.Lists;
+import in.hocg.squirrel.core.Constants;
+import in.hocg.squirrel.core.helper.StatementHelper;
 import in.hocg.squirrel.metadata.TableHelper;
 import in.hocg.squirrel.metadata.struct.Column;
 import in.hocg.squirrel.metadata.struct.Table;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.mapping.ResultMap;
+import org.apache.ibatis.mapping.ResultMapping;
+import org.apache.ibatis.mapping.SqlSource;
+import org.apache.ibatis.reflection.MetaObject;
+import org.apache.ibatis.reflection.SystemMetaObject;
+import org.apache.ibatis.scripting.xmltags.XMLLanguageDriver;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -35,6 +45,12 @@ public abstract class BaseProvider {
      * 使用 Provider 的 Method
      */
     private final Method method;
+    
+    
+    /**
+     * MyBaits内部Xml节点解析的语言驱动
+     */
+    private static final XMLLanguageDriver languageDriver = new XMLLanguageDriver();
     
     /**
      * 表结构
@@ -81,5 +97,50 @@ public abstract class BaseProvider {
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
+    }
+    
+    
+    /**
+     * 设置 SqlSource 参数
+     *
+     * @param statement
+     * @param sql
+     */
+    protected void injectSqlSource(MappedStatement statement, String sql) {
+        SqlSource sqlSource = languageDriver.createSqlSource(statement.getConfiguration(), sql, null);
+        injectSqlSource(statement, sqlSource);
+    }
+    
+    /**
+     * 设置 SqlSource 参数
+     *
+     * @param statement
+     * @param sqlSource
+     */
+    protected void injectSqlSource(MappedStatement statement, SqlSource sqlSource) {
+        MetaObject metaObject = SystemMetaObject.forObject(statement);
+        metaObject.setValue(Constants.MAPPED_STATEMENT_FIELD__SQL_SOURCE, sqlSource);
+    }
+    
+    /**
+     * 设置 ResultMap 参数
+     *
+     * @param statement
+     */
+    protected void injectResultMaps(MappedStatement statement) {
+        List<ResultMapping> resultMappings = Lists.newArrayList();
+        for (Column column : columnStruct) {
+            resultMappings.add(new ResultMapping.Builder(statement.getConfiguration(), column.getFieldName())
+                    .jdbcType(column.getJdbcType())
+                    .javaType(column.getJavaType())
+                    .typeHandler(column.getTypeHandler())
+                    .build());
+        }
+        String id = String.format("%s-Inline", statement.getId());
+        
+        ResultMap resultMap = new ResultMap.Builder(statement.getConfiguration(), id, this.entityClass, resultMappings, true)
+                .build();
+        SystemMetaObject.forObject(statement)
+                .setValue(Constants.MAPPED_STATEMENT_FIELD__RESULT_MAPS, Collections.unmodifiableCollection(Collections.singletonList(resultMap)));
     }
 }

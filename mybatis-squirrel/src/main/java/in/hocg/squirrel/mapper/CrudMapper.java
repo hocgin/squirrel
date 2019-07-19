@@ -14,7 +14,8 @@ import java.io.Serializable;
  * @author hocgin
  */
 public interface CrudMapper<T, Id extends Serializable>
-        extends DeleteOneMapper<T, Id>,
+        extends
+        DeleteOneMapper<T, Id>,
         InsertOneMapper<T, Id>,
         UpdateOneMapper<T, Id>,
         SelectAllMapper<T, Id> {

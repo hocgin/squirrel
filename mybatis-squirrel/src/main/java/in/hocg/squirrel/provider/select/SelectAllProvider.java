@@ -20,6 +20,9 @@ public class SelectAllProvider extends BaseProvider {
     }
     
     public void selectAll(MappedStatement mappedStatement) {
+        //
+        //
+        //
     
     }
 }
