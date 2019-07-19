@@ -17,5 +17,5 @@ public @interface Table {
      *
      * @return
      */
-    String name() default "";
+    String name();
 }

@@ -1,9 +1,8 @@
 package in.hocg.squirrel.provider;
 
-import in.hocg.squirrel.core.helper.MappedStatementHelper;
-import in.hocg.squirrel.core.helper.TableHelper;
-import in.hocg.squirrel.core.table.ColumnStruct;
-import in.hocg.squirrel.core.table.TableStruct;
+import in.hocg.squirrel.metadata.TableHelper;
+import in.hocg.squirrel.metadata.struct.Column;
+import in.hocg.squirrel.metadata.struct.Table;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -23,6 +22,7 @@ import java.util.List;
 @Data
 public abstract class BaseProvider {
     
+    public static final String PROVIDER_METHOD = "method";
     /**
      * Mapper 类
      */
@@ -39,11 +39,11 @@ public abstract class BaseProvider {
     /**
      * 表结构
      */
-    private final TableStruct tableStruct;
+    private final Table tableStruct;
     /**
      * 列结构
      */
-    private final List<ColumnStruct> columnStruct;
+    private final List<Column> columnStruct;
     
     public BaseProvider(Class<?> mapperClass, Class<?> entityClass, Method method) {
         this.mapperClass = mapperClass;
@@ -60,15 +60,17 @@ public abstract class BaseProvider {
     
     /**
      * 调用Provider处理器指定函数名的函数
+     *
      * @param mappedStatement
      */
     public void invokeProviderMethod(MappedStatement mappedStatement) {
-        String methodName = MappedStatementHelper.getMethodName(mappedStatement.getId());
+        String methodName = StatementHelper.getMethodName(mappedStatement.getId());
         invokeProviderMethod(methodName, mappedStatement);
     }
     
     /**
      * 调用Provider处理器指定函数名的函数
+     *
      * @param methodName
      * @param mappedStatement
      */

@@ -1,4 +1,4 @@
-package in.hocg.squirrel.core.table;
+package in.hocg.squirrel.metadata.struct;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -12,7 +12,7 @@ import org.apache.ibatis.type.JdbcType;
  */
 @Data
 @Accessors(chain = true)
-public class ColumnStruct {
+public class Column {
     
     /**
      * 列名

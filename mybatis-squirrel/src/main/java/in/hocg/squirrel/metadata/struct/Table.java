@@ -1,4 +1,4 @@
-package in.hocg.squirrel.core.table;
+package in.hocg.squirrel.metadata.struct;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -11,7 +11,7 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
-public class TableStruct {
+public class Table {
     /**
      * 表名
      */
@@ -20,10 +20,10 @@ public class TableStruct {
     /**
      * 主键名称
      */
-    private String idColumnName;
+    private String keyColumnName;
     
     /**
      * 主键字段
      */
-    private String idFiledName;
+    private String keyFieldName;
 }

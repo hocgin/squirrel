@@ -14,6 +14,7 @@ public class MapperHelper {
     
     /**
      * 通过函数名称获取 Mapper Class 对应的函数
+     *
      * @param methodName
      * @param mapperClass
      * @return
@@ -25,7 +26,7 @@ public class MapperHelper {
                 return method;
             }
         }
-    
-        throw SquirrelException.wrap("接口: " + mapperClass + "未找到函数" + methodName + "的映射");
+        
+        throw SquirrelException.wrap("接口: {} 未找到函数 {} 的映射", mapperClass, methodName);
     }
 }

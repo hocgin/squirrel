@@ -1,7 +1,7 @@
 package in.hocg.squirrel;
 
-import in.hocg.squirrel.core.helper.MappedStatementHelper;
 import in.hocg.squirrel.core.helper.ProviderHelper;
+import in.hocg.squirrel.core.helper.StatementHelper;
 import in.hocg.squirrel.provider.BaseProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.builder.annotation.ProviderSqlSource;
@@ -31,7 +31,7 @@ public class MappedStatementSupport {
             MappedStatement statement = (MappedStatement) mappedStatement;
             
             // 缓存
-            MappedStatementHelper.addMappedStatement(statement);
+            StatementHelper.addMappedStatement(statement);
         }
         // ..
         handleProviderMethod();
@@ -41,10 +41,10 @@ public class MappedStatementSupport {
      * 处理标记 @XXProvider 映射的函数生成 MappedStatement
      */
     private void handleProviderMethod() {
-        Collection<MappedStatement> mappedStatements = MappedStatementHelper.getMappedStatement();
+        Collection<MappedStatement> mappedStatements = StatementHelper.getMappedStatement();
         for (MappedStatement mappedStatement : mappedStatements) {
             String mappedStatementId = mappedStatement.getId();
-            if (!MappedStatementHelper.isLoadedMappedStatement(mappedStatementId)
+            if (!StatementHelper.isLoadedMappedStatement(mappedStatementId)
                     && (mappedStatement.getSqlSource() instanceof ProviderSqlSource)) {
                 BaseProvider provider = ProviderHelper.getMethodProvider(mappedStatementId);
                 
@@ -52,7 +52,7 @@ public class MappedStatementSupport {
                 provider.invokeProviderMethod(mappedStatement);
                 
                 // 标记为已加载
-                MappedStatementHelper.setLoadedMappedStatement(mappedStatementId);
+                StatementHelper.setLoadedMappedStatement(mappedStatementId);
             }
         }
     }

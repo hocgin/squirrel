@@ -18,6 +18,9 @@ import java.util.stream.Collectors;
  */
 @RequiredArgsConstructor
 public class ClassKit {
+    /**
+     * 缓存已分析的类
+     */
     private static Map<Class, ClassKit> CACHED = Maps.newHashMap();
     private final Class<?> clazz;
     
@@ -27,10 +30,19 @@ public class ClassKit {
     
     /**
      * 获取所有函数
+     *
      * @return
      */
-    public Method[] getAllMethod() {
-        return clazz.getDeclaredMethods();
+    public ArrayList<Method> getAllMethod() {
+        ArrayList<Method> result = Lists.newArrayList();
+        result.addAll(Arrays.asList(clazz.getDeclaredMethods()));
+        Class<?> superclass = clazz.getSuperclass();
+        if (Object.class.equals(superclass)) {
+            return result;
+        }
+        result.addAll(ClassKit.from(superclass).getAllMethod());
+        
+        return result;
     }
     
     /**
@@ -41,7 +53,7 @@ public class ClassKit {
     public List<Field> getAllField() {
         ArrayList<Field> result = Lists.newArrayList();
         result.addAll(Arrays.asList(clazz.getDeclaredFields()));
-    
+        
         Class<?> superclass = clazz.getSuperclass();
         if (Object.class.equals(superclass)) {
             return result;
@@ -63,6 +75,7 @@ public class ClassKit {
     
     /**
      * 查找字段
+     *
      * @param fieldName
      * @return
      */

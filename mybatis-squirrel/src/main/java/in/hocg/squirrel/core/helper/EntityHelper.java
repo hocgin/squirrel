@@ -53,7 +53,7 @@ public class EntityHelper {
         }
         
         if (Objects.isNull(targetType)) {
-            throw SquirrelException.wrap("Mapper 接口文件: " + mapperClass + " 中找不到实体泛型");
+            throw SquirrelException.wrap("Mapper 接口文件: {} 中找不到实体泛型", mapperClass);
         }
         
         Type[] actualTypeArguments = targetType.getActualTypeArguments();

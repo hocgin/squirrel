@@ -1,10 +1,9 @@
-package in.hocg.squirrel.core.helper;
+package in.hocg.squirrel.metadata;
 
 import com.google.common.collect.Lists;
-import in.hocg.squirrel.core.annotation.Column;
 import in.hocg.squirrel.core.annotation.Id;
-import in.hocg.squirrel.core.table.ColumnStruct;
-import in.hocg.squirrel.core.table.TableStruct;
+import in.hocg.squirrel.metadata.struct.Column;
+import in.hocg.squirrel.metadata.struct.Table;
 import in.hocg.squirrel.reflection.ClassKit;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.logging.log4j.util.Strings;
@@ -30,17 +29,17 @@ public class ColumnHelper {
      * @param entityClass
      * @return
      */
-    public static List<ColumnStruct> loadColumnStruct(TableStruct tableStruct, Class<?> entityClass) {
-        List<ColumnStruct> columns = Lists.newArrayList();
+    public static List<Column> loadColumnStruct(Table tableStruct, Class<?> entityClass) {
+        List<Column> columns = Lists.newArrayList();
         
         List<Field> fields = ClassKit.from(entityClass).getAllField();
         for (Field field : fields) {
-            ColumnStruct columnStruct = getStruct(field);
+            Column columnStruct = getStruct(field);
     
             // 如果该字段是 @Id
             if (columnStruct.getIsPk()) {
-                tableStruct.setIdColumnName(columnStruct.getColumnName());
-                tableStruct.setIdFiledName(columnStruct.getFieldName());
+                tableStruct.setKeyColumnName(columnStruct.getColumnName());
+                tableStruct.setKeyFieldName(columnStruct.getFieldName());
             }
             columns.add(columnStruct);
         }
@@ -53,8 +52,8 @@ public class ColumnHelper {
      * @param field
      * @return
      */
-    public static ColumnStruct getStruct(Field field) {
-        return new ColumnStruct()
+    public static Column getStruct(Field field) {
+        return new Column()
                 .setColumnName(getColumnName(field))
                 .setJavaType(field.getType())
                 .setFieldName(field.getName())
@@ -70,8 +69,8 @@ public class ColumnHelper {
      */
     public static JdbcType getJdbcType(Field field) {
         JdbcType jdbcType = null;
-        if (field.isAnnotationPresent(Column.class)) {
-            Column column = field.getAnnotation(Column.class);
+        if (field.isAnnotationPresent(in.hocg.squirrel.core.annotation.Column.class)) {
+            in.hocg.squirrel.core.annotation.Column column = field.getAnnotation(in.hocg.squirrel.core.annotation.Column.class);
             jdbcType = column.jdbcType();
         }
         return Objects.isNull(jdbcType) ? JdbcType.JAVA_OBJECT : jdbcType;
@@ -86,8 +85,8 @@ public class ColumnHelper {
      */
     public static String getColumnName(Field field) {
         String fieldName = null;
-        if (field.isAnnotationPresent(Column.class)) {
-            Column column = field.getAnnotation(Column.class);
+        if (field.isAnnotationPresent(in.hocg.squirrel.core.annotation.Column.class)) {
+            in.hocg.squirrel.core.annotation.Column column = field.getAnnotation(in.hocg.squirrel.core.annotation.Column.class);
             fieldName = column.name();
         }
         return Strings.isBlank(fieldName) ? field.getName() : fieldName;

@@ -2,6 +2,7 @@ package in.hocg.squirrel.core.helper;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import in.hocg.squirrel.core.Constants;
 import in.hocg.squirrel.exception.SquirrelException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.cache.Cache;
@@ -22,12 +23,18 @@ import java.util.Set;
  * @author hocgin
  */
 @Slf4j
-public class MappedStatementHelper {
-    // 缓存
+public class StatementHelper {
+    /**
+     * 缓存 <statementId, MappedStatement>
+     */
     private static final Map<String, MappedStatement> CACHE = Maps.newHashMap();
-    // 已加载标识
+    /**
+     * 已加载标识 <statementId>
+     */
     private static final Set<String> LOADED_MAPPED_STATEMENT = Sets.newHashSet();
-    // Mapper Class 缓存
+    /**
+     * Mapper Class 缓存
+     */
     private static Cache MAPPER_CLASS_CACHE = new SoftCache(new PerpetualCache("MAPPER_CLASS_CACHE"));
     
     
@@ -47,20 +54,32 @@ public class MappedStatementHelper {
         return CACHE.values();
     }
     
+    /**
+     * 解析 statementId 获取函数名
+     *
+     * @param statementId
+     * @return
+     */
     public static String getMethodName(String statementId) {
-        if (!statementId.contains(".")) {
-            log.error("Statement Id = {}，不包含.", statementId);
-            throw SquirrelException.wrap("statementId 错误");
+        if (!statementId.contains(Constants.COMMA)) {
+            log.error("Statement Id = {}，不包含\".\"", statementId);
+            throw SquirrelException.wrap("StatementId:{} 错误", statementId);
         }
-        return statementId.substring(statementId.lastIndexOf(".") + 1);
+        return statementId.substring(statementId.lastIndexOf(Constants.COMMA) + 1);
     }
     
+    /**
+     * 获取 Mapper 类
+     *
+     * @param statementId
+     * @return
+     */
     public static Class<?> getMapperClass(String statementId) {
-        if (!statementId.contains(".")) {
+        if (!statementId.contains(Constants.COMMA)) {
             log.error("Statement Id = {}，不包含.", statementId);
-            throw SquirrelException.wrap("statementId 错误");
+            throw SquirrelException.wrap("StatementId:{} 错误", statementId);
         }
-        String mapperClassName = statementId.substring(0, statementId.lastIndexOf("."));
+        String mapperClassName = statementId.substring(0, statementId.lastIndexOf(Constants.COMMA));
         
         Class<?> mapperClass = ((Class<?>) MAPPER_CLASS_CACHE.getObject(statementId));
         if (Objects.nonNull(mapperClass)) {
@@ -75,7 +94,7 @@ public class MappedStatementHelper {
         
         if (Objects.isNull(mapperClass)) {
             log.error("{} 类通过类加载器没有找到", mapperClassName);
-            throw new RuntimeException(mapperClassName + "类没有找到");
+            throw SquirrelException.wrap("{} 类没有找到", mapperClassName);
         }
         MAPPER_CLASS_CACHE.putObject(mapperClassName, mapperClass);
         return mapperClass;

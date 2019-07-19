@@ -14,7 +14,7 @@ public class MessageFormatter {
     
     
     public static String format(String format) {
-        return arrayFormat(format, new Object[]{});
+        return format;
     }
     
     public static String format(String format, Object arg1) {
@@ -35,7 +35,7 @@ public class MessageFormatter {
      * @param args
      * @return
      */
-    public static String arrayFormat(final String messagePattern, Object[] args) {
+    private static String arrayFormat(final String messagePattern, Object[] args) {
         if (Objects.isNull(messagePattern)) {
             throw new IllegalArgumentException("messagePattern 参数不能为 NULL");
         }
@@ -47,10 +47,11 @@ public class MessageFormatter {
         String sbuf = messagePattern;
         if (Strings.isNotBlank(messagePattern)) {
             for (Object arg : args) {
-                sbuf = sbuf.replaceFirst("\\{.*?}", Objects.isNull(arg) ? "null" : arg.toString());
+                sbuf = sbuf.replaceFirst("\\{.*?}", Objects.toString(arg));
             }
         }
         return sbuf;
     }
-
+    
+    
 }

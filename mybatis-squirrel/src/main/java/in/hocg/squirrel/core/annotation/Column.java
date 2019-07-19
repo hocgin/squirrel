@@ -22,7 +22,7 @@ public @interface Column {
      *
      * @return
      */
-    String name() default "";
+    String name();
     
     /**
      * 数据库类型

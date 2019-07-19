@@ -1,9 +1,8 @@
-package in.hocg.squirrel.core.helper;
+package in.hocg.squirrel.metadata;
 
-import in.hocg.squirrel.core.annotation.Table;
-import in.hocg.squirrel.core.table.ColumnStruct;
-import in.hocg.squirrel.core.table.TableStruct;
 import in.hocg.squirrel.exception.SquirrelException;
+import in.hocg.squirrel.metadata.struct.Column;
+import in.hocg.squirrel.metadata.struct.Table;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.decorators.SoftCache;
@@ -36,19 +35,19 @@ public class TableHelper {
      *
      * @param entityClass
      */
-    public static List<ColumnStruct> getColumnStruct(Class<?> entityClass) {
+    public static List<Column> getColumnStruct(Class<?> entityClass) {
         String entityClassName = entityClass.getName();
         Object columnStruct = COLUMN_CACHE.getObject(entityClassName);
         if (Objects.nonNull(columnStruct)) {
-            return (List<ColumnStruct>) columnStruct;
+            return (List<Column>) columnStruct;
         }
-        TableStruct tableStruct = getTableStruct(entityClass);
+        Table tableStruct = getTableStruct(entityClass);
         
         columnStruct = ColumnHelper.loadColumnStruct(tableStruct, entityClass);
         
         COLUMN_CACHE.putObject(entityClassName, columnStruct);
         
-        return ((List<ColumnStruct>) columnStruct);
+        return ((List<Column>) columnStruct);
     }
     
     /**
@@ -57,16 +56,16 @@ public class TableHelper {
      * @param entityClass
      * @return
      */
-    public static TableStruct getTableStruct(Class<?> entityClass) {
+    public static Table getTableStruct(Class<?> entityClass) {
         String className = entityClass.getName();
         Object tableStruct = TABLE_CACHE.getObject(className);
         if (Objects.nonNull(tableStruct)) {
-            return (TableStruct) tableStruct;
+            return (Table) tableStruct;
         }
     
         tableStruct = loadTableStruct(entityClass);
         TABLE_CACHE.putObject(className, tableStruct);
-        return ((TableStruct) tableStruct);
+        return ((Table) tableStruct);
     }
     
     /**
@@ -75,13 +74,13 @@ public class TableHelper {
      * @param entityClass
      * @return
      */
-    private static TableStruct loadTableStruct(Class<?> entityClass) {
-        Table table = entityClass.getAnnotation(Table.class);
+    private static Table loadTableStruct(Class<?> entityClass) {
+        in.hocg.squirrel.core.annotation.Table table = entityClass.getAnnotation(in.hocg.squirrel.core.annotation.Table.class);
         if (Objects.isNull(table)) {
             throw SquirrelException.wrap("在 " + entityClass + " 未找到 @Table");
         }
     
-        return new TableStruct()
+        return new Table()
                 .setTableName(table.name());
     }
 }

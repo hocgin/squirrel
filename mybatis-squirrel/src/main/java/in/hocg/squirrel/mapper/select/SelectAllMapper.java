@@ -1,5 +1,6 @@
 package in.hocg.squirrel.mapper.select;
 
+import in.hocg.squirrel.provider.BaseProvider;
 import in.hocg.squirrel.provider.select.SelectAllProvider;
 import org.apache.ibatis.annotations.SelectProvider;
 
@@ -19,6 +20,6 @@ public interface SelectAllMapper<T, Id extends Serializable> {
      *
      * @return
      */
-    @SelectProvider(type = SelectAllProvider.class, method = "method")
+    @SelectProvider(type = SelectAllProvider.class, method = BaseProvider.PROVIDER_METHOD)
     Collection<T> selectAll();
 }

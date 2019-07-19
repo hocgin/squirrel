@@ -1,7 +1,8 @@
 package in.hocg.squirrel.mapper.update;
 
+import in.hocg.squirrel.provider.BaseProvider;
 import in.hocg.squirrel.provider.update.UpdateOneProvider;
-import org.apache.ibatis.annotations.SelectProvider;
+import org.apache.ibatis.annotations.UpdateProvider;
 
 import java.io.Serializable;
 
@@ -19,6 +20,6 @@ public interface UpdateOneMapper<T, Id extends Serializable> {
      * @param entity
      * @return
      */
-    @SelectProvider(type = UpdateOneProvider.class, method = "method")
+    @UpdateProvider(type = UpdateOneProvider.class, method = BaseProvider.PROVIDER_METHOD)
     Integer updateOne(T entity);
 }

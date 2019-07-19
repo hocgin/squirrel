@@ -23,6 +23,7 @@ public class ProviderHelper {
     
     /**
      * 获取函数上面的 Provider.class 注解
+     *
      * @param method
      * @return
      */
@@ -41,13 +42,14 @@ public class ProviderHelper {
     }
     
     /**
-     * 获取
+     * 通过 statementId 获取 BaseProvider
+     *
      * @param statementId
      * @return
      */
     public static BaseProvider getMethodProvider(String statementId) {
-        String methodName = MappedStatementHelper.getMethodName(statementId);
-        Class<?> mapperClass = MappedStatementHelper.getMapperClass(statementId);
+        String methodName = StatementHelper.getMethodName(statementId);
+        Class<?> mapperClass = StatementHelper.getMapperClass(statementId);
         
         Class<?> entityClass = EntityHelper.getEntityClass(mapperClass);
         
@@ -56,15 +58,15 @@ public class ProviderHelper {
         Class<?> providerClass = ProviderHelper.getProviderClass(method);
         
         if (Objects.isNull(providerClass)) {
-            throw SquirrelException.wrap("该函数" + statementId + "没有实现方式");
+            throw SquirrelException.wrap("该函数 {} 没有实现方式", statementId);
         }
         
-        BaseProvider provider = null;
+        BaseProvider provider;
         try {
             provider = (BaseProvider) providerClass.getConstructor(Class.class, Class.class, Method.class).newInstance(mapperClass, entityClass, method);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             log.error("创建 Provider(Class: {}, 参数: {}, {}, {}) 实例失败, 错误信息: {}", providerClass, mapperClass, entityClass, method, e);
-            e.printStackTrace();
+            throw SquirrelException.wrap("获取 Provider 失败，Statement Id: {}, 参数: {}, {}, {}", statementId, mapperClass, entityClass, method);
         }
         
         return provider;

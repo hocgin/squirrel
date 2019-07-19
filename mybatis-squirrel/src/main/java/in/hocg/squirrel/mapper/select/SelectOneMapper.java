@@ -1,5 +1,6 @@
 package in.hocg.squirrel.mapper.select;
 
+import in.hocg.squirrel.provider.BaseProvider;
 import in.hocg.squirrel.provider.select.SelectOneProvider;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.SelectProvider;
@@ -21,6 +22,6 @@ public interface SelectOneMapper<T, Id extends Serializable> {
      * @param id
      * @return
      */
-    @SelectProvider(type = SelectOneProvider.class, method = "method")
+    @SelectProvider(type = SelectOneProvider.class, method = BaseProvider.PROVIDER_METHOD)
     Optional<T> selectOne(@Param("id") Id id);
 }

@@ -1,5 +1,6 @@
 package in.hocg.squirrel.mapper.insert;
 
+import in.hocg.squirrel.provider.BaseProvider;
 import in.hocg.squirrel.provider.insert.InsertOneProvider;
 import org.apache.ibatis.annotations.InsertProvider;
 
@@ -19,6 +20,6 @@ public interface InsertOneMapper<T, Id extends Serializable> {
      * @param entity
      * @return
      */
-    @InsertProvider(type = InsertOneProvider.class, method = "method")
+    @InsertProvider(type = InsertOneProvider.class, method = BaseProvider.PROVIDER_METHOD)
     Integer insertOne(T entity);
 }
