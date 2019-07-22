@@ -1,6 +1,6 @@
 package in.hocg.squirrel.exception;
 
-import in.hocg.squirrel.utils.MessageFormatter;
+import in.hocg.squirrel.utils.TextFormatter;
 
 /**
  * Created by hocgin on 2019/7/12.
@@ -21,6 +21,6 @@ public class SquirrelException extends RuntimeException {
     }
     
     public static SquirrelException wrap(String message, Object... args) {
-        return new SquirrelException(MessageFormatter.format(message, args));
+        return new SquirrelException(TextFormatter.format(message, args));
     }
 }

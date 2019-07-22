@@ -6,7 +6,9 @@ import in.hocg.squirrel.core.helper.StatementHelper;
 import in.hocg.squirrel.metadata.TableHelper;
 import in.hocg.squirrel.metadata.struct.Column;
 import in.hocg.squirrel.metadata.struct.Table;
+import in.hocg.squirrel.utils.LangKit;
 import lombok.Data;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ResultMap;
@@ -18,6 +20,7 @@ import org.apache.ibatis.scripting.xmltags.XMLLanguageDriver;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -50,7 +53,7 @@ public abstract class BaseProvider {
     /**
      * MyBaits内部Xml节点解析的语言驱动
      */
-    private static final XMLLanguageDriver languageDriver = new XMLLanguageDriver();
+    private static final XMLLanguageDriver langDriver = new XMLLanguageDriver();
     
     /**
      * 表结构
@@ -95,7 +98,7 @@ public abstract class BaseProvider {
             Method method = this.getClass().getMethod(methodName, MappedStatement.class);
             method.invoke(this, mappedStatement);
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
+            log.error("调用异常, Statement ID: {}, 函数名: {}, ERROR: {}", mappedStatement.getId(), methodName, e);
         }
     }
     
@@ -106,8 +109,8 @@ public abstract class BaseProvider {
      * @param statement
      * @param sql
      */
-    protected void injectSqlSource(MappedStatement statement, String sql) {
-        SqlSource sqlSource = languageDriver.createSqlSource(statement.getConfiguration(), sql, null);
+    protected void injectSqlSource(@NonNull MappedStatement statement, @NonNull String sql) {
+        SqlSource sqlSource = langDriver.createSqlSource(statement.getConfiguration(), sql.trim(), null);
         injectSqlSource(statement, sqlSource);
     }
     
@@ -131,6 +134,7 @@ public abstract class BaseProvider {
         List<ResultMapping> resultMappings = Lists.newArrayList();
         for (Column column : columnStruct) {
             resultMappings.add(new ResultMapping.Builder(statement.getConfiguration(), column.getFieldName())
+                    .column(column.getColumnName())
                     .jdbcType(column.getJdbcType())
                     .javaType(column.getJavaType())
                     .typeHandler(column.getTypeHandler())
@@ -140,7 +144,17 @@ public abstract class BaseProvider {
         
         ResultMap resultMap = new ResultMap.Builder(statement.getConfiguration(), id, this.entityClass, resultMappings, true)
                 .build();
-        SystemMetaObject.forObject(statement)
-                .setValue(Constants.MAPPED_STATEMENT_FIELD__RESULT_MAPS, Collections.unmodifiableCollection(Collections.singletonList(resultMap)));
+        SystemMetaObject.forObject(statement).setValue("resultMaps", Collections.unmodifiableList(Arrays.asList(resultMap)));
+    }
+    
+    /**
+     * 获取所有列名
+     * @return
+     */
+    protected String[] getColumnsName() {
+        if (LangKit.isEmpty(this.columnStruct)) {
+            return new String[]{};
+        }
+        return this.columnStruct.stream().map(Column::getColumnName).toArray(String[]::new);
     }
 }

@@ -26,8 +26,8 @@ public class ExampleMapperTest {
     
     @Test
     public void findFirst() {
-        Optional<Example> first = mapper.findFirst();
-        log.debug("执行结果: {}", first);
+        Optional<Example> example = mapper.selectOne(1L);
+        log.debug("执行结果: {}", example);
     }
     
 }

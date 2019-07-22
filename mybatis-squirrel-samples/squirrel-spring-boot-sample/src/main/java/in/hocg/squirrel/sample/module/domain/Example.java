@@ -6,6 +6,7 @@ import in.hocg.squirrel.core.annotation.Id;
 import in.hocg.squirrel.core.annotation.Table;
 import lombok.Data;
 import lombok.ToString;
+import org.apache.ibatis.type.LocalDateTimeTypeHandler;
 
 import java.time.LocalDateTime;
 
@@ -26,6 +27,6 @@ public class Example extends SupperTable {
     @Column(name = "name")
     private String name;
     
-    @Column(name = "created_at")
+    @Column(name = "created_at", typeHandler = LocalDateTimeTypeHandler.class)
     private LocalDateTime createdAt;
 }

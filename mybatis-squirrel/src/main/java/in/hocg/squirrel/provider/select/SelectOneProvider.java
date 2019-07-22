@@ -1,5 +1,7 @@
 package in.hocg.squirrel.provider.select;
 
+import in.hocg.squirrel.builder.XmlScripts;
+import in.hocg.squirrel.core.Constants;
 import in.hocg.squirrel.metadata.struct.Table;
 import in.hocg.squirrel.provider.BaseProvider;
 import lombok.extern.slf4j.Slf4j;
@@ -21,13 +23,22 @@ public class SelectOneProvider extends BaseProvider {
     }
     
     public void selectOne(MappedStatement mappedStatement) {
-        // 0. 表信息
+        // 1. 表信息
         Table tableStruct = getTableStruct();
+        // 2. 列信息
+        String[] columnsName = getColumnsName();
+    
+        String sql = XmlScripts.script(
+                XmlScripts.select(tableStruct.getTableName(), columnsName),
+                XmlScripts.where(
+                        XmlScripts.eq(tableStruct.getKeyColumnName(), Constants.KEY_COLUMN_PARAM)
+                )
+        );
         
-        // 1. sqlSource
-        injectSqlSource(mappedStatement, "");
+        // 3. sqlSource
+        injectSqlSource(mappedStatement, sql);
         
-        // 2. resultMaps
+        // 4. resultMaps
         injectResultMaps(mappedStatement);
     }
     
