@@ -1,10 +1,15 @@
 package in.hocg.squirrel.metadata;
 
 import com.google.common.collect.Lists;
+import in.hocg.squirrel.core.Constants;
 import in.hocg.squirrel.core.annotation.Id;
+import in.hocg.squirrel.exception.SquirrelException;
 import in.hocg.squirrel.metadata.struct.Column;
 import in.hocg.squirrel.metadata.struct.Table;
 import in.hocg.squirrel.reflection.ClassKit;
+import in.hocg.squirrel.utils.LangKit;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.logging.log4j.util.Strings;
 
@@ -18,12 +23,12 @@ import java.util.Objects;
  *
  * @author hocgin
  */
+@Slf4j
 public class ColumnHelper {
     
     
     /**
      * 加载列结构
-     *
      *
      * @param tableStruct
      * @param entityClass
@@ -35,15 +40,46 @@ public class ColumnHelper {
         List<Field> fields = ClassKit.from(entityClass).getAllField();
         for (Field field : fields) {
             Column columnStruct = getStruct(field);
-    
+            
             // 如果该字段是 @Id
             if (columnStruct.getIsPk()) {
                 tableStruct.setKeyColumnName(columnStruct.getColumnName());
                 tableStruct.setKeyFieldName(columnStruct.getFieldName());
+                tableStruct.setKeyGenerator(getAndNewKeyGenerator(field));
             }
             columns.add(columnStruct);
         }
         return columns;
+    }
+    
+    /**
+     * 获取并创建 KeyGenerator
+     *
+     * @param field
+     * @return
+     */
+    private static KeyGenerator getAndNewKeyGenerator(Field field) {
+        Class<? extends KeyGenerator> keyGenerator = getKeyGenerator(field);
+        try {
+            return keyGenerator.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            log.error("设置 {fieldName} 主键生成策略失败, 错误信息: {}", field.getName(), e);
+            throw SquirrelException.wrap("设置 {fieldName} 主键生成策略失败", field.getName());
+        }
+    }
+    
+    /**
+     * 从字段上的注解中获取主键生成策略
+     *
+     * @param field
+     * @return
+     */
+    private static Class<? extends KeyGenerator> getKeyGenerator(Field field) {
+        if (field.isAnnotationPresent(Id.class)) {
+            Id id = field.getAnnotation(Id.class);
+            return id.keyGenerator();
+        }
+        throw SquirrelException.wrap("{field} 上未找到 @Id 注解", field.getName());
     }
     
     /**
@@ -101,4 +137,30 @@ public class ColumnHelper {
     public static Boolean isPk(Field field) {
         return field.isAnnotationPresent(Id.class);
     }
+    
+    /**
+     * 获取所有列名
+     *
+     * @return
+     */
+    public static String[] getColumnNames(List<Column> columnStruct) {
+        if (LangKit.isEmpty(columnStruct)) {
+            return new String[]{};
+        }
+        return columnStruct.stream().map(Column::getColumnName).toArray(String[]::new);
+    }
+    
+    /**
+     * 获取所有类型的参数名称
+     *
+     * @param columnStruct
+     * @return
+     */
+    public static String[] getColumnParameters(List<Column> columnStruct) {
+        if (LangKit.isEmpty(columnStruct)) {
+            return new String[]{};
+        }
+        return columnStruct.stream().map((c) -> Constants.BEAN_PARAMETER_PREFIX + c.getFieldName() + Constants.PARAMETER_SUFFIX).toArray(String[]::new);
+    }
+    
 }

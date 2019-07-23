@@ -1,10 +1,11 @@
 package in.hocg.squirrel.builder;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
+import in.hocg.squirrel.core.Constants;
 import in.hocg.squirrel.utils.TextFormatter;
 import lombok.NonNull;
 import org.apache.ibatis.jdbc.SQL;
-import org.apache.logging.log4j.util.Strings;
 
 import java.util.*;
 
@@ -15,14 +16,6 @@ import java.util.*;
  * @author hocgin
  */
 public class XmlScripts {
-    /**
-     * 参数前缀
-     */
-    private static final String PARAMETER_PREFIX = "#{";
-    /**
-     * 参数后缀
-     */
-    private static final String PARAMETER_SUFFIX = "}";
     private static final String SCRIPT = "script";
     private static final String IF = "if";
     private static final String WHERE = "where";
@@ -85,14 +78,37 @@ public class XmlScripts {
         attrs.put("item", item);
         attrs.put("separator", separator);
         
-        if (Strings.isNotBlank(open)) {
+        if (!Strings.isNullOrEmpty(open)) {
             attrs.put("open", open);
         }
-        if (Strings.isNotBlank(close)) {
+        if (!Strings.isNullOrEmpty(close)) {
             attrs.put("close", close);
         }
-        String inner = String.format("%s%s%s", PARAMETER_PREFIX, item, PARAMETER_SUFFIX);
+        String inner = String.format("%s%s%s", Constants.PARAMETER_PREFIX, item, Constants.PARAMETER_SUFFIX);
         return node(FOREACH, attrs, inner);
+    }
+    
+    
+    /**
+     * xx in()
+     *
+     * @param columnName
+     * @param collection
+     * @param item
+     * @return
+     */
+    public static String in(String columnName,
+                            String collection,
+                            String item) {
+        String sql = String.format("%s%s%s", columnName,
+                SqlKeyword.IN.getValue(),
+                foreach(collection, item,
+                        SqlKeyword.SPLIT.getValue(),
+                        SqlKeyword.SPLIT_PREFIX.getValue(),
+                        SqlKeyword.SPLIT_SUFFIX.getValue())
+        );
+        
+        return ifNotNull(collection, sql);
     }
     
     /**
@@ -157,8 +173,23 @@ public class XmlScripts {
         return TextFormatter.format(nodeStr, openTag, allAttrs, allInner, closeTag);
     }
     
+    /**
+     * SELECT columns FROM tableName
+     *
+     * @param tableName
+     * @param columns
+     * @return
+     */
     public static String select(String tableName, String[] columns) {
         return new SQL().SELECT(columns).FROM(tableName).toString();
+    }
+    
+    public static String update(String tableName) {
+        return new SQL().UPDATE(tableName).toString();
+    }
+    
+    public static void main(String[] args) {
+        System.out.println(update("Xx"));
     }
     
     /**
@@ -172,9 +203,9 @@ public class XmlScripts {
                             @NonNull String fieldName) {
         return keyColumnName +
                 SqlKeyword.EQ.getValue() +
-                PARAMETER_PREFIX +
+                Constants.PARAMETER_PREFIX +
                 fieldName +
-                PARAMETER_SUFFIX;
+                Constants.PARAMETER_SUFFIX;
     }
     
     /**
@@ -186,4 +217,20 @@ public class XmlScripts {
     public static String sql(@NonNull String sql) {
         return sql;
     }
+    
+    /**
+     * 计数
+     *
+     * @param tableName
+     * @param column
+     * @return
+     */
+    public static String count(String tableName, @NonNull String column) {
+        return new SQL().SELECT(SqlKeyword.COUNT.getValue()
+                + SqlKeyword.SPLIT_PREFIX.getValue()
+                + column
+                + SqlKeyword.SPLIT_SUFFIX.getValue()
+        ).FROM(tableName).toString();
+    }
+    
 }

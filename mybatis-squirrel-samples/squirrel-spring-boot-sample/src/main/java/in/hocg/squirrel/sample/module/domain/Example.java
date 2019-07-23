@@ -6,6 +6,7 @@ import in.hocg.squirrel.core.annotation.Id;
 import in.hocg.squirrel.core.annotation.Table;
 import lombok.Data;
 import lombok.ToString;
+import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
 import org.apache.ibatis.type.LocalDateTimeTypeHandler;
 
 import java.time.LocalDateTime;
@@ -21,7 +22,7 @@ import java.time.LocalDateTime;
 @Table(name = "t_example")
 public class Example extends SupperTable {
     
-    @Id
+    @Id(keyGenerator = Jdbc3KeyGenerator.class)
     private Long id;
     
     @Column(name = "name")

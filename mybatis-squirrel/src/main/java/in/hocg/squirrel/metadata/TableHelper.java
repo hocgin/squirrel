@@ -62,7 +62,7 @@ public class TableHelper {
         if (Objects.nonNull(tableStruct)) {
             return (Table) tableStruct;
         }
-    
+        
         tableStruct = loadTableStruct(entityClass);
         TABLE_CACHE.putObject(className, tableStruct);
         return ((Table) tableStruct);
@@ -77,9 +77,9 @@ public class TableHelper {
     private static Table loadTableStruct(Class<?> entityClass) {
         in.hocg.squirrel.core.annotation.Table table = entityClass.getAnnotation(in.hocg.squirrel.core.annotation.Table.class);
         if (Objects.isNull(table)) {
-            throw SquirrelException.wrap("在 " + entityClass + " 未找到 @Table");
+            throw SquirrelException.wrap("在 {entityClass} 未找到 @Table", entityClass);
         }
-    
+        
         return new Table()
                 .setTableName(table.name());
     }

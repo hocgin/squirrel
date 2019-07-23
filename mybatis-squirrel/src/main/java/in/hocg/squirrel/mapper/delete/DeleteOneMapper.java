@@ -1,5 +1,6 @@
 package in.hocg.squirrel.mapper.delete;
 
+import in.hocg.squirrel.core.Constants;
 import in.hocg.squirrel.provider.BaseProvider;
 import in.hocg.squirrel.provider.delete.DeleteOneProvider;
 import org.apache.ibatis.annotations.DeleteProvider;
@@ -18,10 +19,10 @@ public interface DeleteOneMapper<T, Id extends Serializable> {
     /**
      * 删除
      *
-     * @param id
-     * @return
+     * @param id 主键
+     * @return 影响的行数
      */
     @DeleteProvider(type = DeleteOneProvider.class, method = BaseProvider.PROVIDER_METHOD)
-    Integer deleteOne(@Param("id") Id id);
+    Integer deleteOne(@Param(Constants.KEY_PARAMETER) Id id);
     
 }

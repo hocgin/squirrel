@@ -1,15 +1,15 @@
 package in.hocg.squirrel.provider;
 
 import com.google.common.collect.Lists;
-import in.hocg.squirrel.core.Constants;
+import in.hocg.squirrel.core.StatementFields;
 import in.hocg.squirrel.core.helper.StatementHelper;
 import in.hocg.squirrel.metadata.TableHelper;
 import in.hocg.squirrel.metadata.struct.Column;
 import in.hocg.squirrel.metadata.struct.Table;
-import in.hocg.squirrel.utils.LangKit;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ResultMap;
 import org.apache.ibatis.mapping.ResultMapping;
@@ -20,9 +20,7 @@ import org.apache.ibatis.scripting.xmltags.XMLLanguageDriver;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * 每个 @Provider 函数对应一个实例
@@ -70,7 +68,6 @@ public abstract class BaseProvider {
         this.method = method;
         this.tableStruct = TableHelper.getTableStruct(entityClass);
         this.columnStruct = TableHelper.getColumnStruct(entityClass);
-        log.debug("");
     }
     
     public String method() {
@@ -122,11 +119,11 @@ public abstract class BaseProvider {
      */
     protected void injectSqlSource(MappedStatement statement, SqlSource sqlSource) {
         MetaObject metaObject = SystemMetaObject.forObject(statement);
-        metaObject.setValue(Constants.MAPPED_STATEMENT_FIELD__SQL_SOURCE, sqlSource);
+        metaObject.setValue(StatementFields.SQL_SOURCE, sqlSource);
     }
     
     /**
-     * 设置 ResultMap 参数
+     * 设置实体返回值
      *
      * @param statement
      */
@@ -140,21 +137,57 @@ public abstract class BaseProvider {
                     .typeHandler(column.getTypeHandler())
                     .build());
         }
-        String id = String.format("%s-Inline", statement.getId());
+        String id = getStatementId(statement);
         
         ResultMap resultMap = new ResultMap.Builder(statement.getConfiguration(), id, this.entityClass, resultMappings, true)
                 .build();
-        SystemMetaObject.forObject(statement).setValue("resultMaps", Collections.unmodifiableList(Arrays.asList(resultMap)));
+        SystemMetaObject.forObject(statement)
+                .setValue(StatementFields.RESULT_MAPS, Collections.unmodifiableList(Arrays.asList(resultMap)));
     }
     
     /**
-     * 获取所有列名
+     * 设置指定类型的单返回值
+     *
+     * @param statement
+     * @param singleClass
+     */
+    protected void injectSingleResultMaps(MappedStatement statement, Class<?> singleClass) {
+        String id = getStatementId(statement);
+        ResultMap resultMap = new ResultMap.Builder(statement.getConfiguration(), id, singleClass, new ArrayList<>())
+                .build();
+        SystemMetaObject.forObject(statement)
+                .setValue(StatementFields.RESULT_MAPS, Collections.unmodifiableList(Arrays.asList(resultMap)));
+    }
+    
+    /**
+     * 获取 MappedStatement Id
+     *
+     * @param statement
      * @return
      */
-    protected String[] getColumnsName() {
-        if (LangKit.isEmpty(this.columnStruct)) {
-            return new String[]{};
-        }
-        return this.columnStruct.stream().map(Column::getColumnName).toArray(String[]::new);
+    private String getStatementId(MappedStatement statement) {
+        return String.format("%s-Inline", statement.getId());
     }
+    
+    /**
+     * 设置主键生成策略
+     *
+     * @param statement
+     * @param keyProperties
+     * @param keyColumnName
+     * @param keyGenerator
+     */
+    protected void setKeyGenerator(MappedStatement statement,
+                                   String keyProperties,
+                                   String keyColumnName,
+                                   KeyGenerator keyGenerator) {
+        if (Objects.nonNull(keyGenerator)) {
+            MetaObject metaObject = SystemMetaObject.forObject(statement);
+            metaObject.setValue(StatementFields.KEY_PROPERTIES, new String[]{keyProperties});
+            metaObject.setValue(StatementFields.KEY_COLUMNS, new String[]{keyColumnName});
+            metaObject.setValue(StatementFields.KEY_GENERATOR, keyGenerator);
+        }
+    }
+    
+    
 }

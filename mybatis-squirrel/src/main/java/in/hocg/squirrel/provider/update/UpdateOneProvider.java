@@ -1,10 +1,16 @@
 package in.hocg.squirrel.provider.update;
 
+import in.hocg.squirrel.builder.XmlScripts;
+import in.hocg.squirrel.core.Constants;
+import in.hocg.squirrel.metadata.struct.Column;
+import in.hocg.squirrel.metadata.struct.Table;
 import in.hocg.squirrel.provider.BaseProvider;
+import in.hocg.squirrel.utils.TextFormatter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.mapping.MappedStatement;
 
 import java.lang.reflect.Method;
+import java.util.List;
 
 /**
  * Created by hocgin on 2019-07-18.
@@ -19,7 +25,35 @@ public class UpdateOneProvider extends BaseProvider {
         super(mapperClass, entityClass, method);
     }
     
-    public void updateOne(MappedStatement mappedStatement) {
+    public void updateOne(MappedStatement statement) {
+        // 表信息
+        Table tableStruct = getTableStruct();
+        
+        String sql = XmlScripts.script(
+                XmlScripts.update(tableStruct.getTableName()),
+                XmlScripts.set(getSets()),
+                XmlScripts.where(
+                        XmlScripts.eq(tableStruct.getKeyColumnName(), Constants.BEAN_PARAMETER + Constants.COMMA + Constants.KEY_PARAMETER)
+                )
+        );
+        
+        // 设置 SQL
+        injectSqlSource(statement, sql);
+    }
     
+    /**
+     * xx = xx
+     *
+     * @return
+     */
+    private String[] getSets() {
+        // 列信息
+        List<Column> columnStruct = getColumnStruct();
+        String[] sets = columnStruct.stream()
+                .filter(column -> !column.getIsPk())
+                .map(column -> TextFormatter.format("{column} = {field}", column.getColumnName(), Constants.BEAN_PARAMETER_PREFIX + column.getFieldName()) + Constants.PARAMETER_SUFFIX)
+                .toArray(String[]::new);
+        
+        return sets;
     }
 }

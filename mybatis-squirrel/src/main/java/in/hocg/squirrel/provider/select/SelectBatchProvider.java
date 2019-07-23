@@ -19,13 +19,13 @@ import java.util.List;
  * @author hocgin
  */
 @Slf4j
-public class SelectOneProvider extends BaseProvider {
+public class SelectBatchProvider extends BaseProvider {
     
-    public SelectOneProvider(Class<?> mapperClass, Class<?> entityClass, Method method) {
+    public SelectBatchProvider(Class<?> mapperClass, Class<?> entityClass, Method method) {
         super(mapperClass, entityClass, method);
     }
     
-    public void selectOne(MappedStatement statement) {
+    public void selectBatch(MappedStatement statement) {
         
         // 表信息
         Table tableStruct = getTableStruct();
@@ -33,15 +33,15 @@ public class SelectOneProvider extends BaseProvider {
         // 列信息
         List<Column> columnStruct = getColumnStruct();
         String[] columnsName = ColumnHelper.getColumnNames(columnStruct);
-    
+        
         String sql = XmlScripts.script(
                 XmlScripts.select(tableStruct.getTableName(), columnsName),
                 XmlScripts.where(
-                        XmlScripts.eq(tableStruct.getKeyColumnName(), Constants.KEY_PARAMETER)
+                        XmlScripts.in(tableStruct.getKeyColumnName(), Constants.ARRAY_PARAMETER, Constants.KEY_PARAMETER)
                 )
         );
         
-        // 设置 SQL
+        // 设置SQL
         injectSqlSource(statement, sql);
         
         // 设置结果

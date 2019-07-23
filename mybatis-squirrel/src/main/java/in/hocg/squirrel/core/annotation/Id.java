@@ -1,5 +1,8 @@
 package in.hocg.squirrel.core.annotation;
 
+import org.apache.ibatis.executor.keygen.KeyGenerator;
+import org.apache.ibatis.executor.keygen.NoKeyGenerator;
+
 import java.lang.annotation.*;
 
 /**
@@ -12,4 +15,5 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface Id {
+    Class<? extends KeyGenerator> keyGenerator() default NoKeyGenerator.class;
 }

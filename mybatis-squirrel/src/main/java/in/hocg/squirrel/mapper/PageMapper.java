@@ -1,7 +1,5 @@
 package in.hocg.squirrel.mapper;
 
-import in.hocg.squirrel.mapper.select.SelectPageMapper;
-
 import java.io.Serializable;
 
 /**
@@ -10,6 +8,6 @@ import java.io.Serializable;
  *
  * @author hocgin
  */
-public interface PageMapper<T, Id extends Serializable>
-        extends SelectPageMapper<T, Id> {
+public interface PageMapper<T, Id extends Serializable> {
+
 }

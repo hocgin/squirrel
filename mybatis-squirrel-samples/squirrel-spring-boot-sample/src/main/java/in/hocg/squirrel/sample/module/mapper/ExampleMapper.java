@@ -1,6 +1,12 @@
 package in.hocg.squirrel.sample.module.mapper;
 
+import in.hocg.squirrel.mapper.CountAllMapper;
+import in.hocg.squirrel.mapper.delete.DeleteOneMapper;
+import in.hocg.squirrel.mapper.insert.InsertOneMapper;
+import in.hocg.squirrel.mapper.select.SelectAllMapper;
+import in.hocg.squirrel.mapper.select.SelectBatchMapper;
 import in.hocg.squirrel.mapper.select.SelectOneMapper;
+import in.hocg.squirrel.mapper.update.UpdateOneMapper;
 import in.hocg.squirrel.sample.module.domain.Example;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -13,7 +19,15 @@ import java.util.Optional;
  * @author hocgin
  */
 @Mapper
-public interface ExampleMapper extends SelectOneMapper<Example, Long> {
+public interface ExampleMapper
+        extends
+        CountAllMapper<Example, Long>,
+        SelectOneMapper<Example, Long>,
+        DeleteOneMapper<Example, Long>,
+        UpdateOneMapper<Example, Long>,
+        SelectBatchMapper<Example, Long>,
+        SelectAllMapper<Example, Long>,
+        InsertOneMapper<Example, Long> {
     
     
     /**

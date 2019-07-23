@@ -2,6 +2,7 @@ package in.hocg.squirrel.metadata.struct;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.apache.ibatis.executor.keygen.KeyGenerator;
 
 /**
  * Created by hocgin on 2019-07-18.
@@ -26,4 +27,9 @@ public class Table {
      * 主键字段
      */
     private String keyFieldName;
+    
+    /**
+     * 主键生成策略
+     */
+    private KeyGenerator keyGenerator;
 }
