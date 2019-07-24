@@ -1,8 +1,8 @@
 package in.hocg.squirrel.mapper.update;
 
 import in.hocg.squirrel.core.Constants;
-import in.hocg.squirrel.provider.BaseProvider;
-import in.hocg.squirrel.provider.update.UpdateOneProvider;
+import in.hocg.squirrel.provider.AbstractProvider;
+import in.hocg.squirrel.provider.methods.UpdateOneProvider;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.UpdateProvider;
 
@@ -22,6 +22,6 @@ public interface UpdateOneMapper<T, Id extends Serializable> {
      * @param entity
      * @return
      */
-    @UpdateProvider(type = UpdateOneProvider.class, method = BaseProvider.PROVIDER_PROXY_METHOD)
+    @UpdateProvider(type = UpdateOneProvider.class, method = AbstractProvider.PROVIDER_PROXY_METHOD)
     int updateOne(@Param(Constants.BEAN_PARAMETER) T entity);
 }

@@ -1,8 +1,8 @@
-package in.hocg.squirrel.provider.delete;
+package in.hocg.squirrel.provider.methods;
 
 import in.hocg.squirrel.builder.SqlScripts;
 import in.hocg.squirrel.metadata.struct.Table;
-import in.hocg.squirrel.provider.BaseProvider;
+import in.hocg.squirrel.provider.AbstractProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.jdbc.SQL;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -16,7 +16,7 @@ import java.lang.reflect.Method;
  * @author hocgin
  */
 @Slf4j
-public class DeleteOneProvider extends BaseProvider {
+public class DeleteOneProvider extends AbstractProvider {
     
     public DeleteOneProvider(Class<?> mapperClass, Class<?> entityClass, Method method) {
         super(mapperClass, entityClass, method);

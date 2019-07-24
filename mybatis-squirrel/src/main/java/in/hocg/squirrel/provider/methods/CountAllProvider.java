@@ -1,7 +1,8 @@
-package in.hocg.squirrel.provider;
+package in.hocg.squirrel.provider.methods;
 
 import in.hocg.squirrel.builder.XmlScripts;
 import in.hocg.squirrel.metadata.struct.Table;
+import in.hocg.squirrel.provider.AbstractProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.mapping.MappedStatement;
 
@@ -14,7 +15,7 @@ import java.lang.reflect.Method;
  * @author hocgin
  */
 @Slf4j
-public class CountAllProvider extends BaseProvider {
+public class CountAllProvider extends AbstractProvider {
     
     public CountAllProvider(Class<?> mapperClass, Class<?> entityClass, Method method) {
         super(mapperClass, entityClass, method);
@@ -33,6 +34,6 @@ public class CountAllProvider extends BaseProvider {
         setSqlSource(statement, sql);
         
         // 设置返回值
-        setSingleResultMaps(statement, Long.class);
+        setResultMaps(statement, Long.class);
     }
 }

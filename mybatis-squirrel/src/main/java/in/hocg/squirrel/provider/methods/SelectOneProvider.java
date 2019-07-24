@@ -1,11 +1,11 @@
-package in.hocg.squirrel.provider.select;
+package in.hocg.squirrel.provider.methods;
 
 import in.hocg.squirrel.builder.XmlScripts;
 import in.hocg.squirrel.core.Constants;
 import in.hocg.squirrel.metadata.ColumnHelper;
 import in.hocg.squirrel.metadata.struct.Column;
 import in.hocg.squirrel.metadata.struct.Table;
-import in.hocg.squirrel.provider.BaseProvider;
+import in.hocg.squirrel.provider.AbstractProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.mapping.MappedStatement;
 
@@ -19,7 +19,7 @@ import java.util.List;
  * @author hocgin
  */
 @Slf4j
-public class SelectOneProvider extends BaseProvider {
+public class SelectOneProvider extends AbstractProvider {
     
     public SelectOneProvider(Class<?> mapperClass, Class<?> entityClass, Method method) {
         super(mapperClass, entityClass, method);

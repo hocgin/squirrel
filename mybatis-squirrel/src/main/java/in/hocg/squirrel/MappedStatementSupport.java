@@ -2,7 +2,7 @@ package in.hocg.squirrel;
 
 import in.hocg.squirrel.core.helper.ProviderHelper;
 import in.hocg.squirrel.core.helper.StatementHelper;
-import in.hocg.squirrel.provider.BaseProvider;
+import in.hocg.squirrel.provider.AbstractProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.builder.annotation.ProviderSqlSource;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -42,17 +42,17 @@ public class MappedStatementSupport {
      */
     private void handleProviderMethod() {
         Collection<MappedStatement> mappedStatements = StatementHelper.getMappedStatement();
-        for (MappedStatement mappedStatement : mappedStatements) {
-            String mappedStatementId = mappedStatement.getId();
-            if (!StatementHelper.isLoadedMappedStatement(mappedStatementId)
-                    && (mappedStatement.getSqlSource() instanceof ProviderSqlSource)) {
-                BaseProvider provider = ProviderHelper.getMethodProvider(mappedStatementId);
+        for (MappedStatement statement : mappedStatements) {
+            String mappedStatementId = statement.getId();
+            if (!StatementHelper.isBuiltMappedStatement(mappedStatementId)
+                    && (statement.getSqlSource() instanceof ProviderSqlSource)) {
+                AbstractProvider provider = ProviderHelper.getMethodProvider(mappedStatementId);
                 
                 // 调用对应的 Provider 处理器，生成 MappedStatement 实例
-                provider.invokeProviderBuildMethod(mappedStatement);
+                provider.invokeProviderBuildMethod(statement);
                 
                 // 标记为已加载
-                StatementHelper.setLoadedMappedStatement(mappedStatementId);
+                StatementHelper.addBuiltMappedStatement(mappedStatementId);
             }
         }
     }

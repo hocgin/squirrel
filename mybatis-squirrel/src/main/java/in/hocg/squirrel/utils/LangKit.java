@@ -15,14 +15,12 @@ public class LangKit {
     
     /**
      * 判断集合是否为 NULL 或者 空
+     *
      * @param c
      * @return
      */
     public static boolean isEmpty(Collection c) {
-        if (c == null || c.isEmpty()) {
-            return true;
-        }
-        return false;
+        return c == null || c.isEmpty();
     }
-
+    
 }

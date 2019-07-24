@@ -1,7 +1,7 @@
 package in.hocg.squirrel.core.helper;
 
 import in.hocg.squirrel.exception.SquirrelException;
-import in.hocg.squirrel.provider.BaseProvider;
+import in.hocg.squirrel.provider.AbstractProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.DeleteProvider;
 import org.apache.ibatis.annotations.InsertProvider;
@@ -47,7 +47,7 @@ public class ProviderHelper {
      * @param statementId
      * @return
      */
-    public static BaseProvider getMethodProvider(String statementId) {
+    public static AbstractProvider getMethodProvider(String statementId) {
         String methodName = StatementHelper.getMethodName(statementId);
         Class<?> mapperClass = StatementHelper.getMapperClass(statementId);
         
@@ -61,9 +61,9 @@ public class ProviderHelper {
             throw SquirrelException.wrap("该函数 {} 没有实现方式", statementId);
         }
         
-        BaseProvider provider;
+        AbstractProvider provider;
         try {
-            provider = (BaseProvider) providerClass.getConstructor(Class.class, Class.class, Method.class).newInstance(mapperClass, entityClass, method);
+            provider = (AbstractProvider) providerClass.getConstructor(Class.class, Class.class, Method.class).newInstance(mapperClass, entityClass, method);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             log.error("创建 Provider(Class: {}, 参数: {}, {}, {}) 实例失败, 错误信息: {}", providerClass, mapperClass, entityClass, method, e);
             throw SquirrelException.wrap("获取 Provider 失败，Statement Id: {}, 参数: {}, {}, {}", statementId, mapperClass, entityClass, method);

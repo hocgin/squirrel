@@ -30,7 +30,7 @@ import java.util.*;
  */
 @Slf4j
 @Data
-public abstract class BaseProvider implements BuildProvider {
+public abstract class AbstractProvider implements BuildProvider {
     
     /**
      * 代理函数名
@@ -46,15 +46,16 @@ public abstract class BaseProvider implements BuildProvider {
      * Mapper 类
      */
     private final Class<?> mapperClass;
+    
     /**
      * Mapper 的实体
      */
     private final Class<?> entityClass;
+    
     /**
      * 使用 Provider 的 Method
      */
     private final Method method;
-    
     
     /**
      * MyBaits内部Xml节点解析的语言驱动
@@ -65,12 +66,13 @@ public abstract class BaseProvider implements BuildProvider {
      * 表结构
      */
     private final Table tableStruct;
+    
     /**
      * 列结构
      */
     private final List<Column> columnStruct;
     
-    public BaseProvider(Class<?> mapperClass, Class<?> entityClass, Method method) {
+    public AbstractProvider(Class<?> mapperClass, Class<?> entityClass, Method method) {
         this.mapperClass = mapperClass;
         this.entityClass = entityClass;
         this.method = method;
@@ -83,17 +85,16 @@ public abstract class BaseProvider implements BuildProvider {
     }
     
     /**
-     * 调用 Provider 处理器构建函数
+     * 构建自定义 MappedStatement
      *
      * @param statement
      */
     public void invokeProviderBuildMethod(MappedStatement statement) {
-        
         try {
-            Method method = this.getClass().getMethod(BaseProvider.PROVIDER_BUILD_METHOD, MappedStatement.class);
+            Method method = this.getClass().getMethod(AbstractProvider.PROVIDER_BUILD_METHOD, MappedStatement.class);
             method.invoke(this, statement);
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            log.error("调用异常, Statement ID: {}, 函数名: {}, ERROR: {}", statement.getId(), BaseProvider.PROVIDER_BUILD_METHOD, e);
+            log.error("调用异常, Statement ID: {}, 函数名: {}, ERROR: {}", statement.getId(), AbstractProvider.PROVIDER_BUILD_METHOD, e);
         }
     }
     
@@ -135,10 +136,12 @@ public abstract class BaseProvider implements BuildProvider {
                     .typeHandler(column.getTypeHandler())
                     .build());
         }
-        String id = getStatementId(statement);
         
-        ResultMap resultMap = new ResultMap.Builder(statement.getConfiguration(), id, this.entityClass, resultMappings, true)
-                .build();
+        ResultMap resultMap = new ResultMap.Builder(statement.getConfiguration(),
+                getStatementId(statement),
+                this.entityClass,
+                resultMappings,
+                true).build();
         SystemMetaObject.forObject(statement)
                 .setValue(StatementFields.RESULT_MAPS, Collections.unmodifiableList(Arrays.asList(resultMap)));
     }
@@ -147,12 +150,13 @@ public abstract class BaseProvider implements BuildProvider {
      * 设置指定类型的单返回值
      *
      * @param statement
-     * @param singleClass
+     * @param clazz
      */
-    protected void setSingleResultMaps(MappedStatement statement, Class<?> singleClass) {
-        String id = getStatementId(statement);
-        ResultMap resultMap = new ResultMap.Builder(statement.getConfiguration(), id, singleClass, new ArrayList<>())
-                .build();
+    protected void setResultMaps(MappedStatement statement, Class<?> clazz) {
+        ResultMap resultMap = new ResultMap.Builder(statement.getConfiguration(),
+                getStatementId(statement),
+                clazz,
+                new ArrayList<>()).build();
         SystemMetaObject.forObject(statement)
                 .setValue(StatementFields.RESULT_MAPS, Collections.unmodifiableList(Arrays.asList(resultMap)));
     }

@@ -38,11 +38,22 @@ public class StatementHelper {
     private static Cache MAPPER_CLASS_CACHE = new SoftCache(new PerpetualCache("MAPPER_CLASS_CACHE"));
     
     
-    public static void setLoadedMappedStatement(String statementId) {
+    /**
+     * 标记为已经构建
+     *
+     * @param statementId
+     */
+    public static void addBuiltMappedStatement(String statementId) {
         LOADED_MAPPED_STATEMENT.add(statementId);
     }
     
-    public static boolean isLoadedMappedStatement(String statementId) {
+    /**
+     * 是否已经构建结束
+     *
+     * @param statementId
+     * @return
+     */
+    public static boolean isBuiltMappedStatement(String statementId) {
         return LOADED_MAPPED_STATEMENT.contains(statementId);
     }
     

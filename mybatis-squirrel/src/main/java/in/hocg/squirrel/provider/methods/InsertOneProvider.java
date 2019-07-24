@@ -1,9 +1,9 @@
-package in.hocg.squirrel.provider.insert;
+package in.hocg.squirrel.provider.methods;
 
 import in.hocg.squirrel.metadata.ColumnHelper;
 import in.hocg.squirrel.metadata.struct.Column;
 import in.hocg.squirrel.metadata.struct.Table;
-import in.hocg.squirrel.provider.BaseProvider;
+import in.hocg.squirrel.provider.AbstractProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.jdbc.SQL;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -18,7 +18,7 @@ import java.util.List;
  * @author hocgin
  */
 @Slf4j
-public class InsertOneProvider extends BaseProvider {
+public class InsertOneProvider extends AbstractProvider {
     
     public InsertOneProvider(Class<?> mapperClass, Class<?> entityClass, Method method) {
         super(mapperClass, entityClass, method);

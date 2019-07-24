@@ -1,8 +1,8 @@
 package in.hocg.squirrel.mapper.select;
 
 import in.hocg.squirrel.core.Constants;
-import in.hocg.squirrel.provider.BaseProvider;
-import in.hocg.squirrel.provider.select.SelectBatchProvider;
+import in.hocg.squirrel.provider.AbstractProvider;
+import in.hocg.squirrel.provider.methods.SelectBatchProvider;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.SelectProvider;
 
@@ -23,6 +23,6 @@ public interface SelectBatchMapper<T, Id extends Serializable> {
      * @param id
      * @return
      */
-    @SelectProvider(type = SelectBatchProvider.class, method = BaseProvider.PROVIDER_PROXY_METHOD)
+    @SelectProvider(type = SelectBatchProvider.class, method = AbstractProvider.PROVIDER_PROXY_METHOD)
     List<T> selectBatch(@Param(Constants.ARRAY_PARAMETER) Id... id);
 }
