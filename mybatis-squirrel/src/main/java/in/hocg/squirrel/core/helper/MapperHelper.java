@@ -27,6 +27,6 @@ public class MapperHelper {
             }
         }
         
-        throw SquirrelException.wrap("接口: {} 未找到函数 {} 的映射", mapperClass, methodName);
+        throw SquirrelException.wrap("接口: {mapperClass} 未找到函数 {methodName} 的映射", mapperClass, methodName);
     }
 }

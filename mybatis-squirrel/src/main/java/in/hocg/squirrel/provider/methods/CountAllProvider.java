@@ -23,17 +23,14 @@ public class CountAllProvider extends AbstractProvider {
     
     @Override
     public void build(MappedStatement statement) {
-        // 表信息
-        Table tableStruct = getTableStruct();
+        Table table = getTable();
         
         String sql = XmlScripts.script(
-                XmlScripts.count(tableStruct.getTableName(), tableStruct.getKeyColumnName())
+                XmlScripts.count(table.getTableName(), table.getKeyColumnName())
         );
         
-        // 设置SQL
         setSqlSource(statement, sql);
         
-        // 设置返回值
         setResultMaps(statement, Long.class);
     }
 }

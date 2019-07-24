@@ -24,12 +24,11 @@ public class DeleteOneProvider extends AbstractProvider {
     
     @Override
     public void build(MappedStatement statement) {
-        // 表
-        Table tableStruct = getTableStruct();
+        Table table = getTable();
         
         String sql = new SQL()
-                .DELETE_FROM(tableStruct.getTableName())
-                .WHERE(SqlScripts.idEq(tableStruct.getKeyFieldName()))
+                .DELETE_FROM(table.getTableName())
+                .WHERE(SqlScripts.idEq(table.getKeyFieldName()))
                 .toString();
         
         setSqlSource(statement, sql);

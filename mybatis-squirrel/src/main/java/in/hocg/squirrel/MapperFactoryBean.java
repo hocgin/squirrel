@@ -69,7 +69,7 @@ public class MapperFactoryBean<T> extends SqlSessionDaoSupport
             }
         }
     
-        // 全局配置中已有 Mapper
+        // 如果全局配置中已有 Mapper 接口类
         if (configuration.hasMapper(this.mapperInterface)) {
             mappedStatementSupport.support(new ArrayList<>(configuration.getMappedStatements()));
         }

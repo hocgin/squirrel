@@ -2,7 +2,7 @@ package in.hocg.squirrel.provider;
 
 import com.google.common.collect.Lists;
 import in.hocg.squirrel.core.StatementFields;
-import in.hocg.squirrel.metadata.TableHelper;
+import in.hocg.squirrel.metadata.TableUtility;
 import in.hocg.squirrel.metadata.struct.Column;
 import in.hocg.squirrel.metadata.struct.Table;
 import lombok.Data;
@@ -65,19 +65,19 @@ public abstract class AbstractProvider implements BuildProvider {
     /**
      * 表结构
      */
-    private final Table tableStruct;
+    private final Table table;
     
     /**
      * 列结构
      */
-    private final List<Column> columnStruct;
+    private final List<Column> columns;
     
     public AbstractProvider(Class<?> mapperClass, Class<?> entityClass, Method method) {
         this.mapperClass = mapperClass;
         this.entityClass = entityClass;
         this.method = method;
-        this.tableStruct = TableHelper.getTableStruct(entityClass);
-        this.columnStruct = TableHelper.getColumnStruct(entityClass);
+        this.table = TableUtility.getTableMetadata(entityClass);
+        this.columns = TableUtility.getColumnStruct(entityClass);
     }
     
     public String method() {
@@ -128,7 +128,7 @@ public abstract class AbstractProvider implements BuildProvider {
      */
     protected void setResultMaps(MappedStatement statement) {
         List<ResultMapping> resultMappings = Lists.newArrayList();
-        for (Column column : columnStruct) {
+        for (Column column : columns) {
             resultMappings.add(new ResultMapping.Builder(statement.getConfiguration(), column.getFieldName())
                     .column(column.getColumnName())
                     .jdbcType(column.getJdbcType())

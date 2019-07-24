@@ -8,6 +8,7 @@ import in.hocg.squirrel.metadata.struct.Column;
 import in.hocg.squirrel.metadata.struct.Table;
 import in.hocg.squirrel.reflection.ClassKit;
 import in.hocg.squirrel.utils.LangKit;
+import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.type.JdbcType;
@@ -24,7 +25,8 @@ import java.util.Objects;
  * @author hocgin
  */
 @Slf4j
-public class ColumnHelper {
+@UtilityClass
+public class ColumnUtility {
     
     
     /**
@@ -34,20 +36,20 @@ public class ColumnHelper {
      * @param entityClass
      * @return
      */
-    public static List<Column> loadColumnStruct(Table tableStruct, Class<?> entityClass) {
+    public static List<Column> loadColumnMetadata(Table tableStruct, Class<?> entityClass) {
         List<Column> columns = Lists.newArrayList();
         
         List<Field> fields = ClassKit.from(entityClass).getAllField();
         for (Field field : fields) {
-            Column columnStruct = getStruct(field);
+            Column column = getMetadata(field);
             
             // 如果该字段是 @Id
-            if (columnStruct.getIsPk()) {
-                tableStruct.setKeyColumnName(columnStruct.getColumnName());
-                tableStruct.setKeyFieldName(columnStruct.getFieldName());
+            if (column.getIsPk()) {
+                tableStruct.setKeyColumnName(column.getColumnName());
+                tableStruct.setKeyFieldName(column.getFieldName());
                 tableStruct.setKeyGenerator(getAndNewKeyGenerator(field));
             }
-            columns.add(columnStruct);
+            columns.add(column);
         }
         return columns;
     }
@@ -63,7 +65,7 @@ public class ColumnHelper {
         try {
             return keyGenerator.newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
-            log.error("设置 {fieldName} 主键生成策略失败, 错误信息: {}", field.getName(), e);
+            log.error("设置 {} 主键生成策略失败, 错误信息: {}", field.getName(), e);
             throw SquirrelException.wrap("设置 {fieldName} 主键生成策略失败", field.getName());
         }
     }
@@ -88,7 +90,7 @@ public class ColumnHelper {
      * @param field
      * @return
      */
-    public static Column getStruct(Field field) {
+    public static Column getMetadata(Field field) {
         return new Column()
                 .setColumnName(getColumnName(field))
                 .setJavaType(field.getType())

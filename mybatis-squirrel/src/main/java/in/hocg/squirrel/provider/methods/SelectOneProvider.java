@@ -2,7 +2,7 @@ package in.hocg.squirrel.provider.methods;
 
 import in.hocg.squirrel.builder.XmlScripts;
 import in.hocg.squirrel.core.Constants;
-import in.hocg.squirrel.metadata.ColumnHelper;
+import in.hocg.squirrel.metadata.ColumnUtility;
 import in.hocg.squirrel.metadata.struct.Column;
 import in.hocg.squirrel.metadata.struct.Table;
 import in.hocg.squirrel.provider.AbstractProvider;
@@ -28,24 +28,20 @@ public class SelectOneProvider extends AbstractProvider {
     @Override
     public void build(MappedStatement statement) {
         
-        // 表信息
-        Table tableStruct = getTableStruct();
+        Table tableStruct = getTable();
         
-        // 列信息
-        List<Column> columnStruct = getColumnStruct();
-        String[] columnsName = ColumnHelper.getColumnNames(columnStruct);
+        List<Column> columns = getColumns();
+        String[] columnNames = ColumnUtility.getColumnNames(columns);
     
         String sql = XmlScripts.script(
-                XmlScripts.select(tableStruct.getTableName(), columnsName),
+                XmlScripts.select(tableStruct.getTableName(), columnNames),
                 XmlScripts.where(
                         XmlScripts.eq(tableStruct.getKeyColumnName(), Constants.KEY_PARAMETER)
                 )
         );
         
-        // 设置 SQL
         setSqlSource(statement, sql);
         
-        // 设置结果
         setResultMaps(statement);
     }
     

@@ -27,18 +27,17 @@ public class UpdateOneProvider extends AbstractProvider {
     
     @Override
     public void build(MappedStatement statement) {
-        // 表信息
-        Table tableStruct = getTableStruct();
+        
+        Table table = getTable();
         
         String sql = XmlScripts.script(
-                XmlScripts.update(tableStruct.getTableName()),
+                XmlScripts.update(table.getTableName()),
                 XmlScripts.set(getSets()),
                 XmlScripts.where(
-                        XmlScripts.eq(tableStruct.getKeyColumnName(), Constants.BEAN_PARAMETER + Constants.COMMA + Constants.KEY_PARAMETER)
+                        XmlScripts.eq(table.getKeyColumnName(), Constants.BEAN_PARAMETER + Constants.COMMA + Constants.KEY_PARAMETER)
                 )
         );
         
-        // 设置 SQL
         setSqlSource(statement, sql);
     }
     
@@ -49,7 +48,7 @@ public class UpdateOneProvider extends AbstractProvider {
      */
     private String[] getSets() {
         // 列信息
-        List<Column> columnStruct = getColumnStruct();
+        List<Column> columnStruct = getColumns();
         return columnStruct.stream()
                 .filter(column -> !column.getIsPk())
                 .map(column -> TextFormatter.format("{column} = {field}", column.getColumnName(), Constants.BEAN_PARAMETER_PREFIX + column.getFieldName()) + Constants.PARAMETER_SUFFIX)

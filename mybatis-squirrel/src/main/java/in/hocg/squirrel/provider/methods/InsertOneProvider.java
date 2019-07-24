@@ -1,6 +1,6 @@
 package in.hocg.squirrel.provider.methods;
 
-import in.hocg.squirrel.metadata.ColumnHelper;
+import in.hocg.squirrel.metadata.ColumnUtility;
 import in.hocg.squirrel.metadata.struct.Column;
 import in.hocg.squirrel.metadata.struct.Table;
 import in.hocg.squirrel.provider.AbstractProvider;
@@ -26,26 +26,21 @@ public class InsertOneProvider extends AbstractProvider {
     
     @Override
     public void build(MappedStatement statement) {
-        // 表
-        Table tableStruct = getTableStruct();
         
-        // 列
-        List<Column> columnStruct = getColumnStruct();
-        String[] columnsName = ColumnHelper.getColumnNames(columnStruct);
-        String[] columnParameters = ColumnHelper.getColumnParameters(columnStruct);
+        Table table = getTable();
         
-        // sql
+        List<Column> columns = getColumns();
+        String[] columnNames = ColumnUtility.getColumnNames(columns);
+        String[] columnParameters = ColumnUtility.getColumnParameters(columns);
+        
         String sql = new SQL()
-                .INSERT_INTO(tableStruct.getTableName())
-                .INTO_COLUMNS(columnsName)
+                .INSERT_INTO(table.getTableName())
+                .INTO_COLUMNS(columnNames)
                 .INTO_VALUES(columnParameters)
                 .toString();
         
-        // SQLSource
         setSqlSource(statement, sql);
         
-        // 设置主键生成策略
-        setKeyGenerator(statement, tableStruct.getKeyFieldName(), tableStruct.getKeyColumnName(), tableStruct.getKeyGenerator());
-        
+        setKeyGenerator(statement, table.getKeyFieldName(), table.getKeyColumnName(), table.getKeyGenerator());
     }
 }
