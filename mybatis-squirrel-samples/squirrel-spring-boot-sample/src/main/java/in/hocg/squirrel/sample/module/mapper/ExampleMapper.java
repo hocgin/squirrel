@@ -21,14 +21,13 @@ import java.util.Optional;
 @Mapper
 public interface ExampleMapper
         extends
-        CountAllMapper<Example, Long>,
-        SelectOneMapper<Example, Long>,
-        DeleteOneMapper<Example, Long>,
-        UpdateOneMapper<Example, Long>,
-        SelectBatchMapper<Example, Long>,
-        SelectAllMapper<Example, Long>,
-        InsertOneMapper<Example, Long> {
-    
+        CountAllMapper<Example>,
+        SelectOneMapper<Example>,
+        DeleteOneMapper<Example>,
+        UpdateOneMapper<Example>,
+        SelectBatchMapper<Example>,
+        SelectAllMapper<Example>,
+        InsertOneMapper<Example> {
     
     /**
      * 查找一条数据
@@ -37,6 +36,5 @@ public interface ExampleMapper
      * @return
      */
     Optional<Example> findFirst();
-    
     
 }

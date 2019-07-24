@@ -12,7 +12,7 @@ import java.io.Serializable;
  *
  * @author hocgin
  */
-public interface CountAllMapper<T, Id extends Serializable> {
+public interface CountAllMapper<T> {
     
     /**
      * 计数

@@ -14,7 +14,7 @@ import java.io.Serializable;
  *
  * @author hocgin
  */
-public interface UpdateOneMapper<T, Id extends Serializable> {
+public interface UpdateOneMapper<T> {
     
     /**
      * 更新

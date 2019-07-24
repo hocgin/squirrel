@@ -15,7 +15,7 @@ import java.util.Optional;
  *
  * @author hocgin
  */
-public interface SelectOneMapper<T, Id extends Serializable> {
+public interface SelectOneMapper<T> {
     
     /**
      * 查询单个
@@ -24,5 +24,5 @@ public interface SelectOneMapper<T, Id extends Serializable> {
      * @return
      */
     @SelectProvider(type = SelectOneProvider.class, method = AbstractProvider.PROVIDER_PROXY_METHOD)
-    Optional<T> selectOne(@Param(Constants.KEY_PARAMETER) Id id);
+    Optional<T> selectOne(@Param(Constants.KEY_PARAMETER) Serializable id);
 }

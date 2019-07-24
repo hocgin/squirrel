@@ -15,7 +15,7 @@ import java.util.List;
  *
  * @author hocgin
  */
-public interface SelectBatchMapper<T, Id extends Serializable> {
+public interface SelectBatchMapper<T> {
     
     /**
      * 使用主键查询多个
@@ -24,5 +24,5 @@ public interface SelectBatchMapper<T, Id extends Serializable> {
      * @return
      */
     @SelectProvider(type = SelectBatchProvider.class, method = AbstractProvider.PROVIDER_PROXY_METHOD)
-    List<T> selectBatch(@Param(Constants.ARRAY_PARAMETER) Id... id);
+    List<T> selectBatch(@Param(Constants.ARRAY_PARAMETER) Serializable... id);
 }

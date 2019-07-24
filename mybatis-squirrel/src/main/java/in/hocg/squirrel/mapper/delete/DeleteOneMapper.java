@@ -14,7 +14,7 @@ import java.io.Serializable;
  *
  * @author hocgin
  */
-public interface DeleteOneMapper<T, Id extends Serializable> {
+public interface DeleteOneMapper<T> {
     
     /**
      * 删除
@@ -23,6 +23,6 @@ public interface DeleteOneMapper<T, Id extends Serializable> {
      * @return 影响的行数
      */
     @DeleteProvider(type = DeleteOneProvider.class, method = AbstractProvider.PROVIDER_PROXY_METHOD)
-    int deleteOne(@Param(Constants.KEY_PARAMETER) Id id);
+    int deleteOne(@Param(Constants.KEY_PARAMETER) Serializable id);
     
 }

@@ -13,7 +13,7 @@ import java.util.Collection;
  *
  * @author hocgin
  */
-public interface SelectAllMapper<T, Id extends Serializable> {
+public interface SelectAllMapper<T> {
     
     /**
      * 查询所有
