@@ -25,7 +25,8 @@ public class SelectOneProvider extends BaseProvider {
         super(mapperClass, entityClass, method);
     }
     
-    public void selectOne(MappedStatement statement) {
+    @Override
+    public void build(MappedStatement statement) {
         
         // 表信息
         Table tableStruct = getTableStruct();

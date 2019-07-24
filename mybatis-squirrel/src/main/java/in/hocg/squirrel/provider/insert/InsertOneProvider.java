@@ -24,7 +24,8 @@ public class InsertOneProvider extends BaseProvider {
         super(mapperClass, entityClass, method);
     }
     
-    public void insertOne(MappedStatement statement) {
+    @Override
+    public void build(MappedStatement statement) {
         // 表
         Table tableStruct = getTableStruct();
         

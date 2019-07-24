@@ -22,6 +22,6 @@ public interface InsertOneMapper<T, Id extends Serializable> {
      * @param bean
      * @return 影响的行数
      */
-    @InsertProvider(type = InsertOneProvider.class, method = BaseProvider.PROVIDER_METHOD)
-    Integer insertOne(@Param(Constants.BEAN_PARAMETER) T bean);
+    @InsertProvider(type = InsertOneProvider.class, method = BaseProvider.PROVIDER_PROXY_METHOD)
+    int insertOne(@Param(Constants.BEAN_PARAMETER) T bean);
 }

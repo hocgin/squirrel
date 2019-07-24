@@ -2,7 +2,6 @@ package in.hocg.squirrel.provider;
 
 import com.google.common.collect.Lists;
 import in.hocg.squirrel.core.StatementFields;
-import in.hocg.squirrel.core.helper.StatementHelper;
 import in.hocg.squirrel.metadata.TableHelper;
 import in.hocg.squirrel.metadata.struct.Column;
 import in.hocg.squirrel.metadata.struct.Table;
@@ -31,9 +30,18 @@ import java.util.*;
  */
 @Slf4j
 @Data
-public abstract class BaseProvider {
+public abstract class BaseProvider implements BuildProvider {
     
-    public static final String PROVIDER_METHOD = "method";
+    /**
+     * 代理函数名
+     */
+    public static final String PROVIDER_PROXY_METHOD = "method";
+    
+    /**
+     * 构建函数名
+     */
+    public static final String PROVIDER_BUILD_METHOD = "build";
+    
     /**
      * Mapper 类
      */
@@ -51,7 +59,7 @@ public abstract class BaseProvider {
     /**
      * MyBaits内部Xml节点解析的语言驱动
      */
-    private static final XMLLanguageDriver langDriver = new XMLLanguageDriver();
+    private static final XMLLanguageDriver LANG_DRIVER = new XMLLanguageDriver();
     
     /**
      * 表结构
@@ -75,27 +83,17 @@ public abstract class BaseProvider {
     }
     
     /**
-     * 调用Provider处理器指定函数名的函数
+     * 调用 Provider 处理器构建函数
      *
-     * @param mappedStatement
+     * @param statement
      */
-    public void invokeProviderMethod(MappedStatement mappedStatement) {
-        String methodName = StatementHelper.getMethodName(mappedStatement.getId());
-        invokeProviderMethod(methodName, mappedStatement);
-    }
-    
-    /**
-     * 调用Provider处理器指定函数名的函数
-     *
-     * @param methodName
-     * @param mappedStatement
-     */
-    private void invokeProviderMethod(String methodName, MappedStatement mappedStatement) {
+    public void invokeProviderBuildMethod(MappedStatement statement) {
+        
         try {
-            Method method = this.getClass().getMethod(methodName, MappedStatement.class);
-            method.invoke(this, mappedStatement);
+            Method method = this.getClass().getMethod(BaseProvider.PROVIDER_BUILD_METHOD, MappedStatement.class);
+            method.invoke(this, statement);
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            log.error("调用异常, Statement ID: {}, 函数名: {}, ERROR: {}", mappedStatement.getId(), methodName, e);
+            log.error("调用异常, Statement ID: {}, 函数名: {}, ERROR: {}", statement.getId(), BaseProvider.PROVIDER_BUILD_METHOD, e);
         }
     }
     
@@ -107,7 +105,7 @@ public abstract class BaseProvider {
      * @param sql
      */
     protected void setSqlSource(@NonNull MappedStatement statement, @NonNull String sql) {
-        SqlSource sqlSource = langDriver.createSqlSource(statement.getConfiguration(), sql.trim(), null);
+        SqlSource sqlSource = LANG_DRIVER.createSqlSource(statement.getConfiguration(), sql.trim(), null);
         setSqlSource(statement, sqlSource);
     }
     

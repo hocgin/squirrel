@@ -19,6 +19,6 @@ public interface CountAllMapper<T, Id extends Serializable> {
      *
      * @return Long! >=0
      */
-    @SelectProvider(type = CountAllProvider.class, method = BaseProvider.PROVIDER_METHOD)
-    Long countAll();
+    @SelectProvider(type = CountAllProvider.class, method = BaseProvider.PROVIDER_PROXY_METHOD)
+    long countAll();
 }

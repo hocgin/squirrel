@@ -23,6 +23,6 @@ public interface SelectOneMapper<T, Id extends Serializable> {
      * @param id
      * @return
      */
-    @SelectProvider(type = SelectOneProvider.class, method = BaseProvider.PROVIDER_METHOD)
+    @SelectProvider(type = SelectOneProvider.class, method = BaseProvider.PROVIDER_PROXY_METHOD)
     Optional<T> selectOne(@Param(Constants.KEY_PARAMETER) Id id);
 }

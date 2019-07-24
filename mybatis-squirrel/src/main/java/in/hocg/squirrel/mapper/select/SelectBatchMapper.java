@@ -23,6 +23,6 @@ public interface SelectBatchMapper<T, Id extends Serializable> {
      * @param id
      * @return
      */
-    @SelectProvider(type = SelectBatchProvider.class, method = BaseProvider.PROVIDER_METHOD)
+    @SelectProvider(type = SelectBatchProvider.class, method = BaseProvider.PROVIDER_PROXY_METHOD)
     List<T> selectBatch(@Param(Constants.ARRAY_PARAMETER) Id... id);
 }

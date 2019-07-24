@@ -25,7 +25,8 @@ public class UpdateOneProvider extends BaseProvider {
         super(mapperClass, entityClass, method);
     }
     
-    public void updateOne(MappedStatement statement) {
+    @Override
+    public void build(MappedStatement statement) {
         // 表信息
         Table tableStruct = getTableStruct();
         

@@ -38,41 +38,41 @@ public class ExampleMapperTest {
         Example entity = new Example();
         entity.setCreatedAt(LocalDateTime.now());
         entity.setName("?");
-        Integer integer = mapper.insertOne(entity);
-        log.debug("执行结果: {} entity:{}", integer, entity);
+        int result = mapper.insertOne(entity);
+        log.debug("执行结果: {} entity:{}", result, entity);
     }
-    
+
     @Test
     public void deleteOne() {
-        Integer result = mapper.deleteOne(1L);
+        int result = mapper.deleteOne(1L);
         log.debug("执行结果: {}", result);
     }
-    
+
     @Test
     public void selectAll() {
         Collection<Example> result = mapper.selectAll();
         log.debug("执行结果: {}", result);
     }
-    
+
     @Test
     public void countAll() {
-        Long result = mapper.countAll();
+        long result = mapper.countAll();
         log.debug("执行结果: {}", result);
     }
-    
+
     @Test
     public void selectBatch() {
         List<Example> result = mapper.selectBatch(1L, 2L, 3L);
         log.debug("执行结果: {}", result);
     }
-    
+
     @Test
     public void updateOne() {
         Example entity = new Example();
         entity.setId(2L);
         entity.setName("66");
         entity.setCreatedAt(LocalDateTime.now());
-        Integer result = mapper.updateOne(entity);
+        int result = mapper.updateOne(entity);
         log.debug("执行结果: {}", result);
     }
 }

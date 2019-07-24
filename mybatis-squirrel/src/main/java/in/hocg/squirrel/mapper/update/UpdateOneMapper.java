@@ -22,6 +22,6 @@ public interface UpdateOneMapper<T, Id extends Serializable> {
      * @param entity
      * @return
      */
-    @UpdateProvider(type = UpdateOneProvider.class, method = BaseProvider.PROVIDER_METHOD)
-    Integer updateOne(@Param(Constants.BEAN_PARAMETER) T entity);
+    @UpdateProvider(type = UpdateOneProvider.class, method = BaseProvider.PROVIDER_PROXY_METHOD)
+    int updateOne(@Param(Constants.BEAN_PARAMETER) T entity);
 }

@@ -22,7 +22,8 @@ public class DeleteOneProvider extends BaseProvider {
         super(mapperClass, entityClass, method);
     }
     
-    public void deleteOne(MappedStatement statement) {
+    @Override
+    public void build(MappedStatement statement) {
         // 表
         Table tableStruct = getTableStruct();
         

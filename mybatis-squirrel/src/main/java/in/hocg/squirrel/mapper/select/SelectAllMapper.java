@@ -20,6 +20,6 @@ public interface SelectAllMapper<T, Id extends Serializable> {
      *
      * @return
      */
-    @SelectProvider(type = SelectAllProvider.class, method = BaseProvider.PROVIDER_METHOD)
+    @SelectProvider(type = SelectAllProvider.class, method = BaseProvider.PROVIDER_PROXY_METHOD)
     Collection<T> selectAll();
 }

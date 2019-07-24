@@ -49,7 +49,7 @@ public class MappedStatementSupport {
                 BaseProvider provider = ProviderHelper.getMethodProvider(mappedStatementId);
                 
                 // 调用对应的 Provider 处理器，生成 MappedStatement 实例
-                provider.invokeProviderMethod(mappedStatement);
+                provider.invokeProviderBuildMethod(mappedStatement);
                 
                 // 标记为已加载
                 StatementHelper.setLoadedMappedStatement(mappedStatementId);

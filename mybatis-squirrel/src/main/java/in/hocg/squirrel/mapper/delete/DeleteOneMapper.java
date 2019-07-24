@@ -22,7 +22,7 @@ public interface DeleteOneMapper<T, Id extends Serializable> {
      * @param id 主键
      * @return 影响的行数
      */
-    @DeleteProvider(type = DeleteOneProvider.class, method = BaseProvider.PROVIDER_METHOD)
-    Integer deleteOne(@Param(Constants.KEY_PARAMETER) Id id);
+    @DeleteProvider(type = DeleteOneProvider.class, method = BaseProvider.PROVIDER_PROXY_METHOD)
+    int deleteOne(@Param(Constants.KEY_PARAMETER) Id id);
     
 }
