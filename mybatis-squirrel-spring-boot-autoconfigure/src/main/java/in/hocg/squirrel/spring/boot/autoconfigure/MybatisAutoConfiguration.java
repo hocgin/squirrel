@@ -15,7 +15,7 @@
  */
 package in.hocg.squirrel.spring.boot.autoconfigure;
 
-import in.hocg.squirrel.SquirrelClassPathMapperScanner;
+import in.hocg.squirrel.spring.SquirrelClassPathMapperScanner;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.mapping.DatabaseIdProvider;
 import org.apache.ibatis.plugin.Interceptor;

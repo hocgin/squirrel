@@ -1,5 +1,6 @@
-package in.hocg.squirrel;
+package in.hocg.squirrel.spring;
 
+import in.hocg.squirrel.MappedStatementSupport;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
