@@ -41,7 +41,7 @@ public class InsertOneProvider extends BaseProvider {
                 .toString();
         
         // SQLSource
-        injectSqlSource(statement, sql);
+        setSqlSource(statement, sql);
         
         // 设置主键生成策略
         setKeyGenerator(statement, tableStruct.getKeyFieldName(), tableStruct.getKeyColumnName(), tableStruct.getKeyGenerator());

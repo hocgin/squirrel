@@ -29,9 +29,9 @@ public class CountAllProvider extends BaseProvider {
         );
         
         // 设置SQL
-        injectSqlSource(statement, sql);
+        setSqlSource(statement, sql);
         
         // 设置返回值
-        injectSingleResultMaps(statement, Long.class);
+        setSingleResultMaps(statement, Long.class);
     }
 }

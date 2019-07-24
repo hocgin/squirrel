@@ -38,7 +38,7 @@ public class UpdateOneProvider extends BaseProvider {
         );
         
         // 设置 SQL
-        injectSqlSource(statement, sql);
+        setSqlSource(statement, sql);
     }
     
     /**
@@ -49,11 +49,9 @@ public class UpdateOneProvider extends BaseProvider {
     private String[] getSets() {
         // 列信息
         List<Column> columnStruct = getColumnStruct();
-        String[] sets = columnStruct.stream()
+        return columnStruct.stream()
                 .filter(column -> !column.getIsPk())
                 .map(column -> TextFormatter.format("{column} = {field}", column.getColumnName(), Constants.BEAN_PARAMETER_PREFIX + column.getFieldName()) + Constants.PARAMETER_SUFFIX)
                 .toArray(String[]::new);
-        
-        return sets;
     }
 }

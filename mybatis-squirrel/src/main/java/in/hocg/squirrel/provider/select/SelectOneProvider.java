@@ -42,10 +42,10 @@ public class SelectOneProvider extends BaseProvider {
         );
         
         // 设置 SQL
-        injectSqlSource(statement, sql);
+        setSqlSource(statement, sql);
         
         // 设置结果
-        injectResultMaps(statement);
+        setResultMaps(statement);
     }
     
 }

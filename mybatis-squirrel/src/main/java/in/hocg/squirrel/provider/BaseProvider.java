@@ -106,9 +106,9 @@ public abstract class BaseProvider {
      * @param statement
      * @param sql
      */
-    protected void injectSqlSource(@NonNull MappedStatement statement, @NonNull String sql) {
+    protected void setSqlSource(@NonNull MappedStatement statement, @NonNull String sql) {
         SqlSource sqlSource = langDriver.createSqlSource(statement.getConfiguration(), sql.trim(), null);
-        injectSqlSource(statement, sqlSource);
+        setSqlSource(statement, sqlSource);
     }
     
     /**
@@ -117,7 +117,7 @@ public abstract class BaseProvider {
      * @param statement
      * @param sqlSource
      */
-    protected void injectSqlSource(MappedStatement statement, SqlSource sqlSource) {
+    protected void setSqlSource(MappedStatement statement, SqlSource sqlSource) {
         MetaObject metaObject = SystemMetaObject.forObject(statement);
         metaObject.setValue(StatementFields.SQL_SOURCE, sqlSource);
     }
@@ -127,7 +127,7 @@ public abstract class BaseProvider {
      *
      * @param statement
      */
-    protected void injectResultMaps(MappedStatement statement) {
+    protected void setResultMaps(MappedStatement statement) {
         List<ResultMapping> resultMappings = Lists.newArrayList();
         for (Column column : columnStruct) {
             resultMappings.add(new ResultMapping.Builder(statement.getConfiguration(), column.getFieldName())
@@ -151,7 +151,7 @@ public abstract class BaseProvider {
      * @param statement
      * @param singleClass
      */
-    protected void injectSingleResultMaps(MappedStatement statement, Class<?> singleClass) {
+    protected void setSingleResultMaps(MappedStatement statement, Class<?> singleClass) {
         String id = getStatementId(statement);
         ResultMap resultMap = new ResultMap.Builder(statement.getConfiguration(), id, singleClass, new ArrayList<>())
                 .build();

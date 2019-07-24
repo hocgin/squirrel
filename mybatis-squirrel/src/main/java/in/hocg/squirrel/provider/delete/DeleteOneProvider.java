@@ -31,6 +31,6 @@ public class DeleteOneProvider extends BaseProvider {
                 .WHERE(SqlScripts.idEq(tableStruct.getKeyFieldName()))
                 .toString();
         
-        injectSqlSource(statement, sql);
+        setSqlSource(statement, sql);
     }
 }
