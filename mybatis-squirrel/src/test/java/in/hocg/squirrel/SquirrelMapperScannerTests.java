@@ -1,8 +1,7 @@
 package in.hocg.squirrel;
 
-import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 /**
  * Created by hocgin on 2019/7/14.
@@ -10,10 +9,10 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author hocgin
  */
-class SquirrelMapperScannerTest {
+class SquirrelMapperScannerTests {
     
     @Test
     void doScan() {
-    
+        System.out.println("??");
     }
 }
