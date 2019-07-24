@@ -2,9 +2,10 @@ package in.hocg.squirrel.builder;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
-import in.hocg.squirrel.core.Constants;
+import in.hocg.squirrel.constant.Constants;
 import in.hocg.squirrel.utils.TextFormatter;
 import lombok.NonNull;
+import lombok.experimental.UtilityClass;
 import org.apache.ibatis.jdbc.SQL;
 
 import java.util.*;
@@ -15,6 +16,7 @@ import java.util.*;
  *
  * @author hocgin
  */
+@UtilityClass
 public class XmlScripts {
     private static final String SCRIPT = "script";
     private static final String IF = "if";
@@ -100,12 +102,14 @@ public class XmlScripts {
     public static String in(String columnName,
                             String collection,
                             String item) {
-        String sql = String.format("%s%s%s", columnName,
+        String sql = TextFormatter.format("{columnName}{in}{foreach}",
+                columnName,
                 SqlKeyword.IN.getValue(),
                 foreach(collection, item,
                         SqlKeyword.SPLIT.getValue(),
                         SqlKeyword.SPLIT_PREFIX.getValue(),
-                        SqlKeyword.SPLIT_SUFFIX.getValue())
+                        SqlKeyword.SPLIT_SUFFIX.getValue()
+                )
         );
         
         return ifNotNull(collection, sql);
@@ -186,10 +190,6 @@ public class XmlScripts {
     
     public static String update(String tableName) {
         return new SQL().UPDATE(tableName).toString();
-    }
-    
-    public static void main(String[] args) {
-        System.out.println(update("Xx"));
     }
     
     /**

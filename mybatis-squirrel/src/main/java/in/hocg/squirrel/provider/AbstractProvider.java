@@ -1,7 +1,7 @@
 package in.hocg.squirrel.provider;
 
 import com.google.common.collect.Lists;
-import in.hocg.squirrel.core.StatementFields;
+import in.hocg.squirrel.constant.StatementFields;
 import in.hocg.squirrel.metadata.TableUtility;
 import in.hocg.squirrel.metadata.struct.Column;
 import in.hocg.squirrel.metadata.struct.Table;

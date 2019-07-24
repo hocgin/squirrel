@@ -1,4 +1,4 @@
-package in.hocg.squirrel.core.annotation;
+package in.hocg.squirrel.annotation;
 
 import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.executor.keygen.NoKeyGenerator;

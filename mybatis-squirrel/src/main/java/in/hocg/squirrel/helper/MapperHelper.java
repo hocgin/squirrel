@@ -1,4 +1,4 @@
-package in.hocg.squirrel.core.helper;
+package in.hocg.squirrel.helper;
 
 import in.hocg.squirrel.exception.SquirrelException;
 

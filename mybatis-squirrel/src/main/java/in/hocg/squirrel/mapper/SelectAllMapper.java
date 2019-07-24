@@ -1,10 +1,9 @@
-package in.hocg.squirrel.mapper.select;
+package in.hocg.squirrel.mapper;
 
 import in.hocg.squirrel.provider.AbstractProvider;
-import in.hocg.squirrel.provider.methods.SelectAllProvider;
+import in.hocg.squirrel.provider.SelectAllProvider;
 import org.apache.ibatis.annotations.SelectProvider;
 
-import java.io.Serializable;
 import java.util.Collection;
 
 /**

@@ -1,4 +1,4 @@
-package in.hocg.squirrel.core.annotation;
+package in.hocg.squirrel.annotation;
 
 import java.lang.annotation.*;
 

@@ -1,6 +1,7 @@
 package in.hocg.squirrel.builder;
 
-import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 /**
  * Created by hocgin on 2019-07-22.
@@ -8,7 +9,8 @@ import lombok.AllArgsConstructor;
  *
  * @author hocgin
  */
-@AllArgsConstructor
+@Getter
+@RequiredArgsConstructor
 public enum SqlKeyword {
     EQ(" = "),
     NEQ(" <> "),
@@ -41,13 +43,6 @@ public enum SqlKeyword {
     SPLIT_SUFFIX(" ) "),
     WHERE(" WHERE ");
     
-    private String value;
+    private final String value;
     
-    public String getValue() {
-        return value;
-    }
-    
-    public void setValue(String value) {
-        this.value = value;
-    }
 }

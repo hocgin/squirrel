@@ -1,7 +1,7 @@
-package in.hocg.squirrel.provider.methods;
+package in.hocg.squirrel.provider;
 
 import in.hocg.squirrel.builder.XmlScripts;
-import in.hocg.squirrel.core.Constants;
+import in.hocg.squirrel.constant.Constants;
 import in.hocg.squirrel.metadata.ColumnUtility;
 import in.hocg.squirrel.metadata.struct.Column;
 import in.hocg.squirrel.metadata.struct.Table;
@@ -19,30 +19,29 @@ import java.util.List;
  * @author hocgin
  */
 @Slf4j
-public class SelectBatchProvider extends AbstractProvider {
+public class SelectOneProvider extends AbstractProvider {
     
-    public SelectBatchProvider(Class<?> mapperClass, Class<?> entityClass, Method method) {
+    public SelectOneProvider(Class<?> mapperClass, Class<?> entityClass, Method method) {
         super(mapperClass, entityClass, method);
     }
     
     @Override
     public void build(MappedStatement statement) {
         
-        Table table = getTable();
+        Table tableStruct = getTable();
         
         List<Column> columns = getColumns();
-        String[] columnsName = ColumnUtility.getColumnNames(columns);
-        
+        String[] columnNames = ColumnUtility.getColumnNames(columns);
+    
         String sql = XmlScripts.script(
-                XmlScripts.select(table.getTableName(), columnsName),
+                XmlScripts.select(tableStruct.getTableName(), columnNames),
                 XmlScripts.where(
-                        XmlScripts.in(table.getKeyColumnName(), Constants.ARRAY_PARAMETER, Constants.KEY_PARAMETER)
+                        XmlScripts.eq(tableStruct.getKeyColumnName(), Constants.KEY_PARAMETER)
                 )
         );
         
         setSqlSource(statement, sql);
         
-        // 设置结果
         setResultMaps(statement);
     }
     

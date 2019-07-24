@@ -1,9 +1,9 @@
 package in.hocg.squirrel.sample.module.domain;
 
 
-import in.hocg.squirrel.core.annotation.Column;
-import in.hocg.squirrel.core.annotation.Id;
-import in.hocg.squirrel.core.annotation.Table;
+import in.hocg.squirrel.annotation.Column;
+import in.hocg.squirrel.annotation.Id;
+import in.hocg.squirrel.annotation.Table;
 import lombok.Data;
 import lombok.ToString;
 import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;

@@ -1,10 +1,8 @@
 package in.hocg.squirrel.mapper;
 
 import in.hocg.squirrel.provider.AbstractProvider;
-import in.hocg.squirrel.provider.methods.CountAllProvider;
+import in.hocg.squirrel.provider.CountAllProvider;
 import org.apache.ibatis.annotations.SelectProvider;
-
-import java.io.Serializable;
 
 /**
  * Created by hocgin on 2019-07-19.

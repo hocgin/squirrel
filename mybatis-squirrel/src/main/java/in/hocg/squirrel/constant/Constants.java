@@ -1,4 +1,4 @@
-package in.hocg.squirrel.core;
+package in.hocg.squirrel.constant;
 
 import lombok.experimental.UtilityClass;
 
@@ -12,9 +12,19 @@ import lombok.experimental.UtilityClass;
 public class Constants {
     public static final String COMMA = ".";
     
+    /**
+     * 主键参数名
+     */
     public static final String KEY_PARAMETER = "id";
+    
+    /**
+     * 数组参数名
+     */
     public static final String ARRAY_PARAMETER = "array";
     
+    /**
+     * 实体参数名
+     */
     public static final String BEAN_PARAMETER = "bean";
     
     

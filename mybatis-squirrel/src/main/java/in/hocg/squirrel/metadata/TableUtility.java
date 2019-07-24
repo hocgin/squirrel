@@ -77,7 +77,7 @@ public class TableUtility {
      * @return
      */
     private static Table loadTableMetadata(Class<?> entityClass) {
-        in.hocg.squirrel.core.annotation.Table table = entityClass.getAnnotation(in.hocg.squirrel.core.annotation.Table.class);
+        in.hocg.squirrel.annotation.Table table = entityClass.getAnnotation(in.hocg.squirrel.annotation.Table.class);
         if (Objects.isNull(table)) {
             throw SquirrelException.wrap("在 {entityClass} 未找到 @Table", entityClass);
         }

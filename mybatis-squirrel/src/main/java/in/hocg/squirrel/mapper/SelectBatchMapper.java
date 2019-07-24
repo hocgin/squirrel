@@ -1,8 +1,8 @@
-package in.hocg.squirrel.mapper.select;
+package in.hocg.squirrel.mapper;
 
-import in.hocg.squirrel.core.Constants;
+import in.hocg.squirrel.constant.Constants;
 import in.hocg.squirrel.provider.AbstractProvider;
-import in.hocg.squirrel.provider.methods.SelectBatchProvider;
+import in.hocg.squirrel.provider.SelectBatchProvider;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.SelectProvider;
 

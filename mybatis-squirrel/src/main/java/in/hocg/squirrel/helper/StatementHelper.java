@@ -1,8 +1,8 @@
-package in.hocg.squirrel.core.helper;
+package in.hocg.squirrel.helper;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import in.hocg.squirrel.core.Constants;
+import in.hocg.squirrel.constant.Constants;
 import in.hocg.squirrel.exception.SquirrelException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.cache.Cache;

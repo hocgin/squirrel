@@ -1,12 +1,10 @@
-package in.hocg.squirrel.mapper.update;
+package in.hocg.squirrel.mapper;
 
-import in.hocg.squirrel.core.Constants;
+import in.hocg.squirrel.constant.Constants;
 import in.hocg.squirrel.provider.AbstractProvider;
-import in.hocg.squirrel.provider.methods.UpdateOneProvider;
+import in.hocg.squirrel.provider.UpdateOneProvider;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.UpdateProvider;
-
-import java.io.Serializable;
 
 /**
  * Created by hocgin on 2019/7/14.

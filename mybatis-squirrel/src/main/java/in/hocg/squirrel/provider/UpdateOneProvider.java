@@ -1,7 +1,7 @@
-package in.hocg.squirrel.provider.methods;
+package in.hocg.squirrel.provider;
 
 import in.hocg.squirrel.builder.XmlScripts;
-import in.hocg.squirrel.core.Constants;
+import in.hocg.squirrel.constant.Constants;
 import in.hocg.squirrel.metadata.struct.Column;
 import in.hocg.squirrel.metadata.struct.Table;
 import in.hocg.squirrel.provider.AbstractProvider;

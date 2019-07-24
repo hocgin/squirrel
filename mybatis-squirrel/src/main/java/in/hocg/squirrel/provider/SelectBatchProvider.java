@@ -1,11 +1,12 @@
-package in.hocg.squirrel.provider.methods;
+package in.hocg.squirrel.provider;
 
+import in.hocg.squirrel.builder.XmlScripts;
+import in.hocg.squirrel.constant.Constants;
 import in.hocg.squirrel.metadata.ColumnUtility;
 import in.hocg.squirrel.metadata.struct.Column;
 import in.hocg.squirrel.metadata.struct.Table;
 import in.hocg.squirrel.provider.AbstractProvider;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.jdbc.SQL;
 import org.apache.ibatis.mapping.MappedStatement;
 
 import java.lang.reflect.Method;
@@ -18,9 +19,9 @@ import java.util.List;
  * @author hocgin
  */
 @Slf4j
-public class InsertOneProvider extends AbstractProvider {
+public class SelectBatchProvider extends AbstractProvider {
     
-    public InsertOneProvider(Class<?> mapperClass, Class<?> entityClass, Method method) {
+    public SelectBatchProvider(Class<?> mapperClass, Class<?> entityClass, Method method) {
         super(mapperClass, entityClass, method);
     }
     
@@ -30,17 +31,19 @@ public class InsertOneProvider extends AbstractProvider {
         Table table = getTable();
         
         List<Column> columns = getColumns();
-        String[] columnNames = ColumnUtility.getColumnNames(columns);
-        String[] columnParameters = ColumnUtility.getColumnParameters(columns);
+        String[] columnsName = ColumnUtility.getColumnNames(columns);
         
-        String sql = new SQL()
-                .INSERT_INTO(table.getTableName())
-                .INTO_COLUMNS(columnNames)
-                .INTO_VALUES(columnParameters)
-                .toString();
+        String sql = XmlScripts.script(
+                XmlScripts.select(table.getTableName(), columnsName),
+                XmlScripts.where(
+                        XmlScripts.in(table.getKeyColumnName(), Constants.ARRAY_PARAMETER, Constants.KEY_PARAMETER)
+                )
+        );
         
         setSqlSource(statement, sql);
         
-        setKeyGenerator(statement, table.getKeyFieldName(), table.getKeyColumnName(), table.getKeyGenerator());
+        // 设置结果
+        setResultMaps(statement);
     }
+    
 }

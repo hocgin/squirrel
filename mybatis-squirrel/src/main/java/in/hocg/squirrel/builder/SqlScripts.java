@@ -1,7 +1,8 @@
 package in.hocg.squirrel.builder;
 
-import in.hocg.squirrel.core.Constants;
+import in.hocg.squirrel.constant.Constants;
 import lombok.NonNull;
+import lombok.experimental.UtilityClass;
 
 /**
  * Created by hocgin on 2019-07-23.
@@ -9,6 +10,7 @@ import lombok.NonNull;
  *
  * @author hocgin
  */
+@UtilityClass
 public class SqlScripts {
     
     /**

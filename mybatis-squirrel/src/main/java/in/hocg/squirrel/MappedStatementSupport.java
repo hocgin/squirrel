@@ -1,7 +1,7 @@
 package in.hocg.squirrel;
 
-import in.hocg.squirrel.core.helper.ProviderHelper;
-import in.hocg.squirrel.core.helper.StatementHelper;
+import in.hocg.squirrel.helper.ProviderHelper;
+import in.hocg.squirrel.helper.StatementHelper;
 import in.hocg.squirrel.provider.AbstractProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.builder.annotation.ProviderSqlSource;

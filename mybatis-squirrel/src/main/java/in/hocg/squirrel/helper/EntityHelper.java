@@ -1,4 +1,4 @@
-package in.hocg.squirrel.core.helper;
+package in.hocg.squirrel.helper;
 
 import com.google.common.collect.Maps;
 import in.hocg.squirrel.exception.SquirrelException;

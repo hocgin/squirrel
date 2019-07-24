@@ -1,8 +1,8 @@
-package in.hocg.squirrel.mapper.delete;
+package in.hocg.squirrel.mapper;
 
-import in.hocg.squirrel.core.Constants;
+import in.hocg.squirrel.constant.Constants;
 import in.hocg.squirrel.provider.AbstractProvider;
-import in.hocg.squirrel.provider.methods.DeleteOneProvider;
+import in.hocg.squirrel.provider.DeleteOneProvider;
 import org.apache.ibatis.annotations.DeleteProvider;
 import org.apache.ibatis.annotations.Param;
 

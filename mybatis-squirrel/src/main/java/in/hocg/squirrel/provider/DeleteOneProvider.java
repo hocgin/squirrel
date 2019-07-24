@@ -1,4 +1,4 @@
-package in.hocg.squirrel.provider.methods;
+package in.hocg.squirrel.provider;
 
 import in.hocg.squirrel.builder.SqlScripts;
 import in.hocg.squirrel.metadata.struct.Table;

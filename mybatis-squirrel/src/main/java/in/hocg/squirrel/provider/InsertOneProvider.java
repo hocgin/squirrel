@@ -1,12 +1,11 @@
-package in.hocg.squirrel.provider.methods;
+package in.hocg.squirrel.provider;
 
-import in.hocg.squirrel.builder.XmlScripts;
-import in.hocg.squirrel.core.Constants;
 import in.hocg.squirrel.metadata.ColumnUtility;
 import in.hocg.squirrel.metadata.struct.Column;
 import in.hocg.squirrel.metadata.struct.Table;
 import in.hocg.squirrel.provider.AbstractProvider;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.jdbc.SQL;
 import org.apache.ibatis.mapping.MappedStatement;
 
 import java.lang.reflect.Method;
@@ -19,30 +18,29 @@ import java.util.List;
  * @author hocgin
  */
 @Slf4j
-public class SelectOneProvider extends AbstractProvider {
+public class InsertOneProvider extends AbstractProvider {
     
-    public SelectOneProvider(Class<?> mapperClass, Class<?> entityClass, Method method) {
+    public InsertOneProvider(Class<?> mapperClass, Class<?> entityClass, Method method) {
         super(mapperClass, entityClass, method);
     }
     
     @Override
     public void build(MappedStatement statement) {
         
-        Table tableStruct = getTable();
+        Table table = getTable();
         
         List<Column> columns = getColumns();
         String[] columnNames = ColumnUtility.getColumnNames(columns);
-    
-        String sql = XmlScripts.script(
-                XmlScripts.select(tableStruct.getTableName(), columnNames),
-                XmlScripts.where(
-                        XmlScripts.eq(tableStruct.getKeyColumnName(), Constants.KEY_PARAMETER)
-                )
-        );
+        String[] columnParameters = ColumnUtility.getColumnParameters(columns);
+        
+        String sql = new SQL()
+                .INSERT_INTO(table.getTableName())
+                .INTO_COLUMNS(columnNames)
+                .INTO_VALUES(columnParameters)
+                .toString();
         
         setSqlSource(statement, sql);
         
-        setResultMaps(statement);
+        setKeyGenerator(statement, table.getKeyFieldName(), table.getKeyColumnName(), table.getKeyGenerator());
     }
-    
 }

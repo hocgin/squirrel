@@ -1,8 +1,8 @@
 package in.hocg.squirrel.metadata;
 
 import com.google.common.collect.Lists;
-import in.hocg.squirrel.core.Constants;
-import in.hocg.squirrel.core.annotation.Id;
+import in.hocg.squirrel.constant.Constants;
+import in.hocg.squirrel.annotation.Id;
 import in.hocg.squirrel.exception.SquirrelException;
 import in.hocg.squirrel.metadata.struct.Column;
 import in.hocg.squirrel.metadata.struct.Table;
@@ -107,8 +107,8 @@ public class ColumnUtility {
      */
     public static JdbcType getJdbcType(Field field) {
         JdbcType jdbcType = null;
-        if (field.isAnnotationPresent(in.hocg.squirrel.core.annotation.Column.class)) {
-            in.hocg.squirrel.core.annotation.Column column = field.getAnnotation(in.hocg.squirrel.core.annotation.Column.class);
+        if (field.isAnnotationPresent(in.hocg.squirrel.annotation.Column.class)) {
+            in.hocg.squirrel.annotation.Column column = field.getAnnotation(in.hocg.squirrel.annotation.Column.class);
             jdbcType = column.jdbcType();
         }
         return Objects.isNull(jdbcType) ? JdbcType.JAVA_OBJECT : jdbcType;
@@ -123,8 +123,8 @@ public class ColumnUtility {
      */
     public static String getColumnName(Field field) {
         String fieldName = null;
-        if (field.isAnnotationPresent(in.hocg.squirrel.core.annotation.Column.class)) {
-            in.hocg.squirrel.core.annotation.Column column = field.getAnnotation(in.hocg.squirrel.core.annotation.Column.class);
+        if (field.isAnnotationPresent(in.hocg.squirrel.annotation.Column.class)) {
+            in.hocg.squirrel.annotation.Column column = field.getAnnotation(in.hocg.squirrel.annotation.Column.class);
             fieldName = column.name();
         }
         return Strings.isBlank(fieldName) ? field.getName() : fieldName;
