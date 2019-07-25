@@ -1,6 +1,7 @@
 package in.hocg.squirrel.sample.module.mapper;
 
 
+import in.hocg.squirrel.page.Pageable;
 import in.hocg.squirrel.sample.module.domain.Example;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -29,7 +30,7 @@ public class ExampleMapperTest {
     
     @Test
     public void selectOne() {
-        Optional<Example> example = mapper.selectOne(1L);
+        Optional<Example> example = mapper.selectById(1L);
         log.debug("执行结果: {}", example);
     }
     
@@ -38,13 +39,13 @@ public class ExampleMapperTest {
         Example entity = new Example();
         entity.setCreatedAt(LocalDateTime.now());
         entity.setName("?");
-        int result = mapper.insertOne(entity);
+        int result = mapper.insert(entity);
         log.debug("执行结果: {} entity:{}", result, entity);
     }
 
     @Test
     public void deleteOne() {
-        int result = mapper.deleteOne(1L);
+        int result = mapper.deleteById(1L);
         log.debug("执行结果: {}", result);
     }
 
@@ -62,7 +63,7 @@ public class ExampleMapperTest {
 
     @Test
     public void selectBatch() {
-        List<Example> result = mapper.selectBatch(1L, 2L, 3L);
+        List<Example> result = mapper.selectBatchIds(1L, 2L, 3L);
         log.debug("执行结果: {}", result);
     }
 
@@ -72,7 +73,22 @@ public class ExampleMapperTest {
         entity.setId(2L);
         entity.setName("66");
         entity.setCreatedAt(LocalDateTime.now());
-        int result = mapper.updateOne(entity);
+        int result = mapper.updateById(entity);
         log.debug("执行结果: {}", result);
+    }
+    
+    @Test
+    public void test() {
+        mapper.page(new Pageable() {
+            @Override
+            public int getPage() {
+                return 0;
+            }
+        
+            @Override
+            public int getSize() {
+                return 0;
+            }
+        });
     }
 }

@@ -2,8 +2,7 @@ package in.hocg.squirrel.mapper;
 
 import in.hocg.squirrel.constant.Constants;
 import in.hocg.squirrel.provider.AbstractProvider;
-import in.hocg.squirrel.provider.InsertOneProvider;
-import org.apache.ibatis.annotations.InsertProvider;
+import in.hocg.squirrel.provider.InsertProvider;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -12,7 +11,7 @@ import org.apache.ibatis.annotations.Param;
  *
  * @author hocgin
  */
-public interface InsertOneMapper<T> {
+public interface InsertMapper<T> {
     
     /**
      * 新增
@@ -20,6 +19,6 @@ public interface InsertOneMapper<T> {
      * @param bean
      * @return 影响的行数
      */
-    @InsertProvider(type = InsertOneProvider.class, method = AbstractProvider.PROVIDER_PROXY_METHOD)
-    int insertOne(@Param(Constants.BEAN_PARAMETER) T bean);
+    @org.apache.ibatis.annotations.InsertProvider(type = InsertProvider.class, method = AbstractProvider.PROVIDER_PROXY_METHOD)
+    int insert(@Param(Constants.BEAN_PARAMETER) T bean);
 }

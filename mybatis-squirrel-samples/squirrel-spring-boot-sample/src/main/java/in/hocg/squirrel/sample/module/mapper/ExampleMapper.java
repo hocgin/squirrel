@@ -1,12 +1,7 @@
 package in.hocg.squirrel.sample.module.mapper;
 
-import in.hocg.squirrel.mapper.CountAllMapper;
-import in.hocg.squirrel.mapper.DeleteOneMapper;
-import in.hocg.squirrel.mapper.InsertOneMapper;
-import in.hocg.squirrel.mapper.SelectAllMapper;
-import in.hocg.squirrel.mapper.SelectBatchMapper;
-import in.hocg.squirrel.mapper.SelectOneMapper;
-import in.hocg.squirrel.mapper.UpdateOneMapper;
+import in.hocg.squirrel.mapper.*;
+import in.hocg.squirrel.page.Pageable;
 import in.hocg.squirrel.sample.module.domain.Example;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -22,12 +17,12 @@ import java.util.Optional;
 public interface ExampleMapper
         extends
         CountAllMapper<Example>,
-        SelectOneMapper<Example>,
-        DeleteOneMapper<Example>,
-        UpdateOneMapper<Example>,
+        SelectByIdMapper<Example>,
+        DeleteByIdMapper<Example>,
+        UpdateByIdMapper<Example>,
         SelectBatchMapper<Example>,
         SelectAllMapper<Example>,
-        InsertOneMapper<Example> {
+        InsertMapper<Example> {
     
     /**
      * 查找一条数据
@@ -35,6 +30,6 @@ public interface ExampleMapper
      *
      * @return
      */
-    Optional<Example> findFirst();
+    Optional<Example> page(Pageable pageable);
     
 }

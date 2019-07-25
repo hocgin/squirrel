@@ -16,9 +16,9 @@ import java.lang.reflect.Method;
  * @author hocgin
  */
 @Slf4j
-public class DeleteOneProvider extends AbstractProvider {
+public class DeleteByIdProvider extends AbstractProvider {
     
-    public DeleteOneProvider(Class<?> mapperClass, Class<?> entityClass, Method method) {
+    public DeleteByIdProvider(Class<?> mapperClass, Class<?> entityClass, Method method) {
         super(mapperClass, entityClass, method);
     }
     

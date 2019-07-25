@@ -1,7 +1,7 @@
 package in.hocg.squirrel.provider;
 
 import com.google.common.collect.Lists;
-import in.hocg.squirrel.constant.StatementFields;
+import in.hocg.squirrel.constant.MappedStatementFields;
 import in.hocg.squirrel.metadata.TableUtility;
 import in.hocg.squirrel.metadata.struct.Column;
 import in.hocg.squirrel.metadata.struct.Table;
@@ -118,7 +118,7 @@ public abstract class AbstractProvider implements BuildProvider {
      */
     protected void setSqlSource(MappedStatement statement, SqlSource sqlSource) {
         MetaObject metaObject = SystemMetaObject.forObject(statement);
-        metaObject.setValue(StatementFields.SQL_SOURCE, sqlSource);
+        metaObject.setValue(MappedStatementFields.SQL_SOURCE, sqlSource);
     }
     
     /**
@@ -143,7 +143,7 @@ public abstract class AbstractProvider implements BuildProvider {
                 resultMappings,
                 true).build();
         SystemMetaObject.forObject(statement)
-                .setValue(StatementFields.RESULT_MAPS, Collections.unmodifiableList(Arrays.asList(resultMap)));
+                .setValue(MappedStatementFields.RESULT_MAPS, Collections.unmodifiableList(Arrays.asList(resultMap)));
     }
     
     /**
@@ -158,7 +158,7 @@ public abstract class AbstractProvider implements BuildProvider {
                 clazz,
                 new ArrayList<>()).build();
         SystemMetaObject.forObject(statement)
-                .setValue(StatementFields.RESULT_MAPS, Collections.unmodifiableList(Arrays.asList(resultMap)));
+                .setValue(MappedStatementFields.RESULT_MAPS, Collections.unmodifiableList(Arrays.asList(resultMap)));
     }
     
     /**
@@ -185,9 +185,9 @@ public abstract class AbstractProvider implements BuildProvider {
                                    KeyGenerator keyGenerator) {
         if (Objects.nonNull(keyGenerator)) {
             MetaObject metaObject = SystemMetaObject.forObject(statement);
-            metaObject.setValue(StatementFields.KEY_PROPERTIES, new String[]{keyProperties});
-            metaObject.setValue(StatementFields.KEY_COLUMNS, new String[]{keyColumnName});
-            metaObject.setValue(StatementFields.KEY_GENERATOR, keyGenerator);
+            metaObject.setValue(MappedStatementFields.KEY_PROPERTIES, new String[]{keyProperties});
+            metaObject.setValue(MappedStatementFields.KEY_COLUMNS, new String[]{keyColumnName});
+            metaObject.setValue(MappedStatementFields.KEY_GENERATOR, keyGenerator);
         }
     }
     

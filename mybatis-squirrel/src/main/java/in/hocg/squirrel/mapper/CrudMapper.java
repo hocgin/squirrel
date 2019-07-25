@@ -8,8 +8,8 @@ package in.hocg.squirrel.mapper;
  */
 public interface CrudMapper<T>
         extends
-        DeleteOneMapper<T>,
-        InsertOneMapper<T>,
-        UpdateOneMapper<T>,
+        DeleteByIdMapper<T>,
+        InsertMapper<T>,
+        UpdateByIdMapper<T>,
         SelectAllMapper<T> {
 }

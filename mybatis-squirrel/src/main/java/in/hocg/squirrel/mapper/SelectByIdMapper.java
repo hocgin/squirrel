@@ -2,7 +2,7 @@ package in.hocg.squirrel.mapper;
 
 import in.hocg.squirrel.constant.Constants;
 import in.hocg.squirrel.provider.AbstractProvider;
-import in.hocg.squirrel.provider.SelectOneProvider;
+import in.hocg.squirrel.provider.SelectByIdProvider;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.SelectProvider;
 
@@ -15,7 +15,7 @@ import java.util.Optional;
  *
  * @author hocgin
  */
-public interface SelectOneMapper<T> {
+public interface SelectByIdMapper<T> {
     
     /**
      * 查询单个
@@ -23,6 +23,6 @@ public interface SelectOneMapper<T> {
      * @param id
      * @return
      */
-    @SelectProvider(type = SelectOneProvider.class, method = AbstractProvider.PROVIDER_PROXY_METHOD)
-    Optional<T> selectOne(@Param(Constants.KEY_PARAMETER) Serializable id);
+    @SelectProvider(type = SelectByIdProvider.class, method = AbstractProvider.PROVIDER_PROXY_METHOD)
+    Optional<T> selectById(@Param(Constants.KEY_PARAMETER) Serializable id);
 }
