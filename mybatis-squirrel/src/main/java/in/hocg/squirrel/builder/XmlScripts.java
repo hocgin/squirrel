@@ -57,7 +57,7 @@ public class XmlScripts {
      * @return
      */
     public static String ifNotNull(@NonNull String param, String... inner) {
-        return _if(TextFormatter.format("'{param} != null'", param), inner);
+        return _if(TextFormatter.format("{param} != null", param), inner);
     }
     
     /**
@@ -184,7 +184,7 @@ public class XmlScripts {
      * @param columns
      * @return
      */
-    public static String select(String tableName, String[] columns) {
+    public static String select(@NonNull String tableName, @NonNull String[] columns) {
         return new SQL().SELECT(columns).FROM(tableName).toString();
     }
     
