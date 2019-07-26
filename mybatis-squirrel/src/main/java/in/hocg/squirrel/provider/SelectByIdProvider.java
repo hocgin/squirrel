@@ -19,9 +19,9 @@ import java.util.List;
  * @author hocgin
  */
 @Slf4j
-public class SelectOneProvider extends AbstractProvider {
+public class SelectByIdProvider extends AbstractProvider {
     
-    public SelectOneProvider(Class<?> mapperClass, Class<?> entityClass, Method method) {
+    public SelectByIdProvider(Class<?> mapperClass, Class<?> entityClass, Method method) {
         super(mapperClass, entityClass, method);
     }
     

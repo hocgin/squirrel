@@ -11,7 +11,7 @@ import lombok.experimental.UtilityClass;
  * @author hocgin
  */
 @UtilityClass
-public class StatementFields {
+public class MappedStatementFields {
     
     /**
      * 结果映射

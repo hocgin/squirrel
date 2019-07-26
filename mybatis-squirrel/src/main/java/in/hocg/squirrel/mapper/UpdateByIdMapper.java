@@ -2,7 +2,7 @@ package in.hocg.squirrel.mapper;
 
 import in.hocg.squirrel.constant.Constants;
 import in.hocg.squirrel.provider.AbstractProvider;
-import in.hocg.squirrel.provider.UpdateOneProvider;
+import in.hocg.squirrel.provider.UpdateByIdProvider;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.UpdateProvider;
 
@@ -12,7 +12,7 @@ import org.apache.ibatis.annotations.UpdateProvider;
  *
  * @author hocgin
  */
-public interface UpdateOneMapper<T> {
+public interface UpdateByIdMapper<T> {
     
     /**
      * 更新
@@ -20,6 +20,6 @@ public interface UpdateOneMapper<T> {
      * @param entity
      * @return
      */
-    @UpdateProvider(type = UpdateOneProvider.class, method = AbstractProvider.PROVIDER_PROXY_METHOD)
-    int updateOne(@Param(Constants.BEAN_PARAMETER) T entity);
+    @UpdateProvider(type = UpdateByIdProvider.class, method = AbstractProvider.PROVIDER_PROXY_METHOD)
+    int updateById(@Param(Constants.BEAN_PARAMETER) T entity);
 }

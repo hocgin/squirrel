@@ -3,7 +3,6 @@ package in.hocg.squirrel.provider;
 import in.hocg.squirrel.metadata.ColumnUtility;
 import in.hocg.squirrel.metadata.struct.Column;
 import in.hocg.squirrel.metadata.struct.Table;
-import in.hocg.squirrel.provider.AbstractProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.jdbc.SQL;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -18,9 +17,9 @@ import java.util.List;
  * @author hocgin
  */
 @Slf4j
-public class InsertOneProvider extends AbstractProvider {
+public class InsertProvider extends AbstractProvider {
     
-    public InsertOneProvider(Class<?> mapperClass, Class<?> entityClass, Method method) {
+    public InsertProvider(Class<?> mapperClass, Class<?> entityClass, Method method) {
         super(mapperClass, entityClass, method);
     }
     

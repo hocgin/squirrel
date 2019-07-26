@@ -1,6 +1,7 @@
 package in.hocg.squirrel.spring;
 
 import in.hocg.squirrel.MappedStatementSupport;
+import in.hocg.squirrel.intercepts.PageableInterceptor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
@@ -74,5 +75,7 @@ public class MapperFactoryBean<T> extends SqlSessionDaoSupport
         if (configuration.hasMapper(this.mapperInterface)) {
             mappedStatementSupport.support(new ArrayList<>(configuration.getMappedStatements()));
         }
+    
+        configuration.addInterceptor(new PageableInterceptor());
     }
 }

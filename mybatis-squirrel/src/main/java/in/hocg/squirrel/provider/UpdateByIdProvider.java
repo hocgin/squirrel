@@ -19,9 +19,9 @@ import java.util.List;
  * @author hocgin
  */
 @Slf4j
-public class UpdateOneProvider extends AbstractProvider {
+public class UpdateByIdProvider extends AbstractProvider {
     
-    public UpdateOneProvider(Class<?> mapperClass, Class<?> entityClass, Method method) {
+    public UpdateByIdProvider(Class<?> mapperClass, Class<?> entityClass, Method method) {
         super(mapperClass, entityClass, method);
     }
     
