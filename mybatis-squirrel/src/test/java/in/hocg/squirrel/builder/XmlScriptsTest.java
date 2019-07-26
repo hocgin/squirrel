@@ -64,8 +64,8 @@ class XmlScriptsTest {
     @Test
     void node1() {
         HashMap<String, String> attrs = new HashMap<>();
-        String anIffI = XmlScripts.node("if", "fi", attrs, "A.ID >= #{id}");
-        Assertions.assertEquals(anIffI, "<if test=\"id != null && id != ''\">A.ID >= #{id}</fi>");
+        String anIffI = XmlScripts.node("where", "where", attrs, "A.ID >= #{id}");
+        Assertions.assertEquals(anIffI, "<where>A.ID >= #{id}</where>");
     }
     
     @Test
