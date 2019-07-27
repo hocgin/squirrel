@@ -4,6 +4,7 @@ import in.hocg.squirrel.mapper.*;
 import in.hocg.squirrel.page.Pageable;
 import in.hocg.squirrel.sample.module.domain.Example;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.Optional;
 
@@ -30,6 +31,6 @@ public interface ExampleMapper
      *
      * @return
      */
-    Optional<Example> page(Pageable pageable);
+    Optional<Example> page(@Param("pageable") Pageable pageable);
     
 }
