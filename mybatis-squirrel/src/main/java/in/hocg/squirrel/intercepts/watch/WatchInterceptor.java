@@ -6,6 +6,7 @@ import in.hocg.squirrel.intercepts.AbstractInterceptor;
 import in.hocg.squirrel.utils.Pretty;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.executor.statement.StatementHandler;
+import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.plugin.Intercepts;
 import org.apache.ibatis.plugin.Invocation;
@@ -15,7 +16,6 @@ import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.SystemMetaObject;
 import org.apache.ibatis.session.ResultHandler;
 
-import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.sql.Statement;
 import java.util.StringJoiner;
@@ -39,8 +39,6 @@ import java.util.StringJoiner;
         })
 })
 public class WatchInterceptor extends AbstractInterceptor {
-    private static final String DruidPooledPreparedStatement = "com.alibaba.druid.pool.DruidPooledPreparedStatement";
-    private Method druidGetSQLMethod;
     
     @Override
     public Object plugin(Object target) {
@@ -54,35 +52,17 @@ public class WatchInterceptor extends AbstractInterceptor {
     public Object intercept(Invocation invocation) throws Throwable {
         Object[] args = invocation.getArgs();
         Statement statement = getStatement(args[0]);
-        String originalSql = "N/A";
         
-        String statementClassName = statement.getClass().getName();
-        if (DruidPooledPreparedStatement.equals(statementClassName)) {
-            try {
-                if (druidGetSQLMethod == null) {
-                    Class<?> clazz = Class.forName(DruidPooledPreparedStatement);
-                    druidGetSQLMethod = clazz.getMethod("getSql");
-                }
-                Object stmtSql = druidGetSQLMethod.invoke(statement);
-                if (stmtSql instanceof String) {
-                    originalSql = (String) stmtSql;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            originalSql = statement.toString();
-        }
-        
-        originalSql = Pretty.sql(originalSql);
         
         Stopwatch stopwatch = Stopwatch.createStarted();
         Object result = invocation.proceed();
         stopwatch.stop();
-        
-        Object target = getTarget(invocation.getTarget());
+    
+        StatementHandler target = getTarget(invocation.getTarget());
         MetaObject metaObject = SystemMetaObject.forObject(target);
         MappedStatement mappedStatement = (MappedStatement) metaObject.getValue(StatementHandlerFields.DELEGATE__MAPPED_STATEMENT);
+        BoundSql boundSql = target.getBoundSql();
+        String originalSql = Pretty.sql(boundSql);
     
         StringJoiner stringJoiner = new StringJoiner(System.lineSeparator())
                 .add("")

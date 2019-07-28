@@ -11,4 +11,5 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class BoundSqlFields {
     public static final String SQL = "sql";
+    public static final String PARAMETER_OBJECT = "parameterObject";
 }
