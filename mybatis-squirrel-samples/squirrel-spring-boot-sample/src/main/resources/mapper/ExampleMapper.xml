@@ -7,10 +7,8 @@
         ${alias}.createdAt
     </sql>
 
-    <select id="findFirst" resultType="in.hocg.squirrel.sample.module.domain.Example">
+    <select id="page" resultType="in.hocg.squirrel.sample.module.domain.Example">
         SELECT te.*
         FROM t_example te
-        LIMIT 1
     </select>
-    <select id="page" resultType="in.hocg.squirrel.sample.module.domain.Example"></select>
 </mapper>

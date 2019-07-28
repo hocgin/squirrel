@@ -1,6 +1,7 @@
 package in.hocg.squirrel.sample.module.mapper;
 
 
+import in.hocg.squirrel.page.Page;
 import in.hocg.squirrel.page.Pageable;
 import in.hocg.squirrel.sample.module.domain.Example;
 import lombok.extern.slf4j.Slf4j;
@@ -79,16 +80,7 @@ public class ExampleMapperTest {
     
     @Test
     public void test() {
-        mapper.page(new Pageable() {
-            @Override
-            public int getPage() {
-                return 0;
-            }
-        
-            @Override
-            public int getSize() {
-                return 0;
-            }
-        });
+        Page<Example> result = mapper.page(Pageable.of(1, 10));
+        log.debug("执行结果: {}", result);
     }
 }

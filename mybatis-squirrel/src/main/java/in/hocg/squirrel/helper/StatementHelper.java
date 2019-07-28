@@ -110,4 +110,8 @@ public class StatementHelper {
         MAPPER_CLASS_CACHE.putObject(mapperClassName, mapperClass);
         return mapperClass;
     }
+    
+    public static String getStatementId(MappedStatement statement) {
+        return String.format("%s-Inline", statement.getId());
+    }
 }

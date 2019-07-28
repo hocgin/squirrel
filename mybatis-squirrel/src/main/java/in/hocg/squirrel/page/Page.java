@@ -17,26 +17,36 @@ import static java.util.stream.Collectors.toList;
 public interface Page<T> extends Serializable {
     
     /**
-     * 设置当前页
+     * 是否进行总数统计
+     * - 进行总数统计会使用 COUNT 进行查询, 当数据量大的时候或者不需要使用总数时建议设置为 false
      *
-     * @param current
      * @return
      */
-    Page<T> setCurrent(long current);
+    default boolean isSearchCount() {
+        return true;
+    }
+    
+    /**
+     * 设置当前页
+     *
+     * @param page
+     * @return
+     */
+    Page<T> setPage(int page);
     
     /**
      * 获取当前页
      *
      * @return
      */
-    long getCurrent();
+    int getPage();
     
     /**
      * 分页显示数量
      *
      * @return
      */
-    long getSize();
+    int getSize();
     
     /**
      * 设置分页显示数量
@@ -44,7 +54,7 @@ public interface Page<T> extends Serializable {
      * @param size
      * @return
      */
-    Page<T> setSize(long size);
+    Page<T> setSize(int size);
     
     /**
      * 查询数据总数
@@ -98,7 +108,7 @@ public interface Page<T> extends Serializable {
      * @return
      */
     default long offset() {
-        return getCurrent() > 0 ? (getCurrent() - 1) * getSize() : 0;
+        return getPage() > 0 ? (getPage() - 1) * getSize() : 0;
     }
     
     /**

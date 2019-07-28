@@ -34,25 +34,29 @@ public class MappedStatementSupport {
             StatementHelper.addMappedStatement(statement);
         }
         // ..
-        handleProviderMethod();
+        handleMappedStatementMethods();
     }
     
     /**
      * 处理标记 @XXProvider 映射的函数生成 MappedStatement
      */
-    private void handleProviderMethod() {
+    private void handleMappedStatementMethods() {
         Collection<MappedStatement> mappedStatements = StatementHelper.getMappedStatement();
         for (MappedStatement statement : mappedStatements) {
-            String mappedStatementId = statement.getId();
-            if (!StatementHelper.isBuiltMappedStatement(mappedStatementId)
-                    && (statement.getSqlSource() instanceof ProviderSqlSource)) {
-                AbstractProvider provider = ProviderHelper.getMethodProvider(mappedStatementId);
+            String statementId = statement.getId();
+            if (StatementHelper.isBuiltMappedStatement(statementId)) {
+                continue;
+            }
+            
+            // 如果是使用 @XXProvider
+            if (statement.getSqlSource() instanceof ProviderSqlSource) {
+                AbstractProvider provider = ProviderHelper.getMethodProvider(statementId);
                 
                 // 调用对应的 Provider 处理器，生成 MappedStatement 实例
                 provider.invokeProviderBuildMethod(statement);
                 
                 // 标记为已加载
-                StatementHelper.addBuiltMappedStatement(mappedStatementId);
+                StatementHelper.addBuiltMappedStatement(statementId);
             }
         }
     }
