@@ -5,6 +5,7 @@ import in.hocg.squirrel.page.Page;
 import in.hocg.squirrel.page.Pageable;
 import in.hocg.squirrel.sample.module.domain.Example;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.session.RowBounds;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,6 +82,14 @@ public class ExampleMapperTest {
     @Test
     public void test() {
         Page<Example> result = mapper.page(Pageable.of(1, 10));
-        log.debug("执行结果: {}", result);
+        log.debug("执行结果1: {}", result);
+        log.debug("执行结果2: {}", mapper.page2(2));
+        System.out.println();
+    }
+    
+    @Test
+    public void test3() {
+        List<Example> arg = mapper.page3(new RowBounds(0, 2));
+        log.debug("执行结果3: {}", arg);
     }
 }

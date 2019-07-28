@@ -1,5 +1,6 @@
 package in.hocg.squirrel.intercepts.pageable;
 
+import in.hocg.squirrel.constant.BoundSqlFields;
 import in.hocg.squirrel.intercepts.AbstractInterceptor;
 import in.hocg.squirrel.page.Page;
 import in.hocg.squirrel.utils.TextFormatter;
@@ -46,28 +47,40 @@ public class PageableInterceptor extends AbstractInterceptor {
     
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
-        MappedStatement statement = (MappedStatement) invocation.getArgs()[0];
-        Object parameter = invocation.getArgs()[1];
-        RowBounds rowBounds = (RowBounds) invocation.getArgs()[2];
-        ResultHandler resultHandler = (ResultHandler) invocation.getArgs()[3];
+        Object[] args = invocation.getArgs();
+        MappedStatement statement = (MappedStatement) args[0];
+        Object parameter = args[1];
         Optional<Page<?>> optional = getPageable(parameter);
         
         if (StatementType.CALLABLE.equals(statement.getStatementType())
                 || !optional.isPresent()) {
             return invocation.proceed();
         }
+        RowBounds rowBounds = (RowBounds) args[2];
+        ResultHandler resultHandler = (ResultHandler) args[3];
+        Executor executor = getTarget(invocation.getTarget());
+        BoundSql boundSql;
+        CacheKey cacheKey;
+        if (args.length == 4) {
+            boundSql = statement.getBoundSql(parameter);
+            cacheKey = executor.createCacheKey(statement, parameter, rowBounds, boundSql);
+        } else {
+            cacheKey = (CacheKey) args[4];
+            boundSql = (BoundSql) args[5];
+        }
+        
         Page<?> pageable = optional.get();
         
-        Executor executor = getTarget(invocation.getTarget());
-        
-        
+        // 如果不需要获取总数
         if (pageable.isSearchCount()) {
-            long total = getTotal(statement, parameter, rowBounds, resultHandler, executor);
+            long total = getTotal(statement, boundSql, parameter,
+                    rowBounds, resultHandler, executor);
             pageable.setTotal(total);
         }
         
-        // 设置分页SQL
-        List records = getRecords(statement, parameter, rowBounds, resultHandler, executor, pageable);
+        // 获取数据
+        List records = getRecords(statement, boundSql, cacheKey, parameter,
+                rowBounds, resultHandler, executor, pageable);
         pageable.setRecords(records);
         
         return Collections.unmodifiableList(Arrays.asList(pageable));
@@ -85,18 +98,17 @@ public class PageableInterceptor extends AbstractInterceptor {
      * @return
      * @throws java.sql.SQLException
      */
-    private List getRecords(MappedStatement statement,
+    private List<?> getRecords(MappedStatement statement,
+                            BoundSql boundSql,
+                            CacheKey cacheKey,
                             Object parameter,
                             RowBounds rowBounds,
                             ResultHandler resultHandler,
                             Executor executor,
                             Page<?> pageable) throws java.sql.SQLException {
-        BoundSql boundSql = statement.getBoundSql(parameter);
-        String selectSql = getPageableSql(boundSql, pageable);
-        SystemMetaObject.forObject(boundSql)
-                .setValue("sql", selectSql);
-        
-        return executor.query(statement, parameter, rowBounds, resultHandler);
+        String selectSql = getPageableSql(boundSql, pageable.offset(), pageable.getSize());
+        SystemMetaObject.forObject(boundSql).setValue(BoundSqlFields.SQL, selectSql);
+        return executor.query(statement, parameter, rowBounds, resultHandler, cacheKey, boundSql);
     }
     
     /**
@@ -111,17 +123,17 @@ public class PageableInterceptor extends AbstractInterceptor {
      * @throws java.sql.SQLException
      */
     private long getTotal(MappedStatement statement,
+                          BoundSql boundSql,
                           Object parameter,
                           RowBounds rowBounds,
                           ResultHandler resultHandler,
                           Executor executor) throws java.sql.SQLException {
         Configuration configuration = statement.getConfiguration();
-        String id = statement.getId() + "#count";
+        String id = statement.getId() + "#Count";
         
         if (configuration.hasStatement(id)) {
             statement = configuration.getMappedStatement(id);
         } else {
-            BoundSql boundSql = statement.getBoundSql(parameter);
             String countSql = getCountSql(boundSql);
             SqlSource sqlSource = new StaticSqlSource(configuration, countSql, boundSql.getParameterMappings());
             ResultMap resultMap = new ResultMap.Builder(configuration,
@@ -141,10 +153,11 @@ public class PageableInterceptor extends AbstractInterceptor {
      * 设置分页参数
      *
      * @param boundSql
-     * @param pageable
+     * @param offset
+     * @param size
      */
-    private String getPageableSql(BoundSql boundSql, Page pageable) {
-        return TextFormatter.format("{sql}\nLIMIT {offset}, {size}", boundSql.getSql(), pageable.offset(), pageable.getSize());
+    private String getPageableSql(BoundSql boundSql, long offset, int size) {
+        return TextFormatter.format("{sql}\nLIMIT {offset}, {size}", boundSql.getSql(), offset, size);
     }
     
     /**
@@ -165,6 +178,8 @@ public class PageableInterceptor extends AbstractInterceptor {
      * @return
      */
     private Optional<Page<?>> getPageable(Object parameter) {
+        
+        // 多个函数参数
         if (parameter instanceof Map) {
             Map<String, Object> parameterMap = (Map<String, Object>) parameter;
             for (String k : parameterMap.keySet()) {
@@ -173,6 +188,10 @@ public class PageableInterceptor extends AbstractInterceptor {
                     return Optional.of((Page<?>) v);
                 }
             }
+        }
+        // 单个函数参数
+        else if (parameter instanceof Page) {
+            return Optional.of((Page<?>) parameter);
         }
         return Optional.empty();
     }

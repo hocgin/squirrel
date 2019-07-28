@@ -6,6 +6,9 @@ import in.hocg.squirrel.page.Pageable;
 import in.hocg.squirrel.sample.module.domain.Example;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.session.RowBounds;
+
+import java.util.List;
 
 /**
  * Created by hocgin on 2019/5/25.
@@ -31,5 +34,9 @@ public interface ExampleMapper
      * @return
      */
     Pageable<Example> page(@Param("pageable") Page pageable);
+    
+    List<Example> page2(Integer intt);
+    
+    List<Example> page3(RowBounds rowBounds);
     
 }
