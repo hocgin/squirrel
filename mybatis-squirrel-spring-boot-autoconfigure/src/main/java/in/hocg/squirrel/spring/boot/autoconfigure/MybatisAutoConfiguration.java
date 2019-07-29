@@ -15,6 +15,7 @@
  */
 package in.hocg.squirrel.spring.boot.autoconfigure;
 
+import in.hocg.squirrel.spring.MapperFactoryBean;
 import in.hocg.squirrel.spring.SquirrelClassPathMapperScanner;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.mapping.DatabaseIdProvider;
@@ -24,7 +25,6 @@ import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
-import org.mybatis.spring.mapper.MapperFactoryBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactory;
