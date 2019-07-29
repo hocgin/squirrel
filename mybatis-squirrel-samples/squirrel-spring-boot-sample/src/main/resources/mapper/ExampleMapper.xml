@@ -13,6 +13,6 @@
     </select>
     <select id="page3" resultType="in.hocg.squirrel.sample.module.domain.Example">
         SELECT te.*
-        FROM t_example
+        FROM t_example te
     </select>
 </mapper>

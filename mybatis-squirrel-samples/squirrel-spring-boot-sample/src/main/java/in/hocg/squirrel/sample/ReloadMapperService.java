@@ -1,5 +1,7 @@
 package in.hocg.squirrel.sample;
 
+import in.hocg.squirrel.spring.boot.autoconfigure.MybatisAutoConfiguration;
+import in.hocg.squirrel.spring.boot.autoconfigure.MybatisProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
 import org.apache.ibatis.builder.xml.XMLMapperEntityResolver;
@@ -9,18 +11,16 @@ import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.SystemMetaObject;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.io.Resource;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.*;
-import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 /**
@@ -28,46 +28,45 @@ import java.util.stream.Collectors;
  * @date 2019/7/29
  */
 @Slf4j
-@Component
+@org.springframework.context.annotation.Configuration
+@AutoConfigureAfter({MybatisAutoConfiguration.class})
 public class ReloadMapperService implements InitializingBean, ApplicationContextAware {
-    private SqlSessionFactoryBean sqlSessionFactoryBean;
+    private Resource[] mapperResources;
     private Configuration configuration;
+    private ApplicationContext applicationContext;
     
     @Override
     public void afterPropertiesSet() throws Exception {
         log.debug("启动监听🐕");
-        Executors.newFixedThreadPool(1).submit(new WatchDog());
+        SqlSessionFactory sqlSessionFactory = applicationContext.getBean(SqlSessionFactory.class);
+        MybatisProperties mybatisProperties = applicationContext.getBean(MybatisProperties.class);
+        mapperResources = mybatisProperties.resolveMapperLocations();
+//        sqlSessionFactoryBean = applicationContext.getBean(SqlSessionFactoryBean.class);
+        configuration = sqlSessionFactory.getConfiguration();
+        new WatchDog().start();
+        
     }
     
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        SqlSessionFactory sqlSessionFactory = applicationContext.getBean(SqlSessionFactory.class);
-//        MybatisProperties mybatisProperties = applicationContext.getBean(MybatisProperties.class);
-        sqlSessionFactoryBean = applicationContext.getBean(SqlSessionFactoryBean.class);
-        configuration = sqlSessionFactory.getConfiguration();
+        this.applicationContext = applicationContext;
     }
     
-    class WatchDog implements Runnable {
+    class WatchDog extends Thread {
         
         @Override
         public void run() {
-            try {
-                WatchService watcher = FileSystems.getDefault().newWatchService();
-                getWatchPaths().forEach(p -> {
-                    try {
-                        Paths.get(p).register(watcher, StandardWatchEventKinds.ENTRY_MODIFY);
-                    } catch (Exception e) {
-                        log.error("ERROR: 注册xml监听事件", e);
-                        throw new RuntimeException("ERROR: 注册xml监听事件", e);
-                    }
-                });
+            
+            try (WatchService watchService = FileSystems.getDefault().newWatchService()) {
+                for (String path : getWatchPaths()) {
+                    Paths.get(path).register(watchService, StandardWatchEventKinds.ENTRY_MODIFY);
+                }
                 while (true) {
-                    WatchKey watchKey = watcher.take();
+                    WatchKey watchKey = watchService.take();
                     Set<String> set = new HashSet<>();
                     for (WatchEvent<?> event : watchKey.pollEvents()) {
                         set.add(event.context().toString());
                     }
-                    // 重新加载xml
                     reloadXml(set);
                     boolean valid = watchKey.reset();
                     if (!valid) {
@@ -75,7 +74,7 @@ public class ReloadMapperService implements InitializingBean, ApplicationContext
                     }
                 }
             } catch (IOException | InterruptedException e) {
-                log.error("error：", e);
+                log.error("", e);
             }
         }
         
@@ -161,8 +160,7 @@ public class ReloadMapperService implements InitializingBean, ApplicationContext
         }
         
         private Resource[] getResource() {
-            Object mapperLocations = SystemMetaObject.forObject(sqlSessionFactoryBean).getValue("mapperLocations");
-            return (Resource[]) mapperLocations;
+            return mapperResources;
         }
         
     }
