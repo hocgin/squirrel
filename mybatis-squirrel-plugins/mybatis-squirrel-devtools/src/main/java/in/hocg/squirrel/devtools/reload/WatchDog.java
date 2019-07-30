@@ -1,4 +1,4 @@
-package in.hocg.squirrel.devtools;
+package in.hocg.squirrel.devtools.reload;
 
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;

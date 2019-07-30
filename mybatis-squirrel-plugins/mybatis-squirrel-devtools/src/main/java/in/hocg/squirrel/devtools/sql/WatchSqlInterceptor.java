@@ -1,4 +1,4 @@
-package in.hocg.squirrel.intercepts.watch;
+package in.hocg.squirrel.devtools.sql;
 
 import com.google.common.base.Stopwatch;
 import in.hocg.squirrel.constant.StatementHandlerFields;
@@ -38,7 +38,7 @@ import java.util.StringJoiner;
                 Statement.class
         })
 })
-public class WatchInterceptor extends AbstractInterceptor {
+public class WatchSqlInterceptor extends AbstractInterceptor {
     
     @Override
     public Object plugin(Object target) {

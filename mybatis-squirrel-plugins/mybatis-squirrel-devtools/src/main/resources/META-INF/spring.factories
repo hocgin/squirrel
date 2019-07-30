@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  in.hocg.squirrel.devtools.MybatisMapperRefreshAutoConfiguration
+  in.hocg.squirrel.devtools.DevtoolsAutoConfiguration

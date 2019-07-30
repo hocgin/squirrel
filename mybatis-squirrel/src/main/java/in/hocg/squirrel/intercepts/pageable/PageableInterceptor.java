@@ -129,7 +129,7 @@ public class PageableInterceptor extends AbstractInterceptor {
                           ResultHandler resultHandler,
                           Executor executor) throws java.sql.SQLException {
         Configuration configuration = statement.getConfiguration();
-        String id = statement.getId() + "#Count";
+        String id = statement.getId() + "#count";
         
         if (configuration.hasStatement(id)) {
             statement = configuration.getMappedStatement(id);
