@@ -14,7 +14,7 @@ import org.springframework.context.ApplicationContext;
 public class MybatisWatchSql {
     
     public MybatisWatchSql(ApplicationContext applicationContext) {
-        log.debug("启动 监听SQL");
+        log.debug("启动监听 SQL");
         SqlSessionFactory sqlSessionFactory = applicationContext.getBean(SqlSessionFactory.class);
         sqlSessionFactory.getConfiguration().addInterceptor(new WatchSqlInterceptor());
     }
