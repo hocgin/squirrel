@@ -15,6 +15,7 @@
  */
 package in.hocg.squirrel;
 
+import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.binding.MapperRegistry;
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
@@ -24,10 +25,13 @@ import org.apache.ibatis.executor.keygen.SelectKeyGenerator;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
+import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.parsing.XNode;
 import org.apache.ibatis.parsing.XPathParser;
+import org.apache.ibatis.reflection.SystemMetaObject;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.defaults.DefaultSqlSession;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -36,7 +40,6 @@ import org.springframework.util.ResourceUtils;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.nio.file.*;
 import java.util.*;
 
 /**
@@ -103,31 +106,19 @@ public class MybatisMapperRefresh2 implements Runnable {
          * 启动 XML 热加载
          */
         if (enabled) {
-            try (WatchService watchService = FileSystems.getDefault().newWatchService()) {
-                for (String path : getWatchPaths()) {
-                    String url = path.substring(0, path.lastIndexOf(File.separator));
-                    Paths.get(url).register(watchService, StandardWatchEventKinds.ENTRY_MODIFY);
+            try {
+                Thread.sleep(8 * 1000);
+                for (String filePath : getWatchPaths()) {
+                    File file = new File(filePath);
+                    if (file.isFile() && file.lastModified() > beforeTime) {
+                        refresh(new FileSystemResource(file));
+                    }
+                    beforeTime = System.currentTimeMillis();
                 }
-                while (true) {
-                    WatchKey watchKey = watchService.take();
-                    Set<String> set = new HashSet<>();
-                    for (WatchEvent<?> event : watchKey.pollEvents()) {
-                        set.add(event.context().toString());
-                    }
-                    for (String file : getWatchPaths()) {
-                        try {
-                            refresh(new FileSystemResource(file));
-                        } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) {
-                            log.error("刷新错误", e);
-                        }
-                    }
-                    boolean valid = watchKey.reset();
-                    if (!valid) {
-                        break;
-                    }
-                }
-            } catch (IOException | InterruptedException e) {
-                log.error("", e);
+            } catch (IllegalAccessException | ClassNotFoundException | NoSuchFieldException | InterruptedException e) {
+                // e.printStackTrace();
+            } finally {
+                this.run();
             }
         }
     }
@@ -155,6 +146,7 @@ public class MybatisMapperRefresh2 implements Runnable {
             loadedResourcesSet.remove(resource.toString());
             configuration.getCacheNames().remove(namespace);
             cleanParameterMap(context.evalNodes("/mapper/parameterMap"), namespace);
+            cleanMappedStatement(context.evalNodes("insert|update|select|delete"), namespace);
             cleanResultMap(context.evalNodes("/mapper/resultMap"), namespace);
             cleanKeyGenerators(context.evalNodes("insert|update"), namespace);
             cleanSqlElement(context.evalNodes("/mapper/sql"), namespace);
@@ -177,11 +169,25 @@ public class MybatisMapperRefresh2 implements Runnable {
      * @param namespace ignore
      */
     @SuppressWarnings("unlikely-arg-type")
-	private void cleanParameterMap(List<XNode> list, String namespace) {
+    private void cleanParameterMap(List<XNode> list, String namespace) {
         for (XNode parameterMapNode : list) {
             String id = parameterMapNode.getStringAttribute("id");
             configuration.getParameterMaps().remove(namespace + "." + id);
         }
+    }
+    private void cleanMappedStatement(List<XNode> list, String namespace) {
+        Collection<MappedStatement> mappedStatements = configuration.getMappedStatements();
+        Map<String, MappedStatement> mappedStatementMap = Maps.newHashMap();
+        for (MappedStatement mappedStatement : mappedStatements) {
+            mappedStatementMap.put(mappedStatement.getId(), mappedStatement);
+        }
+        for (XNode node : list) {
+            String id = node.getStringAttribute("id");
+            mappedStatementMap.remove(namespace + "." + id);
+        }
+        DefaultSqlSession.StrictMap<Object> objectStrictMap = new DefaultSqlSession.StrictMap<>();
+        objectStrictMap.putAll(mappedStatementMap);
+        SystemMetaObject.forObject(configuration).setValue("mappedStatements", objectStrictMap);
     }
 
     /**

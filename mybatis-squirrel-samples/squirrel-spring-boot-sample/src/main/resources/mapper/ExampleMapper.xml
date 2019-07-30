@@ -12,7 +12,7 @@
         FROM t_example te
     </select>
     <select id="page3" resultType="in.hocg.squirrel.sample.module.domain.Example">
-        SELECT tete.*
-        FROM t_example tete
+        SELECT tetetetetetetete.*
+        FROM t_example tetetetetetetete
     </select>
 </mapper>
