@@ -1,5 +1,6 @@
 package in.hocg.squirrel.sample;
 
+import in.hocg.squirrel.MybatisMapperRefresh2;
 import in.hocg.squirrel.spring.boot.autoconfigure.MybatisAutoConfiguration;
 import in.hocg.squirrel.spring.boot.autoconfigure.MybatisProperties;
 import lombok.extern.slf4j.Slf4j;
@@ -43,7 +44,9 @@ public class ReloadMapperService implements InitializingBean, ApplicationContext
         mapperResources = mybatisProperties.resolveMapperLocations();
 //        sqlSessionFactoryBean = applicationContext.getBean(SqlSessionFactoryBean.class);
         configuration = sqlSessionFactory.getConfiguration();
-        new WatchDog().start();
+        new Thread(()->{
+            new MybatisMapperRefresh2(mapperResources, sqlSessionFactory, true);
+        }).run();
         
     }
     
@@ -56,7 +59,6 @@ public class ReloadMapperService implements InitializingBean, ApplicationContext
         
         @Override
         public void run() {
-            
             try (WatchService watchService = FileSystems.getDefault().newWatchService()) {
                 for (String path : getWatchPaths()) {
                     Paths.get(path).register(watchService, StandardWatchEventKinds.ENTRY_MODIFY);
