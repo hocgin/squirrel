@@ -76,7 +76,7 @@ public interface Page<T> extends Serializable {
      *
      * @return
      */
-    default long getPages() {
+    default long getTotalPage() {
         if (getSize() == 0) {
             return 0L;
         }

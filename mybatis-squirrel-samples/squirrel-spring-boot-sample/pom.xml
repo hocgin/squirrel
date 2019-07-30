@@ -26,6 +26,11 @@
         </dependency>
         <dependency>
             <groupId>in.hocg.squirrel</groupId>
+            <artifactId>mybatis-squirrel-devtools</artifactId>
+            <version>2.7.1</version>
+        </dependency>
+        <dependency>
+            <groupId>in.hocg.squirrel</groupId>
             <artifactId>mybatis-squirrel-spring-boot-starter</artifactId>
         </dependency>
         <dependency>

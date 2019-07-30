@@ -11,6 +11,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>mybatis-squirrel-plugins</artifactId>
+    <packaging>pom</packaging>
 
+    <modules>
+        <module>mybatis-squirrel-devtools</module>
+    </modules>
 
 </project>

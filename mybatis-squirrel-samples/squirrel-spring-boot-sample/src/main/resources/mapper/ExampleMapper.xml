@@ -5,6 +5,7 @@
     <select id="page" resultType="in.hocg.squirrel.sample.module.domain.Example">
         SELECT te.*
         FROM t_example te
+        WHERE te.id IN(1)
     </select>
 
     <select id="page2" resultType="in.hocg.squirrel.sample.module.domain.Example">
@@ -12,7 +13,7 @@
         FROM t_example te
     </select>
     <select id="page3" resultType="in.hocg.squirrel.sample.module.domain.Example">
-        SELECT tetetetetetetete.*
-        FROM t_example tetetetetetetete
+        SELECT tete.*
+        FROM t_example tete
     </select>
 </mapper>

@@ -67,7 +67,7 @@ public class Pageable<T> implements Page<T> {
      * @return true / false
      */
     public boolean hasNext() {
-        return this.page < this.getPages();
+        return this.page < this.getTotalPage();
     }
     
     

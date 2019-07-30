@@ -1,19 +1,4 @@
-/*
- * Copyright (c) 2011-2020, baomidou (jobob@qq.com).
- * <p>
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- * <p>
- * https://www.apache.org/licenses/LICENSE-2.0
- * <p>
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
-package in.hocg.squirrel;
+package in.hocg.squirrel.devtools;
 
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
@@ -23,8 +8,6 @@ import org.apache.ibatis.builder.xml.XMLMapperEntityResolver;
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.executor.keygen.SelectKeyGenerator;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.logging.Log;
-import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.parsing.XNode;
 import org.apache.ibatis.parsing.XPathParser;
@@ -34,8 +17,6 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.defaults.DefaultSqlSession;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import org.springframework.util.ResourceUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,71 +24,37 @@ import java.lang.reflect.Field;
 import java.util.*;
 
 /**
- * 切莫用于生产环境（后果自负）
- * <p>Mybatis 映射文件热加载（发生变动后自动重新加载）.</p>
- * <p>方便开发时使用，不用每次修改xml文件后都要去重启应用.</p>
+ * Created by hocgin on 2019-07-30.
+ * email: hocgin@gmail.com
  *
- * @author nieqiurong
- * @since 2016-08-25
- * @deprecated 2018-11-26
+ * @author hocgin
  */
 @Slf4j
-@Deprecated
-public class MybatisMapperRefresh2 implements Runnable {
-
-    private static final Log logger = LogFactory.getLog(MybatisMapperRefresh2.class);
-    /**
-     * 记录jar包存在的mapper
-     */
-    private static final Map<String, List<Resource>> JAR_MAPPER = new HashMap<>();
+public class WatchDog implements Runnable {
     private final SqlSessionFactory sqlSessionFactory;
     private final Resource[] mapperLocations;
-    /**
-     * 是否开启刷新mapper
-     */
     private final boolean enabled;
     private Long beforeTime = 0L;
-    private Configuration configuration;
-    /**
-     * xml文件目录
-     */
     private Set<String> fileSet;
-    /**
-     * 延迟加载时间
-     */
-    private int delaySeconds = 10;
-    /**
-     * 刷新间隔时间
-     */
-    private int sleepSeconds = 20;
-
-    public MybatisMapperRefresh2(Resource[] mapperLocations, SqlSessionFactory sqlSessionFactory, int delaySeconds,
-                                 int sleepSeconds, boolean enabled) {
-        this.mapperLocations = mapperLocations.clone();
-        this.sqlSessionFactory = sqlSessionFactory;
-        this.delaySeconds = delaySeconds;
-        this.enabled = enabled;
-        this.sleepSeconds = sleepSeconds;
-        this.configuration = sqlSessionFactory.getConfiguration();
-        this.run();
-    }
-
-    public MybatisMapperRefresh2(Resource[] mapperLocations, SqlSessionFactory sqlSessionFactory, boolean enabled) {
+    private Configuration configuration;
+    private int delaySeconds = 1;
+    private int sleepSeconds = 1;
+    
+    public WatchDog(Resource[] mapperLocations,
+                    SqlSessionFactory sqlSessionFactory,
+                    boolean enabled) {
         this.mapperLocations = mapperLocations.clone();
         this.sqlSessionFactory = sqlSessionFactory;
         this.enabled = enabled;
         this.configuration = sqlSessionFactory.getConfiguration();
         this.run();
     }
-
+    
     @Override
     public void run() {
-        /*
-         * 启动 XML 热加载
-         */
         if (enabled) {
             try {
-                Thread.sleep(8 * 1000);
+                Thread.sleep(delaySeconds * 1000);
                 for (String filePath : getWatchPaths()) {
                     File file = new File(filePath);
                     if (file.isFile() && file.lastModified() > beforeTime) {
@@ -115,28 +62,33 @@ public class MybatisMapperRefresh2 implements Runnable {
                     }
                     beforeTime = System.currentTimeMillis();
                 }
+                Thread.sleep(sleepSeconds * 1000);
             } catch (IllegalAccessException | ClassNotFoundException | NoSuchFieldException | InterruptedException e) {
-                // e.printStackTrace();
+                log.error("监控文件刷新出错:", e);
             } finally {
                 this.run();
             }
         }
     }
-
+    
     /**
-     * 刷新mapper
+     * 刷新 Mapper 文件
+     *
+     * @param resource
+     * @throws ClassNotFoundException
+     * @throws NoSuchFieldException
+     * @throws IllegalAccessException
      */
-    @SuppressWarnings("rawtypes")
     private void refresh(Resource resource) throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
         this.configuration = sqlSessionFactory.getConfiguration();
         boolean isSupper = configuration.getClass().getSuperclass() == Configuration.class;
         try {
             Field loadedResourcesField = isSupper ? configuration.getClass().getSuperclass().getDeclaredField("loadedResources")
-                : configuration.getClass().getDeclaredField("loadedResources");
+                    : configuration.getClass().getDeclaredField("loadedResources");
             loadedResourcesField.setAccessible(true);
             Set loadedResourcesSet = ((Set) loadedResourcesField.get(configuration));
             XPathParser xPathParser = new XPathParser(resource.getInputStream(), true, configuration.getVariables(),
-                new XMLMapperEntityResolver());
+                    new XMLMapperEntityResolver());
             XNode context = xPathParser.evalNode("/mapper");
             String namespace = context.getStringAttribute("namespace");
             Field field = MapperRegistry.class.getDeclaredField("knownMappers");
@@ -151,30 +103,37 @@ public class MybatisMapperRefresh2 implements Runnable {
             cleanKeyGenerators(context.evalNodes("insert|update"), namespace);
             cleanSqlElement(context.evalNodes("/mapper/sql"), namespace);
             XMLMapperBuilder xmlMapperBuilder = new XMLMapperBuilder(resource.getInputStream(),
-                sqlSessionFactory.getConfiguration(),
-                resource.toString(), sqlSessionFactory.getConfiguration().getSqlFragments());
+                    sqlSessionFactory.getConfiguration(),
+                    resource.toString(), sqlSessionFactory.getConfiguration().getSqlFragments());
             xmlMapperBuilder.parse();
-            logger.debug("refresh: '" + resource + "', success!");
+            log.debug("刷新 Mapper 文件: {}", resource);
         } catch (IOException e) {
-            logger.error("Refresh IOException :" + e.getMessage());
+            log.error("刷新 Mapper 文件错误:", e);
         } finally {
             ErrorContext.instance().reset();
         }
     }
-
+    
+    
     /**
-     * 清理parameterMap
+     * 清除参数
      *
-     * @param list      ignore
-     * @param namespace ignore
+     * @param list
+     * @param namespace
      */
-    @SuppressWarnings("unlikely-arg-type")
     private void cleanParameterMap(List<XNode> list, String namespace) {
         for (XNode parameterMapNode : list) {
             String id = parameterMapNode.getStringAttribute("id");
             configuration.getParameterMaps().remove(namespace + "." + id);
         }
     }
+    
+    /**
+     * 清除 MappedStatement
+     *
+     * @param list
+     * @param namespace
+     */
     private void cleanMappedStatement(List<XNode> list, String namespace) {
         Collection<MappedStatement> mappedStatements = configuration.getMappedStatements();
         Map<String, MappedStatement> mappedStatementMap = Maps.newHashMap();
@@ -189,12 +148,12 @@ public class MybatisMapperRefresh2 implements Runnable {
         objectStrictMap.putAll(mappedStatementMap);
         SystemMetaObject.forObject(configuration).setValue("mappedStatements", objectStrictMap);
     }
-
+    
     /**
-     * 清理resultMap
+     * 清除 resultMap 节点
      *
-     * @param list      ignore
-     * @param namespace ignore
+     * @param list
+     * @param namespace
      */
     private void cleanResultMap(List<XNode> list, String namespace) {
         for (XNode resultMapNode : list) {
@@ -204,16 +163,22 @@ public class MybatisMapperRefresh2 implements Runnable {
             clearResultMap(resultMapNode, namespace);
         }
     }
-
+    
+    /**
+     * 清除 resultMap 嵌套节点
+     *
+     * @param xNode
+     * @param namespace
+     */
     private void clearResultMap(XNode xNode, String namespace) {
         for (XNode resultChild : xNode.getChildren()) {
             if ("association".equals(resultChild.getName()) || "collection".equals(resultChild.getName())
-                || "case".equals(resultChild.getName())) {
+                    || "case".equals(resultChild.getName())) {
                 if (resultChild.getStringAttribute("select") == null) {
                     configuration.getResultMapNames().remove(
-                        resultChild.getStringAttribute("id", resultChild.getValueBasedIdentifier()));
+                            resultChild.getStringAttribute("id", resultChild.getValueBasedIdentifier()));
                     configuration.getResultMapNames().remove(
-                        namespace + "." + resultChild.getStringAttribute("id", resultChild.getValueBasedIdentifier()));
+                            namespace + "." + resultChild.getStringAttribute("id", resultChild.getValueBasedIdentifier()));
                     if (resultChild.getChildren() != null && !resultChild.getChildren().isEmpty()) {
                         clearResultMap(resultChild, namespace);
                     }
@@ -221,12 +186,12 @@ public class MybatisMapperRefresh2 implements Runnable {
             }
         }
     }
-
+    
     /**
-     * 清理selectKey
+     * 清除 selectKey 节点
      *
-     * @param list      ignore
-     * @param namespace ignore
+     * @param list
+     * @param namespace
      */
     private void cleanKeyGenerators(List<XNode> list, String namespace) {
         for (XNode context : list) {
@@ -235,12 +200,12 @@ public class MybatisMapperRefresh2 implements Runnable {
             configuration.getKeyGeneratorNames().remove(namespace + "." + id + SelectKeyGenerator.SELECT_KEY_SUFFIX);
         }
     }
-
+    
     /**
-     * 清理sql节点缓存
+     * 清除 SQL 节点
      *
-     * @param list      ignore
-     * @param namespace ignore
+     * @param list
+     * @param namespace
      */
     private void cleanSqlElement(List<XNode> list, String namespace) {
         for (XNode context : list) {
@@ -250,26 +215,18 @@ public class MybatisMapperRefresh2 implements Runnable {
         }
     }
     
+    /**
+     * 获取要监控的文件
+     *
+     * @return
+     */
     private Set<String> getWatchPaths() {
         if (fileSet == null) {
             fileSet = new HashSet<>();
             if (mapperLocations != null) {
                 for (Resource mapperLocation : mapperLocations) {
                     try {
-                        if (ResourceUtils.isJarURL(mapperLocation.getURL())) {
-                            String key = new UrlResource(ResourceUtils.extractJarFileURL(mapperLocation.getURL()))
-                                    .getFile().getPath();
-                            fileSet.add(key);
-                            if (JAR_MAPPER.get(key) != null) {
-                                JAR_MAPPER.get(key).add(mapperLocation);
-                            } else {
-                                List<Resource> resourcesList = new ArrayList<>();
-                                resourcesList.add(mapperLocation);
-                                JAR_MAPPER.put(key, resourcesList);
-                            }
-                        } else {
-                            fileSet.add(mapperLocation.getFile().getPath());
-                        }
+                        fileSet.add(mapperLocation.getFile().getPath());
                     } catch (IOException ioException) {
                         ioException.printStackTrace();
                     }
