@@ -83,7 +83,12 @@ public class WatchSqlInterceptor extends AbstractInterceptor {
                 ParameterMapping parameterMapping = parameterMappings.get(i);
                 if (parameterMapping.getMode() != ParameterMode.OUT) {
                     String propertyName = parameterMapping.getProperty();
-                    Object value = parameterMetaObject == null ? null : parameterMetaObject.getValue(propertyName);
+                    Object value;
+                    if (boundSql.hasAdditionalParameter(propertyName)) { // issue #448 ask first for additional params
+                        value = boundSql.getAdditionalParameter(propertyName);
+                    } else {
+                        value = parameterMetaObject == null ? null : parameterMetaObject.getValue(propertyName);
+                    }
                     JdbcType jdbcType = parameterMapping.getJdbcType();
                     // .. 处理参数设值
                     if (value instanceof String) {
