@@ -16,7 +16,14 @@ import java.util.regex.Pattern;
  */
 @Slf4j
 public class TextFormatter {
-    private static final Pattern OPEN_CLOSE = Pattern.compile("\\{.*?}");
+    /**
+     * 普通占位符
+     */
+    private static final Pattern PLACEHOLDER = Pattern.compile("\\{.*?}");
+    /**
+     * SQL 占位符
+     */
+    public static final Pattern SQL_PLACEHOLDER = Pattern.compile("\\?");
     
     public static String format(String format) {
         return format;
@@ -42,10 +49,18 @@ public class TextFormatter {
      * @param args
      * @return
      */
-    private static String arrayFormat(@NonNull final String messagePattern, @NonNull Object[] args) {
+    private static String arrayFormat(@NonNull final String messagePattern,
+                                      @NonNull Object[] args) {
+        return arrayFormat(messagePattern, args, PLACEHOLDER);
+    }
+    
+    
+    public static String arrayFormat(@NonNull final String messagePattern,
+                                      @NonNull Object[] args,
+                                      @NonNull Pattern placeholder) {
         StringBuffer sb = new StringBuffer();
         if (Strings.isNotBlank(messagePattern)) {
-            Matcher matcher = OPEN_CLOSE.matcher(messagePattern);
+            Matcher matcher = placeholder.matcher(messagePattern);
             int i = 0;
             while (matcher.find()) {
                 if (args.length < (i + 1)) {
