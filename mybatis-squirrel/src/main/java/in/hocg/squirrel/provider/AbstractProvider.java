@@ -40,7 +40,7 @@ public abstract class AbstractProvider implements BuildProvider {
     /**
      * 构建函数名
      */
-    public static final String PROVIDER_BUILD_METHOD = "buildPageableSql";
+    public static final String PROVIDER_BUILD_METHOD = "build";
     
     /**
      * Mapper 类

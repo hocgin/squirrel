@@ -11,7 +11,7 @@ import in.hocg.squirrel.utils.TextFormatter;
 public class MySqlPageableBuilder implements PageableBuilder {
     
     @Override
-    public String buildPageableSql(String sql, int offset, int size) {
+    public String buildPageableSql(String sql, long offset, long size) {
         return TextFormatter.format("{sql}\nLIMIT {offset}, {size}", sql, offset, size);
     }
 }
