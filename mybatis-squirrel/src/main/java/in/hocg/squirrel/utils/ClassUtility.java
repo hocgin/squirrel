@@ -1,4 +1,4 @@
-package in.hocg.squirrel.reflection;
+package in.hocg.squirrel.utils;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -17,15 +17,15 @@ import java.util.stream.Collectors;
  * @author hocgin
  */
 @RequiredArgsConstructor
-public class ClassKit {
+public class ClassUtility {
     /**
      * 缓存已分析的类
      */
-    private static Map<Class, ClassKit> CACHED = Maps.newHashMap();
+    private static Map<Class, ClassUtility> CACHED = Maps.newHashMap();
     private final Class<?> clazz;
     
-    public static ClassKit from(Class<?> clazz) {
-        return CACHED.computeIfAbsent(clazz, ClassKit::new);
+    public static ClassUtility from(Class<?> clazz) {
+        return CACHED.computeIfAbsent(clazz, ClassUtility::new);
     }
     
     /**
@@ -40,7 +40,7 @@ public class ClassKit {
         if (Object.class.equals(superclass)) {
             return result;
         }
-        result.addAll(ClassKit.from(superclass).getAllMethod());
+        result.addAll(ClassUtility.from(superclass).getAllMethod());
         
         return result;
     }
@@ -58,7 +58,7 @@ public class ClassKit {
         if (Object.class.equals(superclass)) {
             return result;
         }
-        result.addAll(ClassKit.from(superclass).getAllField());
+        result.addAll(ClassUtility.from(superclass).getAllField());
         return result;
     }
     
@@ -86,7 +86,7 @@ public class ClassKit {
         } catch (NoSuchFieldException e) {
             Class<?> superclass = clazz.getSuperclass();
             if (!Object.class.equals(superclass)) {
-                return ClassKit.from(superclass).getField(fieldName);
+                return ClassUtility.from(superclass).getField(fieldName);
             }
         }
         if (Objects.isNull(field)) {

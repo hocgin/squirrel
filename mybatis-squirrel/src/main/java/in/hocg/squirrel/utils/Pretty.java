@@ -17,14 +17,13 @@ import java.util.StringTokenizer;
 public class Pretty {
     
     
+    /**
+     * 美化 SQL
+     * @param boundSql
+     * @return
+     */
     public static String sql(BoundSql boundSql) {
-//        Object parameterObject = boundSql.getParameterObject();
-//        if (parameterObject instanceof MapperMethod.ParamMap) {
-//            MapperMethod.ParamMap paramMap = (MapperMethod.ParamMap) parameterObject;
-//            log.debug("{}", paramMap);
-//        }
-//
-//        log.debug("{}", parameterObject);
+        // fixme: 等待补充美化SQL..
         String sql = removeBreakingWhitespace(boundSql.getSql());
         return sql.replaceAll("[\\s]+", " ");
     }

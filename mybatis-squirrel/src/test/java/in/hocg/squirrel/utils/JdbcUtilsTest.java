@@ -14,7 +14,7 @@ class JdbcUtilsTest {
     
     @Test
     void getDialect() {
-        Dialect dialect = JdbcUtils.getDialect("jdbc:mariadb://mysql.localhost:3306/db_test?useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true");
+        Dialect dialect = JdbcUtility.getDialect("jdbc:mariadb://mysql.localhost:3306/db_test?useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true");
         Assert.isTrue(dialect.equals(Dialect.MariaDB));
     }
 }

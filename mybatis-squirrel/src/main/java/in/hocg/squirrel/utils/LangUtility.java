@@ -11,7 +11,7 @@ import java.util.Collection;
  * @author hocgin
  */
 @Slf4j
-public class LangKit {
+public class LangUtility {
     
     /**
      * 判断集合是否为 NULL 或者 空

@@ -6,8 +6,8 @@ import in.hocg.squirrel.annotation.Id;
 import in.hocg.squirrel.exception.SquirrelException;
 import in.hocg.squirrel.metadata.struct.Column;
 import in.hocg.squirrel.metadata.struct.Table;
-import in.hocg.squirrel.reflection.ClassKit;
-import in.hocg.squirrel.utils.LangKit;
+import in.hocg.squirrel.utils.ClassUtility;
+import in.hocg.squirrel.utils.LangUtility;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
@@ -39,7 +39,7 @@ public class ColumnUtility {
     public static List<Column> loadColumnMetadata(Table tableStruct, Class<?> entityClass) {
         List<Column> columns = Lists.newArrayList();
         
-        List<Field> fields = ClassKit.from(entityClass).getAllField();
+        List<Field> fields = ClassUtility.from(entityClass).getAllField();
         for (Field field : fields) {
             Column column = getMetadata(field);
             
@@ -146,7 +146,7 @@ public class ColumnUtility {
      * @return
      */
     public static String[] getColumnNames(List<Column> columnStruct) {
-        if (LangKit.isEmpty(columnStruct)) {
+        if (LangUtility.isEmpty(columnStruct)) {
             return new String[]{};
         }
         return columnStruct.stream().map(Column::getColumnName).toArray(String[]::new);
@@ -159,7 +159,7 @@ public class ColumnUtility {
      * @return
      */
     public static String[] getColumnParameters(List<Column> columnStruct) {
-        if (LangKit.isEmpty(columnStruct)) {
+        if (LangUtility.isEmpty(columnStruct)) {
             return new String[]{};
         }
         return columnStruct.stream().map((c) -> Constants.BEAN_PARAMETER_PREFIX + c.getFieldName() + Constants.PARAMETER_SUFFIX).toArray(String[]::new);

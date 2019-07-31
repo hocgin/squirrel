@@ -6,7 +6,7 @@ import in.hocg.squirrel.intercepts.AbstractInterceptor;
 import in.hocg.squirrel.intercepts.pageable.builder.PageableBuilder;
 import in.hocg.squirrel.intercepts.pageable.builder.PageableBuilderFactory;
 import in.hocg.squirrel.page.Page;
-import in.hocg.squirrel.utils.JdbcUtils;
+import in.hocg.squirrel.utils.JdbcUtility;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.builder.StaticSqlSource;
 import org.apache.ibatis.cache.CacheKey;
@@ -108,7 +108,7 @@ public class PageableInterceptor extends AbstractInterceptor {
     private Dialect getDialect(Connection connection) {
         try {
             String url = connection.getMetaData().getURL();
-            return JdbcUtils.getDialect(url);
+            return JdbcUtility.getDialect(url);
         } catch (SQLException e) {
             return Dialect.Unknown;
         }

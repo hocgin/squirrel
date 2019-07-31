@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
  * @author hocgin
  */
 @UtilityClass
-public class JdbcUtils {
+public class JdbcUtility {
     private static final Pattern PATTERN_JDBC_TYPE = Pattern.compile(":.*?:");
     
     /**
