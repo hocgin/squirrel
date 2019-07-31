@@ -1,9 +1,12 @@
 package in.hocg.squirrel.intercepts.pageable;
 
 import in.hocg.squirrel.constant.BoundSqlFields;
+import in.hocg.squirrel.core.Dialect;
 import in.hocg.squirrel.intercepts.AbstractInterceptor;
+import in.hocg.squirrel.intercepts.pageable.builder.PageableBuilder;
+import in.hocg.squirrel.intercepts.pageable.builder.PageableBuilderFactory;
 import in.hocg.squirrel.page.Page;
-import in.hocg.squirrel.utils.TextFormatter;
+import in.hocg.squirrel.utils.JdbcUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.builder.StaticSqlSource;
 import org.apache.ibatis.cache.CacheKey;
@@ -18,6 +21,8 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.*;
 
 /**
@@ -36,6 +41,8 @@ import java.util.*;
         })
 })
 public class PageableInterceptor extends AbstractInterceptor {
+    
+    private Dialect dialect;
     
     @Override
     public Object plugin(Object target) {
@@ -69,17 +76,23 @@ public class PageableInterceptor extends AbstractInterceptor {
             boundSql = (BoundSql) args[5];
         }
         
+        // 设置方言类型
+        if (Objects.isNull(dialect)) {
+            this.dialect = getDialect(executor.getTransaction().getConnection());
+        }
+        PageableBuilder builder = PageableBuilderFactory.getPageableBuilder(dialect);
+    
         Page<?> pageable = optional.get();
         
         // 如果不需要获取总数
         if (pageable.isSearchCount()) {
-            long total = getTotal(statement, boundSql, parameter,
+            long total = getTotal(builder, statement, boundSql, parameter,
                     rowBounds, resultHandler, executor);
             pageable.setTotal(total);
         }
         
         // 获取数据
-        List records = getRecords(statement, boundSql, cacheKey, parameter,
+        List records = getRecords(builder, statement, boundSql, cacheKey, parameter,
                 rowBounds, resultHandler, executor, pageable);
         pageable.setRecords(records);
         
@@ -87,8 +100,24 @@ public class PageableInterceptor extends AbstractInterceptor {
     }
     
     /**
+     * 获取方言类型
+     *
+     * @param connection
+     * @return
+     */
+    private Dialect getDialect(Connection connection) {
+        try {
+            String url = connection.getMetaData().getURL();
+            return JdbcUtils.getDialect(url);
+        } catch (SQLException e) {
+            return Dialect.Unknown;
+        }
+    }
+    
+    /**
      * 获取查询结果
      *
+     * @param builder
      * @param statement
      * @param parameter
      * @param rowBounds
@@ -98,15 +127,16 @@ public class PageableInterceptor extends AbstractInterceptor {
      * @return
      * @throws java.sql.SQLException
      */
-    private List<?> getRecords(MappedStatement statement,
-                            BoundSql boundSql,
-                            CacheKey cacheKey,
-                            Object parameter,
-                            RowBounds rowBounds,
-                            ResultHandler resultHandler,
-                            Executor executor,
-                            Page<?> pageable) throws java.sql.SQLException {
-        String selectSql = getPageableSql(boundSql, pageable.offset(), pageable.getSize());
+    private List<?> getRecords(PageableBuilder builder,
+                               MappedStatement statement,
+                               BoundSql boundSql,
+                               CacheKey cacheKey,
+                               Object parameter,
+                               RowBounds rowBounds,
+                               ResultHandler resultHandler,
+                               Executor executor,
+                               Page<?> pageable) throws java.sql.SQLException {
+        String selectSql = builder.buildPageableSql(boundSql.getSql(), pageable.offset(), pageable.getSize());
         SystemMetaObject.forObject(boundSql).setValue(BoundSqlFields.SQL, selectSql);
         return executor.query(statement, parameter, rowBounds, resultHandler, cacheKey, boundSql);
     }
@@ -114,6 +144,8 @@ public class PageableInterceptor extends AbstractInterceptor {
     /**
      * 获取总数
      *
+     *
+     * @param builder
      * @param statement
      * @param parameter
      * @param rowBounds
@@ -122,7 +154,8 @@ public class PageableInterceptor extends AbstractInterceptor {
      * @return
      * @throws java.sql.SQLException
      */
-    private long getTotal(MappedStatement statement,
+    private long getTotal(PageableBuilder builder,
+                          MappedStatement statement,
                           BoundSql boundSql,
                           Object parameter,
                           RowBounds rowBounds,
@@ -134,7 +167,7 @@ public class PageableInterceptor extends AbstractInterceptor {
         if (configuration.hasStatement(id)) {
             statement = configuration.getMappedStatement(id);
         } else {
-            String countSql = getCountSql(boundSql);
+            String countSql = builder.buildCountSql(boundSql.getSql());
             SqlSource sqlSource = new StaticSqlSource(configuration, countSql, boundSql.getParameterMappings());
             ResultMap resultMap = new ResultMap.Builder(configuration,
                     id + "-Inline",
@@ -147,29 +180,6 @@ public class PageableInterceptor extends AbstractInterceptor {
         List<Object> result = executor.query(statement, parameter, rowBounds, resultHandler);
         return result.isEmpty() ? 0L : ((Long) result.get(0));
     }
-    
-    
-    /**
-     * 设置分页参数
-     *
-     * @param boundSql
-     * @param offset
-     * @param size
-     */
-    private String getPageableSql(BoundSql boundSql, long offset, int size) {
-        return TextFormatter.format("{sql}\nLIMIT {offset}, {size}", boundSql.getSql(), offset, size);
-    }
-    
-    /**
-     * 获取分页总数
-     *
-     * @param boundSql
-     * @return
-     */
-    private String getCountSql(BoundSql boundSql) {
-        return TextFormatter.format("SELECT COUNT(1) FROM ({sql}) t", boundSql.getSql());
-    }
-    
     
     /**
      * 获取分页参数

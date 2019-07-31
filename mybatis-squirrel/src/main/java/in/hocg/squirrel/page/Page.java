@@ -46,7 +46,7 @@ public interface Page<T> extends Serializable {
      *
      * @return
      */
-    int getSize();
+    long getSize();
     
     /**
      * 设置分页显示数量
@@ -54,7 +54,7 @@ public interface Page<T> extends Serializable {
      * @param size
      * @return
      */
-    Page<T> setSize(int size);
+    Page<T> setSize(long size);
     
     /**
      * 查询数据总数

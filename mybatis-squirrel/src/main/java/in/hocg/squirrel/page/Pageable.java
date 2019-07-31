@@ -21,7 +21,7 @@ public class Pageable<T> implements Page<T> {
     /**
      * 每页显示条数，默认 10
      */
-    private int size = 10;
+    private long size = 10;
     
     /**
      * 当前页
@@ -83,12 +83,12 @@ public class Pageable<T> implements Page<T> {
     }
     
     @Override
-    public int getSize() {
+    public long getSize() {
         return this.size;
     }
     
     @Override
-    public Page<T> setSize(int size) {
+    public Page<T> setSize(long size) {
         this.size = size;
         return this;
     }
