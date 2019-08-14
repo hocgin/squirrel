@@ -133,7 +133,7 @@ public class XmlScripts {
      */
     public static String set(String... inners) {
         Optional<String> setOptional = Arrays.stream(inners)
-                .reduce((s, s2) -> s + SqlKeyword.SPLIT.getValue() + s2);
+                .reduce((s, s2) -> s + s2);
         return node(SET, EMPTY, setOptional.orElse(""));
     }
     

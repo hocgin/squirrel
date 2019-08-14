@@ -11,5 +11,9 @@ public interface CrudMapper<T>
         DeleteByIdMapper<T>,
         InsertMapper<T>,
         UpdateByIdMapper<T>,
-        SelectAllMapper<T> {
+        UpdateIgnoreNullByIdMapper<T>,
+        SelectAllMapper<T>,
+        CountAllMapper<T>,
+        SelectByIdMapper<T>,
+        SelectBatchMapper<T> {
 }

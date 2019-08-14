@@ -3,7 +3,6 @@ package in.hocg.squirrel.metadata.struct;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.apache.ibatis.type.JdbcType;
-import org.apache.ibatis.type.TypeHandler;
 
 /**
  * Created by hocgin on 2019-07-18.
@@ -38,7 +37,7 @@ public class Column {
     /**
      * 类型处理器
      */
-    private TypeHandler<?> typeHandler;
+//    private TypeHandler<?> typeHandler;
     
     /**
      * 是否是主键

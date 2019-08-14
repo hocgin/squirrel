@@ -30,10 +30,8 @@ public class MappedStatementSupport {
             }
             MappedStatement statement = (MappedStatement) mappedStatement;
             
-            // 缓存
             StatementHelper.addMappedStatement(statement);
         }
-        // ..
         handleMappedStatementMethods();
     }
     

@@ -1,6 +1,6 @@
 package in.hocg.squirrel.sample.module.mapper;
 
-import in.hocg.squirrel.mapper.*;
+import in.hocg.squirrel.mapper.CrudMapper;
 import in.hocg.squirrel.page.Page;
 import in.hocg.squirrel.page.Pageable;
 import in.hocg.squirrel.sample.module.domain.Example;
@@ -19,13 +19,7 @@ import java.util.List;
 @Mapper
 public interface ExampleMapper
         extends
-        CountAllMapper<Example>,
-        SelectByIdMapper<Example>,
-        DeleteByIdMapper<Example>,
-        UpdateByIdMapper<Example>,
-        SelectBatchMapper<Example>,
-        SelectAllMapper<Example>,
-        InsertMapper<Example> {
+        CrudMapper<Example> {
     
     /**
      * 查找一条数据

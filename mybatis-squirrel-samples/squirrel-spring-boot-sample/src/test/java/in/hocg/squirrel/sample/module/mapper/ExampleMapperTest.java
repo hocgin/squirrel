@@ -68,7 +68,7 @@ public class ExampleMapperTest {
         List<Example> result = mapper.selectBatchIds(1L, 2L, 3L);
         log.debug("执行结果: {}", result);
     }
-
+    
     @Test
     public void updateOne() {
         Example entity = new Example();
@@ -76,6 +76,15 @@ public class ExampleMapperTest {
         entity.setName("66");
         entity.setCreatedAt(LocalDateTime.now());
         int result = mapper.updateById(entity);
+        log.debug("执行结果: {}", result);
+    }
+    @Test
+    public void updateIgnoreNullOne() {
+        Example entity = new Example();
+        entity.setId(2L);
+//        entity.setTitle("66");
+        entity.setCreatedAt(LocalDateTime.now());
+        int result = mapper.updateIgnoreNullById(entity);
         log.debug("执行结果: {}", result);
     }
     

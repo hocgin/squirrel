@@ -133,7 +133,6 @@ public abstract class AbstractProvider implements BuildProvider {
                     .column(column.getColumnName())
                     .jdbcType(column.getJdbcType())
                     .javaType(column.getJavaType())
-                    .typeHandler(column.getTypeHandler())
                     .build());
         }
         

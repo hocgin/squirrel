@@ -13,15 +13,15 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 /**
- * Created by hocgin on 2019-07-18.
+ * Created by hocgin on 2019-08-14.
  * email: hocgin@gmail.com
  *
  * @author hocgin
  */
 @Slf4j
-public class UpdateByIdProvider extends AbstractProvider {
+public class UpdateIgnoreNullByIdProvider extends AbstractProvider {
     
-    public UpdateByIdProvider(Class<?> mapperClass, Class<?> entityClass, Method method) {
+    public UpdateIgnoreNullByIdProvider(Class<?> mapperClass, Class<?> entityClass, Method method) {
         super(mapperClass, entityClass, method);
     }
     
@@ -51,7 +51,10 @@ public class UpdateByIdProvider extends AbstractProvider {
         List<Column> columnStruct = getColumns();
         return columnStruct.stream()
                 .filter(column -> !column.getIsPk())
-                .map(column -> TextFormatter.format("{column} = {field}", column.getColumnName(), Constants.BEAN_PARAMETER_PREFIX + column.getFieldName() + Constants.PARAMETER_SUFFIX) + SqlKeyword.SPLIT.getValue())
-                .toArray(String[]::new);
+                .map(column ->
+                        XmlScripts.ifNotNull("bean." + column.getFieldName(),
+                                TextFormatter.format("{column} = {field}", column.getColumnName(), Constants.BEAN_PARAMETER_PREFIX + column.getFieldName() + Constants.PARAMETER_SUFFIX) + SqlKeyword.SPLIT.getValue()
+                        )
+                ).toArray(String[]::new);
     }
 }
