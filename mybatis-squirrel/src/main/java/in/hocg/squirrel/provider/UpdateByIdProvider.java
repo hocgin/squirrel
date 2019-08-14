@@ -4,7 +4,6 @@ import in.hocg.squirrel.builder.XmlScripts;
 import in.hocg.squirrel.constant.Constants;
 import in.hocg.squirrel.metadata.struct.Column;
 import in.hocg.squirrel.metadata.struct.Table;
-import in.hocg.squirrel.provider.AbstractProvider;
 import in.hocg.squirrel.utils.TextFormatter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -51,7 +50,7 @@ public class UpdateByIdProvider extends AbstractProvider {
         List<Column> columnStruct = getColumns();
         return columnStruct.stream()
                 .filter(column -> !column.getIsPk())
-                .map(column -> TextFormatter.format("{column} = {field}", column.getColumnName(), Constants.BEAN_PARAMETER_PREFIX + column.getFieldName()) + Constants.PARAMETER_SUFFIX)
+                .map(column -> TextFormatter.format("{column} = {field}", column.getColumnName(), Constants.BEAN_PARAMETER_PREFIX + column.getFieldName() + Constants.PARAMETER_SUFFIX))
                 .toArray(String[]::new);
     }
 }
