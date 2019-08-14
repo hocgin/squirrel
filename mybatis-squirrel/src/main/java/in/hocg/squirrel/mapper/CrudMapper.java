@@ -9,11 +9,12 @@ package in.hocg.squirrel.mapper;
 public interface CrudMapper<T>
         extends
         DeleteByIdMapper<T>,
+        DeleteByIdsMapper<T>,
         InsertMapper<T>,
         UpdateByIdMapper<T>,
         UpdateIgnoreNullByIdMapper<T>,
-        SelectAllMapper<T>,
         CountAllMapper<T>,
+        SelectAllMapper<T>,
         SelectByIdMapper<T>,
-        SelectBatchMapper<T> {
+        SelectByIdsMapper<T> {
 }

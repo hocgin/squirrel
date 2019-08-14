@@ -2,7 +2,7 @@ package in.hocg.squirrel.mapper;
 
 import in.hocg.squirrel.constant.Constants;
 import in.hocg.squirrel.provider.AbstractProvider;
-import in.hocg.squirrel.provider.SelectBatchProvider;
+import in.hocg.squirrel.provider.SelectByIdsProvider;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.SelectProvider;
 
@@ -15,7 +15,7 @@ import java.util.List;
  *
  * @author hocgin
  */
-public interface SelectBatchMapper<T> {
+public interface SelectByIdsMapper<T> {
     
     /**
      * 使用主键查询多个
@@ -23,6 +23,6 @@ public interface SelectBatchMapper<T> {
      * @param id
      * @return
      */
-    @SelectProvider(type = SelectBatchProvider.class, method = AbstractProvider.PROVIDER_PROXY_METHOD)
-    List<T> selectBatchIds(@Param(Constants.ARRAY_PARAMETER) Serializable... id);
+    @SelectProvider(type = SelectByIdsProvider.class, method = AbstractProvider.PROVIDER_PROXY_METHOD)
+    List<T> selectByIds(@Param(Constants.ARRAY_PARAMETER) Serializable... id);
 }

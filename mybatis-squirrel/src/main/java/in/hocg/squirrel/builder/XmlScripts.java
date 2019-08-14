@@ -188,8 +188,24 @@ public class XmlScripts {
         return new SQL().SELECT(columns).FROM(tableName).toString();
     }
     
+    /**
+     * UPDATE tableName
+     *
+     * @param tableName
+     * @return
+     */
     public static String update(String tableName) {
         return new SQL().UPDATE(tableName).toString();
+    }
+    
+    /**
+     * DELETE tableName
+     *
+     * @param tableName
+     * @return
+     */
+    public static String delete(String tableName) {
+        return new SQL().DELETE_FROM(tableName).toString();
     }
     
     /**
@@ -232,5 +248,4 @@ public class XmlScripts {
                 + SqlKeyword.SPLIT_SUFFIX.getValue()
         ).FROM(tableName).toString();
     }
-    
 }

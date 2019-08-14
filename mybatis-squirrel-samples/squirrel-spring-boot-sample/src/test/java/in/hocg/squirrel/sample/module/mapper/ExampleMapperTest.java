@@ -31,7 +31,7 @@ public class ExampleMapperTest {
     ExampleMapper mapper;
     
     @Test
-    public void selectOne() {
+    public void selectById() {
         Optional<Example> example = mapper.selectById(1L);
         log.debug("执行结果: {}", example);
     }
@@ -44,10 +44,16 @@ public class ExampleMapperTest {
         int result = mapper.insert(entity);
         log.debug("执行结果: {} entity:{}", result, entity);
     }
-
+    
     @Test
-    public void deleteOne() {
+    public void deleteById() {
         int result = mapper.deleteById(1L);
+        log.debug("执行结果: {}", result);
+    }
+    
+    @Test
+    public void deleteByIds() {
+        int result = mapper.deleteByIds(1L, 2L, 3L);
         log.debug("执行结果: {}", result);
     }
 
@@ -64,8 +70,8 @@ public class ExampleMapperTest {
     }
 
     @Test
-    public void selectBatch() {
-        List<Example> result = mapper.selectBatchIds(1L, 2L, 3L);
+    public void selectByIds() {
+        List<Example> result = mapper.selectByIds(1L, 2L, 3L);
         log.debug("执行结果: {}", result);
     }
     
