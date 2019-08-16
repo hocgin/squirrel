@@ -1,8 +1,13 @@
 spring:
   datasource:
-    url: jdbc:mariadb://mysql.localhost:3306/db_test?useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+    driver-class-name: com.p6spy.engine.spy.P6SpyDriver
+    url: jdbc:p6spy:mariadb://mysql.localhost:3306/db_test?useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
     username: root
     password: hocgin
 logging:
   level:
     in.hocg: debug
+mybatis:
+  devtools:
+    show-sql: false
+    reload-mapper: false

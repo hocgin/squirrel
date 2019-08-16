@@ -11,6 +11,7 @@
     <modelVersion>4.0.0</modelVersion>
     <packaging>jar</packaging>
 
+    <name>Squirrel :: Spring Boot Starter</name>
     <artifactId>mybatis-squirrel-spring-boot-starter</artifactId>
 
     <dependencies>

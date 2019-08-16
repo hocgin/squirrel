@@ -10,6 +10,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <name>Squirrel :: Samples</name>
     <artifactId>mybatis-squirrel-samples</artifactId>
     <packaging>pom</packaging>
 

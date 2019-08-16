@@ -4,6 +4,7 @@ import in.hocg.squirrel.devtools.reload.WatchDog;
 import in.hocg.squirrel.devtools.sql.WatchSqlInterceptor;
 import in.hocg.squirrel.spring.boot.autoconfigure.MybatisAutoConfiguration;
 import in.hocg.squirrel.spring.boot.autoconfigure.MybatisProperties;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.beans.BeansException;
@@ -25,22 +26,28 @@ import org.springframework.core.io.Resource;
 @Configuration
 @EnableConfigurationProperties(DevtoolsProperties.class)
 @AutoConfigureAfter({MybatisAutoConfiguration.class})
+@RequiredArgsConstructor
 public class DevtoolsAutoConfiguration implements InitializingBean,
         ApplicationContextAware {
     private ApplicationContext applicationContext;
- 
+    private final DevtoolsProperties devtoolsProperties;
+    
+    
     @Override
     public void afterPropertiesSet() throws Exception {
         SqlSessionFactory sqlSessionFactory = applicationContext.getBean(SqlSessionFactory.class);
         MybatisProperties mybatisProperties = applicationContext.getBean(MybatisProperties.class);
         
-        log.debug("==========[[启动监听 SQL]]==========");
-        sqlSessionFactory.getConfiguration().addInterceptor(new WatchSqlInterceptor());
-    
-        log.debug("==========[[启动 Mapper 监听🐕]]==========");
-        Resource[] mapperResources = mybatisProperties.resolveMapperLocations();
-        new Thread(() -> new WatchDog(mapperResources, sqlSessionFactory, true), "MybatisMapperReload").start();
+        if (devtoolsProperties.isShowSql()) {
+            log.debug("==========[[启动监听 SQL]]==========");
+            sqlSessionFactory.getConfiguration().addInterceptor(new WatchSqlInterceptor());
+        }
         
+        if (devtoolsProperties.isReloadMapper()) {
+            log.debug("==========[[启动 Mapper 监听🐕]]==========");
+            Resource[] mapperResources = mybatisProperties.resolveMapperLocations();
+            new Thread(() -> new WatchDog(mapperResources, sqlSessionFactory, true), "MybatisMapperReload").start();
+        }
     }
     
     @Override

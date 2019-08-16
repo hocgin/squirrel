@@ -10,6 +10,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <name>Squirrel :: Parent</name>
     <artifactId>mybatis-squirrel-parent</artifactId>
     <packaging>pom</packaging>
 
@@ -40,6 +41,11 @@
             <dependency>
                 <groupId>in.hocg.squirrel</groupId>
                 <artifactId>mybatis-squirrel-spring-boot-starter</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>in.hocg.squirrel</groupId>
+                <artifactId>mybatis-squirrel-devtools</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
