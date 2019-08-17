@@ -5,5 +5,7 @@
 # IntelliJ project files
 .idea
 *.iml
+.flattened-pom.xml
+target/
 out
 gen

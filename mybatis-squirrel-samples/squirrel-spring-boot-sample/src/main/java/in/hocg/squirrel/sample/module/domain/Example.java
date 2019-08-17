@@ -5,6 +5,7 @@ import in.hocg.squirrel.annotation.Column;
 import in.hocg.squirrel.annotation.Id;
 import in.hocg.squirrel.annotation.Table;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
 
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
  *
  * @author hocgin
  */
+@EqualsAndHashCode(callSuper = true)
 @ToString
 @Data
 @Table(name = "t_example")
