@@ -30,7 +30,11 @@ public class TextFormatter {
     }
     
     public static String format(String format, Object arg1) {
-        return arrayFormat(format, new Object[]{arg1});
+        if (Objects.isNull(arg1) || !arg1.getClass().isArray()) {
+            return arrayFormat(format, new Object[]{arg1});
+        }
+        
+        return arrayFormat(format, (Object[]) arg1);
     }
     
     public static String format(String format, Object arg1, Object... args) {
