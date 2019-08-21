@@ -2,10 +2,12 @@ package in.hocg.squirrel;
 
 import in.hocg.squirrel.helper.ProviderHelper;
 import in.hocg.squirrel.helper.StatementHelper;
+import in.hocg.squirrel.intercepts.pageable.PageableInterceptor;
 import in.hocg.squirrel.provider.AbstractProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.builder.annotation.ProviderSqlSource;
 import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.session.Configuration;
 
 import java.util.Collection;
 
@@ -57,5 +59,13 @@ public class MappedStatementSupport {
                 StatementHelper.addBuiltMappedStatement(statementId);
             }
         }
+    }
+    
+    /**
+     * 装载插件
+     * @param configuration
+     */
+    public void addInterceptors(Configuration configuration) {
+        configuration.addInterceptor(new PageableInterceptor());
     }
 }
