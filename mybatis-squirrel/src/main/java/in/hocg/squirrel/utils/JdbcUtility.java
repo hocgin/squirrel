@@ -28,8 +28,7 @@ public class JdbcUtility {
             return Dialect.Unknown;
         }
     
-        String group = matcher.group(0);
-        return Dialect.of(group);
+        return Dialect.of(matcher.group(0), Dialect.Unknown);
     }
     
 }
