@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="in.hocg.squirrel.cashew.sample.module.mapper.ExampleMapper">
+
+    <select id="page" resultType="in.hocg.squirrel.cashew.sample.module.domain.Example">
+        SELECT te.*
+        FROM t_example te
+        WHERE te.id IN(1)
+    </select>
+
+    <select id="page2" resultType="in.hocg.squirrel.cashew.sample.module.domain.Example">
+        SELECT te.*
+        FROM t_example te
+    </select>
+    <select id="page3" resultType="in.hocg.squirrel.cashew.sample.module.domain.Example">
+        SELECT tete.*
+        FROM t_example tete
+    </select>
+</mapper>
