@@ -1,4 +1,4 @@
-package in.hocg.squirrel.devtools.sample.module.domain;
+package in.hocg.squirrel.sample.module.domain;
 
 /**
  * Created by hocgin on 2019-07-18.

@@ -1,7 +1,7 @@
-package in.hocg.squirrel.devtools.sample.module.service;
+package in.hocg.squirrel.sample.module.service;
 
 import in.hocg.squirrel.page.Pageable;
-import in.hocg.squirrel.devtools.sample.module.domain.Example;
+import in.hocg.squirrel.sample.module.domain.Example;
 
 /**
  * Created by hocgin on 2019/5/25.

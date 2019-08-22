@@ -1,6 +1,6 @@
-package in.hocg.squirrel.devtools.sample.module.controller;
+package in.hocg.squirrel.sample.module.controller;
 
-import in.hocg.squirrel.devtools.sample.module.service.ExampleService;
+import in.hocg.squirrel.sample.module.service.ExampleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

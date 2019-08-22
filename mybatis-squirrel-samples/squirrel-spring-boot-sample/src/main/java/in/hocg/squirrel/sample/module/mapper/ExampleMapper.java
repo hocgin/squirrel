@@ -1,9 +1,9 @@
-package in.hocg.squirrel.devtools.sample.module.mapper;
+package in.hocg.squirrel.sample.module.mapper;
 
 import in.hocg.squirrel.mapper.CrudMapper;
 import in.hocg.squirrel.page.Page;
 import in.hocg.squirrel.page.Pageable;
-import in.hocg.squirrel.devtools.sample.module.domain.Example;
+import in.hocg.squirrel.sample.module.domain.Example;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
