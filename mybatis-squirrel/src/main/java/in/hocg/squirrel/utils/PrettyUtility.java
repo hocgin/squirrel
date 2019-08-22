@@ -14,7 +14,7 @@ import java.util.StringTokenizer;
  */
 @Slf4j
 @UtilityClass
-public class Pretty {
+public class PrettyUtility {
     
     
     /**

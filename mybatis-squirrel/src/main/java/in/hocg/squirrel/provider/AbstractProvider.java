@@ -86,11 +86,11 @@ public abstract class AbstractProvider implements BuildProvider {
     }
     
     /**
-     * 构建自定义 MappedStatement
+     * 调用 AbstractProvider 构建自定义 MappedStatement
      *
      * @param statement
      */
-    public void invokeProviderBuildMethod(MappedStatement statement) {
+    public void buildMappedStatement(MappedStatement statement) {
         try {
             Method method = this.getClass().getMethod(AbstractProvider.PROVIDER_BUILD_METHOD, MappedStatement.class);
             method.invoke(this, statement);
@@ -168,7 +168,7 @@ public abstract class AbstractProvider implements BuildProvider {
      * @return
      */
     private String getStatementId(MappedStatement statement) {
-        return MappedStatementHelper.getStatementInlineId(statement);
+        return MappedStatementHelper.getInlineStatementId(statement);
     }
     
     /**

@@ -57,7 +57,6 @@ public class MapperFactoryBean<T> extends SqlSessionDaoSupport
         Assert.notNull(this.mapperInterface, "字段 mapperInterface 是必须的");
         Configuration configuration = this.getSqlSession().getConfiguration();
         
-        // 如果要求加入配置中
         if (this.addToConfig && !configuration.hasMapper(this.mapperInterface)) {
             try {
                 configuration.addMapper(this.mapperInterface);
@@ -70,7 +69,7 @@ public class MapperFactoryBean<T> extends SqlSessionDaoSupport
         }
     
         if (configuration.hasMapper(this.mapperInterface)) {
-            mappedStatementSupport.handleMapper(new ArrayList<>(configuration.getMappedStatements()));
+            mappedStatementSupport.handleMappedStatements(new ArrayList<>(configuration.getMappedStatements()));
         }
     
         mappedStatementSupport.handleInterceptors(configuration);
