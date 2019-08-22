@@ -2,6 +2,7 @@ package in.hocg.squirrel.utils;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import in.hocg.squirrel.exception.SquirrelException;
 import lombok.RequiredArgsConstructor;
 
 import java.lang.reflect.Field;
@@ -93,6 +94,23 @@ public class ClassUtility {
             throw new IllegalArgumentException(String.format("在 %s 中未找到 %s 字段", clazz.getSimpleName(), fieldName));
         }
         return field;
+    }
+    
+    /**
+     * 通过函数名称获取 Class 对应的函数
+     *
+     * @param methodName
+     * @return
+     */
+    public Method getMethod(String methodName) {
+        Method[] methods = clazz.getMethods();
+        for (Method method : methods) {
+            if (method.getName().equals(methodName)) {
+                return method;
+            }
+        }
+        
+        throw SquirrelException.wrap("{class} 未找到函数名为 {methodName} 的函数", clazz, methodName);
     }
     
 }

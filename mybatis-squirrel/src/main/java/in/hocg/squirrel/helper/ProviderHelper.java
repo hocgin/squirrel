@@ -2,6 +2,7 @@ package in.hocg.squirrel.helper;
 
 import in.hocg.squirrel.exception.SquirrelException;
 import in.hocg.squirrel.provider.AbstractProvider;
+import in.hocg.squirrel.utils.ClassUtility;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.DeleteProvider;
 import org.apache.ibatis.annotations.InsertProvider;
@@ -48,12 +49,12 @@ public class ProviderHelper {
      * @return
      */
     public static AbstractProvider getMethodProvider(String statementId) {
-        String methodName = StatementHelper.getMethodName(statementId);
-        Class<?> mapperClass = StatementHelper.getMapperClass(statementId);
+        String methodName = MappedStatementHelper.getMethodName(statementId);
+        Class<?> mapperClass = MappedStatementHelper.getMapperClass(statementId);
         
         Class<?> entityClass = EntityHelper.getEntityClass(mapperClass);
         
-        Method method = MapperHelper.getMethod(methodName, mapperClass);
+        Method method = ClassUtility.from(mapperClass).getMethod(methodName);
         
         Class<?> providerClass = ProviderHelper.getProviderClass(method);
         

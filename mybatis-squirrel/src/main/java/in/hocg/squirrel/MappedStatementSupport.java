@@ -1,7 +1,7 @@
 package in.hocg.squirrel;
 
 import in.hocg.squirrel.helper.ProviderHelper;
-import in.hocg.squirrel.helper.StatementHelper;
+import in.hocg.squirrel.helper.MappedStatementHelper;
 import in.hocg.squirrel.intercepts.pageable.PageableInterceptor;
 import in.hocg.squirrel.provider.AbstractProvider;
 import lombok.extern.slf4j.Slf4j;
@@ -21,18 +21,13 @@ import java.util.Collection;
 public class MappedStatementSupport {
     
     /**
-     * 生成 MappedStatement
+     * 处理 Mapper
      *
-     * @param mappedStatements
+     * @param mappedStatements mappedStatements
      */
-    public void support(Collection<Object> mappedStatements) {
-        for (Object mappedStatement : mappedStatements) {
-            if (!(mappedStatement instanceof MappedStatement)) {
-                continue;
-            }
-            MappedStatement statement = (MappedStatement) mappedStatement;
-            
-            StatementHelper.addMappedStatement(statement);
+    public void handleMapper(Collection<MappedStatement> mappedStatements) {
+        for (MappedStatement statement : mappedStatements) {
+            MappedStatementHelper.addMappedStatement(statement);
         }
         handleMappedStatementMethods();
     }
@@ -41,10 +36,10 @@ public class MappedStatementSupport {
      * 处理标记 @XXProvider 映射的函数生成 MappedStatement
      */
     private void handleMappedStatementMethods() {
-        Collection<MappedStatement> mappedStatements = StatementHelper.getMappedStatement();
+        Collection<MappedStatement> mappedStatements = MappedStatementHelper.getMappedStatement();
         for (MappedStatement statement : mappedStatements) {
             String statementId = statement.getId();
-            if (StatementHelper.isBuiltMappedStatement(statementId)) {
+            if (MappedStatementHelper.isBuiltMappedStatement(statementId)) {
                 continue;
             }
             
@@ -56,16 +51,17 @@ public class MappedStatementSupport {
                 provider.invokeProviderBuildMethod(statement);
                 
                 // 标记为已加载
-                StatementHelper.addBuiltMappedStatement(statementId);
+                MappedStatementHelper.addBuiltMappedStatement(statementId);
             }
         }
     }
     
     /**
      * 装载插件
-     * @param configuration
+     * @param configuration configuration
      */
-    public void addInterceptors(Configuration configuration) {
+    public void handleInterceptors(Configuration configuration) {
+        // 分页插件
         configuration.addInterceptor(new PageableInterceptor());
     }
 }

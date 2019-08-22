@@ -2,6 +2,7 @@ package in.hocg.squirrel.provider;
 
 import com.google.common.collect.Lists;
 import in.hocg.squirrel.constant.MappedStatementFields;
+import in.hocg.squirrel.helper.MappedStatementHelper;
 import in.hocg.squirrel.metadata.TableUtility;
 import in.hocg.squirrel.metadata.struct.Column;
 import in.hocg.squirrel.metadata.struct.Table;
@@ -155,7 +156,7 @@ public abstract class AbstractProvider implements BuildProvider {
         ResultMap resultMap = new ResultMap.Builder(statement.getConfiguration(),
                 getStatementId(statement),
                 clazz,
-                new ArrayList<>()).build();
+                Collections.emptyList()).build();
         SystemMetaObject.forObject(statement)
                 .setValue(MappedStatementFields.RESULT_MAPS, Collections.unmodifiableList(Arrays.asList(resultMap)));
     }
@@ -167,7 +168,7 @@ public abstract class AbstractProvider implements BuildProvider {
      * @return
      */
     private String getStatementId(MappedStatement statement) {
-        return String.format("%s-Inline", statement.getId());
+        return MappedStatementHelper.getStatementInlineId(statement);
     }
     
     /**

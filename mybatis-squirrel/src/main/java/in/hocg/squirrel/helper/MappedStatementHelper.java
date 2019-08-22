@@ -23,7 +23,7 @@ import java.util.Set;
  * @author hocgin
  */
 @Slf4j
-public class StatementHelper {
+public class MappedStatementHelper {
     /**
      * 缓存 <statementId, MappedStatement>
      */
@@ -111,7 +111,12 @@ public class StatementHelper {
         return mapperClass;
     }
     
-    public static String getStatementId(MappedStatement statement) {
+    /**
+     *
+     * @param statement
+     * @return
+     */
+    public static String getStatementInlineId(MappedStatement statement) {
         return String.format("%s-Inline", statement.getId());
     }
 }
