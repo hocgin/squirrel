@@ -1,5 +1,6 @@
 package in.hocg.squirrel.spring;
 
+import in.hocg.squirrel.Global;
 import in.hocg.squirrel.MappedStatementSupport;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -56,6 +57,7 @@ public class MapperFactoryBean<T> extends SqlSessionDaoSupport
         super.checkDaoConfig();
         Assert.notNull(this.mapperInterface, "字段 mapperInterface 是必须的");
         Configuration configuration = this.getSqlSession().getConfiguration();
+        Global.CONFIGURATION = configuration;
         
         if (this.addToConfig && !configuration.hasMapper(this.mapperInterface)) {
             try {
