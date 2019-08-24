@@ -56,19 +56,19 @@ public class ExampleMapperTest {
         int result = mapper.deleteByIds(1L, 2L, 3L);
         log.debug("执行结果: {}", result);
     }
-
+    
     @Test
     public void selectAll() {
         Collection<Example> result = mapper.selectAll();
         log.debug("执行结果: {}", result);
     }
-
+    
     @Test
     public void countAll() {
         long result = mapper.countAll();
         log.debug("执行结果: {}", result);
     }
-
+    
     @Test
     public void selectByIds() {
         List<Example> result = mapper.selectByIds(1L, 2L, 3L);
@@ -76,7 +76,7 @@ public class ExampleMapperTest {
     }
     
     @Test
-    public void updateOne() {
+    public void updateById() {
         Example entity = new Example();
         entity.setId(2L);
         entity.setName("66");
@@ -84,26 +84,30 @@ public class ExampleMapperTest {
         int result = mapper.updateById(entity);
         log.debug("执行结果: {}", result);
     }
+    
     @Test
-    public void updateIgnoreNullOne() {
+    public void updateIgnoreNullById() {
         Example entity = new Example();
         entity.setId(2L);
-//        entity.setTitle("66");
         entity.setCreatedAt(LocalDateTime.now());
         int result = mapper.updateIgnoreNullById(entity);
         log.debug("执行结果: {}", result);
     }
     
     @Test
-    public void test() {
+    public void pageUsePageable() {
         Page<Example> result = mapper.page(Pageable.of(1, 10));
         log.debug("执行结果1: {}", result);
+    }
+    
+    @Test
+    public void pageUseParams() {
         log.debug("执行结果2: {}", mapper.page2(2));
         System.out.println();
     }
     
     @Test
-    public void test3() {
+    public void pageUseRowBounds() {
         List<Example> arg = mapper.page3(new RowBounds(0, 2));
         log.debug("执行结果3: {}", arg);
     }
