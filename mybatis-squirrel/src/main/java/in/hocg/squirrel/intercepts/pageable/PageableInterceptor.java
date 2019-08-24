@@ -96,7 +96,7 @@ public class PageableInterceptor extends AbstractInterceptor {
                 rowBounds, resultHandler, executor, pageable);
         pageable.setRecords(records);
         
-        return Collections.unmodifiableList(Arrays.asList(pageable));
+        return Collections.unmodifiableList(Collections.singletonList(pageable));
     }
     
     /**
