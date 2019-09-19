@@ -1,6 +1,6 @@
 package in.hocg.squirrel.sample.module.vo;
 
-import in.hocg.squirrel.annotation.Column;
+import in.hocg.squirrel.intercepts.typehandle.CustomTypeHandle;
 import in.hocg.squirrel.sample.typehandler.CustomTypeHandler;
 import lombok.Data;
 
@@ -15,6 +15,6 @@ public class CustomTypeHandlerVo {
     
     private Long id;
     
-    @Column(name = "name", typeHandler = CustomTypeHandler.class)
+    @CustomTypeHandle(typeHandler = CustomTypeHandler.class)
     private String name;
 }
