@@ -98,8 +98,12 @@ public class ExampleMapperTest {
     public void test() {
         Page<Example> result = mapper.page(Pageable.of(1, 10));
         log.debug("执行结果1: {}", result);
-        log.debug("执行结果2: {}", mapper.page2(2));
         System.out.println();
+    }
+    
+    @Test
+    public void testPage2() {
+        log.debug("执行结果2: {}", mapper.page2(2));
     }
     
     @Test

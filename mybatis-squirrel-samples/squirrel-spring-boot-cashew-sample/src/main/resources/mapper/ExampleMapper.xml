@@ -9,7 +9,8 @@
     </select>
 
     <select id="page2" resultType="in.hocg.squirrel.cashew.sample.module.domain.Example">
-        SELECT te.*
+        SELECT te.*,
+               1 AS "fname@key"
         FROM t_example te
     </select>
     <select id="page3" resultType="in.hocg.squirrel.cashew.sample.module.domain.Example">
