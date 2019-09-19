@@ -12,7 +12,15 @@
         SELECT te.*
         FROM t_example te
     </select>
-    <select id="page3" resultType="in.hocg.squirrel.cashew.sample.module.domain.Example">
+
+
+    <resultMap id="exampleMap" type="in.hocg.squirrel.cashew.sample.module.domain.Example">
+        <result typeHandler="in.hocg.squirrel.cashew.sample.typehandle.TestTypeHandle"
+                column="id"
+                jdbcType="INTEGER"
+                property="id"/>
+    </resultMap>
+    <select id="page3" resultMap="exampleMap">
         SELECT tete.*
         FROM t_example tete
     </select>
