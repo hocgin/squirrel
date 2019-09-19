@@ -4,6 +4,7 @@ package in.hocg.squirrel.sample.module.domain;
 import in.hocg.squirrel.annotation.Column;
 import in.hocg.squirrel.annotation.Id;
 import in.hocg.squirrel.annotation.Table;
+import in.hocg.squirrel.sample.typehandler.CustomTypeHandler;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;

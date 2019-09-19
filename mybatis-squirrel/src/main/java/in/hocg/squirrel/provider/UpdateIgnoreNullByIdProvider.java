@@ -53,7 +53,7 @@ public class UpdateIgnoreNullByIdProvider extends AbstractProvider {
                 .filter(column -> !column.getIsPk())
                 .map(column ->
                         XmlScripts.ifNotNull("bean." + column.getFieldName(),
-                                TextFormatter.format("{column} = {field}", column.getColumnName(), Constants.BEAN_PARAMETER_PREFIX + column.getFieldName() + Constants.PARAMETER_SUFFIX) + SqlKeyword.SPLIT.getValue()
+                                TextFormatter.format("{column} = {field}", column.getColumnName(), Constants.BEAN_PARAMETER_PREFIX + column.getEl() + Constants.PARAMETER_SUFFIX) + SqlKeyword.SPLIT.getValue()
                         )
                 ).toArray(String[]::new);
     }

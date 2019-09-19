@@ -1,6 +1,8 @@
 package in.hocg.squirrel.annotation;
 
 import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.type.TypeHandler;
+import org.apache.ibatis.type.UnknownTypeHandler;
 
 import java.lang.annotation.*;
 
@@ -34,5 +36,5 @@ public @interface Column {
      *
      * @return
      */
-//    Class<? extends TypeHandler<?>> typeHandler() default UnknownTypeHandler.class;
+    Class<? extends TypeHandler<?>> typeHandler() default UnknownTypeHandler.class;
 }
