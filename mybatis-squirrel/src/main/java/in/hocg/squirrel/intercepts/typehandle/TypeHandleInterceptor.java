@@ -60,25 +60,29 @@ public class TypeHandleInterceptor extends AbstractInterceptor {
     public Object intercept(Invocation invocation) throws Throwable {
         MappedStatement ms = (MappedStatement) invocation.getArgs()[0];
         List<ResultMap> resultMaps = ms.getResultMaps();
-        List<ResultMap> newResultMaps = Lists.newArrayList();
-        for (ResultMap resultMap : resultMaps) {
+        if (resultMaps.size() == 1) {
+            List<ResultMap> newResultMaps = Lists.newArrayList();
+            ResultMap resultMap = resultMaps.get(0);
             Class<?> type = resultMap.getType();
-            newResultMaps.add(getResultMap(ms, type));
+            if (!ClassUtility.isPrimitive(type)) {
+                newResultMaps.add(getResultMap(ms, type));
+                SystemMetaObject.forObject(ms)
+                        .setValue(MappedStatementFields.RESULT_MAPS, Collections.unmodifiableList(newResultMaps));
+            }
         }
-    
-        SystemMetaObject.forObject(ms)
-                .setValue(MappedStatementFields.RESULT_MAPS, Collections.unmodifiableList(newResultMaps));
+        
         return invocation.proceed();
     }
     
     private ResultMap getResultMap(MappedStatement statement, Class<?> clazz) {
         List<ResultMapping> resultMappings = Lists.newArrayList();
         List<Field> fields = ClassUtility.from(clazz).getAllField();
+        Configuration configuration = statement.getConfiguration();
         for (Field field : fields) {
-            resultMappings.add(getResultMapping(field, statement.getConfiguration()));
+            resultMappings.add(getResultMapping(field, configuration));
         }
         
-        return new ResultMap.Builder(statement.getConfiguration(),
+        return new ResultMap.Builder(configuration,
                 getStatementId(statement),
                 clazz,
                 resultMappings,

@@ -95,4 +95,20 @@ public class ClassUtility {
         return field;
     }
     
+    /**
+     * 检查是否是基础类型
+     * Integer => true
+     * Long => true
+     *
+     * @param clazz
+     * @return
+     */
+    public static boolean isPrimitive(Class<?> clazz) {
+        try {
+            return ((Class<?>) clazz.getField("TYPE").get(null)).isPrimitive();
+        } catch (IllegalAccessException | NoSuchFieldException e) {
+            return false;
+        }
+    }
+    
 }
