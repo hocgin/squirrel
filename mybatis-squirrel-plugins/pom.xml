@@ -16,6 +16,7 @@
 
     <modules>
         <module>mybatis-squirrel-devtools</module>
+        <module>mybatis-squirrel-cashew</module>
     </modules>
 
 </project>
