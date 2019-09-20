@@ -85,6 +85,10 @@ public class TypeHandleInterceptor extends AbstractInterceptor {
                 true).build();
     }
     
+    private boolean useTypeHandle(Class<?> type) {
+        return type.isAnnotationPresent(UseTypeHandle.class);
+    }
+    
     private ResultMapping getResultMapping(Field field, final Configuration configuration) {
         String fieldName = field.getName();
         String columnName = fieldName;
@@ -98,11 +102,8 @@ public class TypeHandleInterceptor extends AbstractInterceptor {
         }
         
         ResultMapping.Builder builder = new ResultMapping.Builder(configuration, fieldName,
-                columnName, javaType);
+                columnName, javaType).jdbcType(jdbcType);
         TypeHandlerRegistry registry = configuration.getTypeHandlerRegistry();
-        if (jdbcType != null && jdbcType != JdbcType.UNDEFINED) {
-            builder.jdbcType(jdbcType);
-        }
         if (typeHandler != UnknownTypeHandler.class) {
             TypeHandler<?> _typeHandler = registry.getMappingTypeHandler(typeHandler);
             if (_typeHandler == null) {
