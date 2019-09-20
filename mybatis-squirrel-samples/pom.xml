@@ -21,7 +21,6 @@
     <modules>
         <module>squirrel-spring-boot-sample</module>
         <module>squirrel-spring-boot-devtools-sample</module>
-        <module>squirrel-spring-boot-cashew-sample</module>
     </modules>
 
     <dependencyManagement>

@@ -51,7 +51,7 @@ public class UpdateByIdProvider extends AbstractProvider {
         List<Column> columnStruct = getColumns();
         return columnStruct.stream()
                 .filter(column -> !column.getIsPk())
-                .map(column -> TextFormatter.format("{column} = {field}", column.getColumnName(), Constants.BEAN_PARAMETER_PREFIX + column.getFieldName() + Constants.PARAMETER_SUFFIX) + SqlKeyword.SPLIT.getValue())
+                .map(column -> TextFormatter.format("{column} = {field}", column.getColumnName(), Constants.BEAN_PARAMETER_PREFIX + column.getEl() + Constants.PARAMETER_SUFFIX) + SqlKeyword.SPLIT.getValue())
                 .toArray(String[]::new);
     }
 }

@@ -113,4 +113,20 @@ public class ClassUtility {
         throw SquirrelException.wrap("{class} 未找到函数名为 {methodName} 的函数", clazz, methodName);
     }
     
+    /**
+     * 检查是否是基础类型
+     * Integer => true
+     * Long => true
+     *
+     * @param clazz
+     * @return
+     */
+    public static boolean isPrimitive(Class<?> clazz) {
+        try {
+            return ((Class<?>) clazz.getField("TYPE").get(null)).isPrimitive();
+        } catch (IllegalAccessException | NoSuchFieldException e) {
+            return false;
+        }
+    }
+    
 }

@@ -3,6 +3,7 @@ package in.hocg.squirrel;
 import com.google.common.collect.Sets;
 import in.hocg.squirrel.helper.ProviderHelper;
 import in.hocg.squirrel.intercepts.pageable.PageableInterceptor;
+import in.hocg.squirrel.intercepts.typehandle.TypeHandleInterceptor;
 import in.hocg.squirrel.provider.AbstractProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.builder.annotation.ProviderSqlSource;
@@ -66,5 +67,6 @@ public class MappedStatementSupport {
     public void handleInterceptors(Configuration configuration) {
         // 分页插件
         configuration.addInterceptor(new PageableInterceptor());
+        configuration.addInterceptor(new TypeHandleInterceptor());
     }
 }
