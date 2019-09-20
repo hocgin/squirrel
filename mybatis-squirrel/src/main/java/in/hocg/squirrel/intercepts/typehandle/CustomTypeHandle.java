@@ -1,13 +1,12 @@
-package in.hocg.squirrel.annotation;
+package in.hocg.squirrel.intercepts.typehandle;
 
-import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.UnknownTypeHandler;
 
 import java.lang.annotation.*;
 
 /**
- * Created by hocgin on 2019/7/12.
+ * Created by hocgin on 2019-09-19.
  * email: hocgin@gmail.com
  *
  * @author hocgin
@@ -15,22 +14,7 @@ import java.lang.annotation.*;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface Column {
-    
-    /**
-     * 列名
-     *
-     * @return
-     */
-    String name();
-    
-    /**
-     * 数据库类型
-     *
-     * @return
-     */
-    JdbcType jdbcType() default JdbcType.UNDEFINED;
-    
+public @interface CustomTypeHandle {
     /**
      * 类型处理器
      *

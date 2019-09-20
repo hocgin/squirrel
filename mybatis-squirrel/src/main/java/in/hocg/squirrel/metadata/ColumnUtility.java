@@ -1,8 +1,8 @@
 package in.hocg.squirrel.metadata;
 
 import com.google.common.collect.Lists;
-import in.hocg.squirrel.constant.Constants;
 import in.hocg.squirrel.annotation.Id;
+import in.hocg.squirrel.constant.Constants;
 import in.hocg.squirrel.exception.SquirrelException;
 import in.hocg.squirrel.metadata.struct.Column;
 import in.hocg.squirrel.metadata.struct.Table;
@@ -12,6 +12,8 @@ import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.type.TypeHandler;
+import org.apache.ibatis.type.UnknownTypeHandler;
 import org.apache.logging.log4j.util.Strings;
 
 import java.lang.reflect.Field;
@@ -96,6 +98,7 @@ public class ColumnUtility {
                 .setJavaType(field.getType())
                 .setFieldName(field.getName())
                 .setJdbcType(getJdbcType(field))
+                .setTypeHandler(getTypeHandler(field))
                 .setIsPk(isPk(field));
     }
     
@@ -112,6 +115,20 @@ public class ColumnUtility {
             jdbcType = column.jdbcType();
         }
         return Objects.isNull(jdbcType) ? JdbcType.JAVA_OBJECT : jdbcType;
+    }
+    
+    /**
+     * 获取 TypeHandler
+     *
+     * @param field
+     * @return
+     */
+    public static Class<? extends TypeHandler<?>> getTypeHandler(Field field) {
+        if (field.isAnnotationPresent(in.hocg.squirrel.annotation.Column.class)) {
+            in.hocg.squirrel.annotation.Column column = field.getAnnotation(in.hocg.squirrel.annotation.Column.class);
+            return column.typeHandler();
+        }
+        return UnknownTypeHandler.class;
     }
     
     
@@ -162,7 +179,7 @@ public class ColumnUtility {
         if (LangUtility.isEmpty(columnStruct)) {
             return new String[]{};
         }
-        return columnStruct.stream().map((c) -> Constants.BEAN_PARAMETER_PREFIX + c.getFieldName() + Constants.PARAMETER_SUFFIX).toArray(String[]::new);
+        return columnStruct.stream().map((c) -> Constants.BEAN_PARAMETER_PREFIX + c.getEl() + Constants.PARAMETER_SUFFIX).toArray(String[]::new);
     }
     
 }

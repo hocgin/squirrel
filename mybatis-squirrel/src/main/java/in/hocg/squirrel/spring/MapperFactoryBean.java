@@ -2,6 +2,7 @@ package in.hocg.squirrel.spring;
 
 import in.hocg.squirrel.MappedStatementSupport;
 import in.hocg.squirrel.intercepts.pageable.PageableInterceptor;
+import in.hocg.squirrel.intercepts.typehandle.TypeHandleInterceptor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
@@ -77,5 +78,6 @@ public class MapperFactoryBean<T> extends SqlSessionDaoSupport
         }
     
         configuration.addInterceptor(new PageableInterceptor());
+        configuration.addInterceptor(new TypeHandleInterceptor());
     }
 }

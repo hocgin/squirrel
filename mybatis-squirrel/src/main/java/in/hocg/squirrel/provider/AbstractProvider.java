@@ -129,11 +129,7 @@ public abstract class AbstractProvider implements BuildProvider {
     protected void setResultMaps(MappedStatement statement) {
         List<ResultMapping> resultMappings = Lists.newArrayList();
         for (Column column : columns) {
-            resultMappings.add(new ResultMapping.Builder(statement.getConfiguration(), column.getFieldName())
-                    .column(column.getColumnName())
-                    .jdbcType(column.getJdbcType())
-                    .javaType(column.getJavaType())
-                    .build());
+            resultMappings.add(column.getResultMapping(statement.getConfiguration()));
         }
         
         ResultMap resultMap = new ResultMap.Builder(statement.getConfiguration(),
