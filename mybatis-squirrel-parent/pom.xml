@@ -50,11 +50,6 @@
             </dependency>
             <dependency>
                 <groupId>in.hocg.squirrel</groupId>
-                <artifactId>mybatis-squirrel-cashew</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>in.hocg.squirrel</groupId>
                 <artifactId>mybatis-squirrel-spring-boot-autoconfigure</artifactId>
                 <version>${project.version}</version>
             </dependency>
