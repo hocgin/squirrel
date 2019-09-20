@@ -21,4 +21,8 @@
         FROM t_example
         LIMIT 1
     </select>
+    <select id="pageUseCustomTypeHandle" resultType="in.hocg.squirrel.sample.module.vo.CustomTypeHandlerVo">
+        SELECT *
+        FROM t_example
+    </select>
 </mapper>

@@ -35,4 +35,6 @@ public interface ExampleMapper
     List<Example> page3(RowBounds rowBounds);
     
     CustomTypeHandlerVo findBy();
+    
+    Page<CustomTypeHandlerVo> pageUseCustomTypeHandle(@Param("pageable") Page pageable);
 }
