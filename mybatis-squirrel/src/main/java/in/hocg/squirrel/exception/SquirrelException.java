@@ -1,6 +1,7 @@
 package in.hocg.squirrel.exception;
 
 import in.hocg.squirrel.utils.TextFormatter;
+import lombok.NoArgsConstructor;
 
 /**
  * Created by hocgin on 2019/7/12.
@@ -8,9 +9,8 @@ import in.hocg.squirrel.utils.TextFormatter;
  *
  * @author hocgin
  */
+@NoArgsConstructor
 public class SquirrelException extends RuntimeException {
-    
-    private SquirrelException() {}
     
     private SquirrelException(String message) {
         super(message);

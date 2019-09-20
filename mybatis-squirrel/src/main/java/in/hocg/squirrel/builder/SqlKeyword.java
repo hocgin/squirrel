@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum SqlKeyword {
+    // SQL Keyword
     EQ(" = "),
     NEQ(" <> "),
     ALL(" * "),

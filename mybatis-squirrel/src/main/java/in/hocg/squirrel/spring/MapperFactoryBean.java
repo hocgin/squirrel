@@ -1,8 +1,6 @@
 package in.hocg.squirrel.spring;
 
 import in.hocg.squirrel.MappedStatementSupport;
-import in.hocg.squirrel.intercepts.pageable.PageableInterceptor;
-import in.hocg.squirrel.intercepts.typehandle.TypeHandleInterceptor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
@@ -59,10 +57,8 @@ public class MapperFactoryBean<T> extends SqlSessionDaoSupport
         Assert.notNull(this.mapperInterface, "字段 mapperInterface 是必须的");
         Configuration configuration = this.getSqlSession().getConfiguration();
         
-        // 如果要求加入配置中
         if (this.addToConfig && !configuration.hasMapper(this.mapperInterface)) {
             try {
-                // 把 Mapper 加入全局配置中
                 configuration.addMapper(this.mapperInterface);
             } catch (Exception e) {
                 logger.error("Error while adding the mapper '" + this.mapperInterface + "' to configuration.", e);
@@ -72,12 +68,10 @@ public class MapperFactoryBean<T> extends SqlSessionDaoSupport
             }
         }
     
-        // 如果全局配置中已有 Mapper 接口类
         if (configuration.hasMapper(this.mapperInterface)) {
-            mappedStatementSupport.support(new ArrayList<>(configuration.getMappedStatements()));
+            mappedStatementSupport.handleMappedStatements(new ArrayList<>(configuration.getMappedStatements()));
         }
     
-        configuration.addInterceptor(new PageableInterceptor());
-        configuration.addInterceptor(new TypeHandleInterceptor());
+        mappedStatementSupport.handleInterceptors(configuration);
     }
 }

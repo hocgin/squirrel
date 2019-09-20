@@ -29,11 +29,7 @@ public class EntityHelper {
      * @return
      */
     public static Class<?> getEntityClass(Class<?> mapperClass) {
-        String mapperClassName = mapperClass.getName();
-        if (ENTITY_CLASS_CACHE.containsKey(mapperClassName)) {
-            return ENTITY_CLASS_CACHE.get(mapperClassName);
-        }
-        return getMapperEntityClass(mapperClass);
+        return ENTITY_CLASS_CACHE.computeIfAbsent(mapperClass.getName(), (key) -> getMapperEntityClass(mapperClass));
     }
     
     /**
@@ -57,9 +53,7 @@ public class EntityHelper {
         }
         
         Type[] actualTypeArguments = targetType.getActualTypeArguments();
-        Class<?> entityClass = (Class<?>) actualTypeArguments[0];
-        ENTITY_CLASS_CACHE.put(entityClass.getName(), entityClass);
-        return entityClass;
+        return (Class<?>) actualTypeArguments[0];
     }
     
 }

@@ -2,6 +2,7 @@ package in.hocg.squirrel.intercepts.typehandle;
 
 import com.google.common.collect.Lists;
 import in.hocg.squirrel.constant.MappedStatementFields;
+import in.hocg.squirrel.helper.MappedStatementHelper;
 import in.hocg.squirrel.intercepts.AbstractInterceptor;
 import in.hocg.squirrel.utils.ClassUtility;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +30,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import static in.hocg.squirrel.helper.StatementHelper.getStatementId;
 
 /**
  * Created by hocgin on 2019-09-19.
@@ -83,7 +83,7 @@ public class TypeHandleInterceptor extends AbstractInterceptor {
         }
         
         return new ResultMap.Builder(configuration,
-                getStatementId(statement),
+                MappedStatementHelper.getInlineStatementId(statement),
                 clazz,
                 resultMappings,
                 true).build();

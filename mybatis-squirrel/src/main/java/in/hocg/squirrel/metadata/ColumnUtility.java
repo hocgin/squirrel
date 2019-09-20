@@ -114,7 +114,7 @@ public class ColumnUtility {
             in.hocg.squirrel.annotation.Column column = field.getAnnotation(in.hocg.squirrel.annotation.Column.class);
             jdbcType = column.jdbcType();
         }
-        return Objects.isNull(jdbcType) ? JdbcType.JAVA_OBJECT : jdbcType;
+        return Objects.isNull(jdbcType) ? JdbcType.UNDEFINED : jdbcType;
     }
     
     /**

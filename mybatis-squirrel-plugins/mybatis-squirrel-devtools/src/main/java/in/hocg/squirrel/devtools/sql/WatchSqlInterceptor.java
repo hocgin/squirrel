@@ -3,7 +3,7 @@ package in.hocg.squirrel.devtools.sql;
 import com.google.common.base.Stopwatch;
 import in.hocg.squirrel.constant.StatementHandlerFields;
 import in.hocg.squirrel.intercepts.AbstractInterceptor;
-import in.hocg.squirrel.utils.Pretty;
+import in.hocg.squirrel.utils.PrettyUtility;
 import in.hocg.squirrel.utils.TextFormatter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.executor.statement.StatementHandler;
@@ -69,7 +69,7 @@ public class WatchSqlInterceptor extends AbstractInterceptor {
         MetaObject metaObject = SystemMetaObject.forObject(target);
         MappedStatement mappedStatement = (MappedStatement) metaObject.getValue(StatementHandlerFields.DELEGATE__MAPPED_STATEMENT);
         BoundSql boundSql = target.getBoundSql();
-        String originalSql = Pretty.sql(boundSql);
+        String originalSql = PrettyUtility.sql(boundSql);
         Configuration configuration = mappedStatement.getConfiguration();
         
         List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();

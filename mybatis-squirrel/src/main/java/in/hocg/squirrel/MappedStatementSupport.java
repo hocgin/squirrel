@@ -1,13 +1,18 @@
 package in.hocg.squirrel;
 
+import com.google.common.collect.Sets;
 import in.hocg.squirrel.helper.ProviderHelper;
-import in.hocg.squirrel.helper.StatementHelper;
+import in.hocg.squirrel.intercepts.pageable.PageableInterceptor;
+import in.hocg.squirrel.intercepts.typehandle.TypeHandleInterceptor;
 import in.hocg.squirrel.provider.AbstractProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.builder.annotation.ProviderSqlSource;
 import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.session.Configuration;
 
-import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by hocgin on 2019/7/14.
@@ -19,30 +24,26 @@ import java.util.Collection;
 public class MappedStatementSupport {
     
     /**
-     * 生成 MappedStatement
-     *
-     * @param mappedStatements
+     * 已处理过的 MappedStatement
      */
-    public void support(Collection<Object> mappedStatements) {
-        for (Object mappedStatement : mappedStatements) {
-            if (!(mappedStatement instanceof MappedStatement)) {
-                continue;
-            }
-            MappedStatement statement = (MappedStatement) mappedStatement;
-            
-            StatementHelper.addMappedStatement(statement);
-        }
-        handleMappedStatementMethods();
+    private static final Set<String> HANDLED_MAPPED_STATEMENT = Sets.newHashSet();
+    
+    /**
+     * 处理 Mapper
+     *
+     * @param mappedStatements mappedStatements
+     */
+    public void handleMappedStatements(List<MappedStatement> mappedStatements) {
+        handleMappedStatementMethods(Collections.unmodifiableList(mappedStatements));
     }
     
     /**
      * 处理标记 @XXProvider 映射的函数生成 MappedStatement
      */
-    private void handleMappedStatementMethods() {
-        Collection<MappedStatement> mappedStatements = StatementHelper.getMappedStatement();
+    private void handleMappedStatementMethods(List<MappedStatement> mappedStatements) {
         for (MappedStatement statement : mappedStatements) {
             String statementId = statement.getId();
-            if (StatementHelper.isBuiltMappedStatement(statementId)) {
+            if (HANDLED_MAPPED_STATEMENT.contains(statementId)) {
                 continue;
             }
             
@@ -51,11 +52,21 @@ public class MappedStatementSupport {
                 AbstractProvider provider = ProviderHelper.getMethodProvider(statementId);
                 
                 // 调用对应的 Provider 处理器，生成 MappedStatement 实例
-                provider.invokeProviderBuildMethod(statement);
+                provider.buildMappedStatement(statement);
                 
-                // 标记为已加载
-                StatementHelper.addBuiltMappedStatement(statementId);
+                HANDLED_MAPPED_STATEMENT.add(statementId);
             }
         }
+    }
+    
+    /**
+     * 装载插件
+     *
+     * @param configuration configuration
+     */
+    public void handleInterceptors(Configuration configuration) {
+        // 分页插件
+        configuration.addInterceptor(new PageableInterceptor());
+        configuration.addInterceptor(new TypeHandleInterceptor());
     }
 }

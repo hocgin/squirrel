@@ -2,6 +2,7 @@ package in.hocg.squirrel.helper;
 
 import in.hocg.squirrel.exception.SquirrelException;
 import in.hocg.squirrel.provider.AbstractProvider;
+import in.hocg.squirrel.utils.ClassUtility;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.DeleteProvider;
 import org.apache.ibatis.annotations.InsertProvider;
@@ -48,22 +49,23 @@ public class ProviderHelper {
      * @return
      */
     public static AbstractProvider getMethodProvider(String statementId) {
-        String methodName = StatementHelper.getMethodName(statementId);
-        Class<?> mapperClass = StatementHelper.getMapperClass(statementId);
+        String methodName = MappedStatementHelper.getMethodName(statementId);
+        Class<?> mapperClass = MappedStatementHelper.getMapperClass(statementId);
         
         Class<?> entityClass = EntityHelper.getEntityClass(mapperClass);
         
-        Method method = MapperHelper.getMethod(methodName, mapperClass);
+        Method method = ClassUtility.from(mapperClass).getMethod(methodName);
         
         Class<?> providerClass = ProviderHelper.getProviderClass(method);
         
         if (Objects.isNull(providerClass)) {
-            throw SquirrelException.wrap("该函数 {} 没有实现方式", statementId);
+            throw SquirrelException.wrap("该函数 {}{} 没有对应的 Provider 实现", mapperClass.getName(), methodName);
         }
         
         AbstractProvider provider;
         try {
-            provider = (AbstractProvider) providerClass.getConstructor(Class.class, Class.class, Method.class).newInstance(mapperClass, entityClass, method);
+            provider = (AbstractProvider) providerClass.getConstructor(Class.class, Class.class, Method.class)
+                    .newInstance(mapperClass, entityClass, method);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             log.error("创建 Provider(Class: {}, 参数: {}, {}, {}) 实例失败, 错误信息: {}", providerClass, mapperClass, entityClass, method, e);
             throw SquirrelException.wrap("获取 Provider 失败，Statement Id: {}, 参数: {}, {}, {}", statementId, mapperClass, entityClass, method);

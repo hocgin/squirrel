@@ -31,12 +31,12 @@ public enum Dialect {
      * @param flag
      * @return
      */
-    public static Dialect of(String flag) {
+    public static Dialect of(String flag, Dialect def) {
         for (Dialect dialect : Dialect.values()) {
             if (dialect.flag.contains(flag)) {
                 return dialect;
             }
         }
-        return Dialect.Unknown;
+        return def;
     }
 }
