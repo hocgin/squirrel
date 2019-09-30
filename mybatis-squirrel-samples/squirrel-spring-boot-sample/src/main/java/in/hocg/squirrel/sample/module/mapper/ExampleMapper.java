@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by hocgin on 2019/5/25.
@@ -37,4 +38,6 @@ public interface ExampleMapper
     CustomTypeHandlerVo findBy();
     
     Page<CustomTypeHandlerVo> pageUseCustomTypeHandle(@Param("pageable") Page pageable);
+    
+    Optional<Example> findByName2(@Param("name2") String name2);
 }

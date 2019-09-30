@@ -111,4 +111,10 @@ public class ExampleMapperTest {
         List<Example> arg = mapper.page3(new RowBounds(0, 2));
         log.debug("执行结果3: {}", arg);
     }
+    
+    @Test
+    public void testFindByName2() {
+        Optional<Example> exampleOptional = mapper.findByName2("22");
+        log.debug("执行结果: {}", exampleOptional.get());
+    }
 }

@@ -25,4 +25,10 @@
         SELECT *
         FROM t_example
     </select>
+
+    <select id="findByName2" resultType="in.hocg.squirrel.sample.module.domain.Example">
+        SELECT *
+        FROM t_example te
+        WHERE te.name2 = #{name2}
+    </select>
 </mapper>
