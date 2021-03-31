@@ -23,7 +23,7 @@
         <maven-compiler-plugin.version>3.6.0</maven-compiler-plugin.version>
 
         <lombok.version>1.18.6</lombok.version>
-        <guava.version>27.1-jre</guava.version>
+        <guava.version>29.0-jre</guava.version>
         <mybatis.version>3.5.1</mybatis.version>
         <spring.boot.version>2.1.6.RELEASE</spring.boot.version>
         <mybatis.spring.version>2.0.1</mybatis.spring.version>
