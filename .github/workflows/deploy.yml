@@ -28,14 +28,9 @@ jobs:
         run: |
           mkdir -p ~/.m2
           echo "<settings><servers><server><id>\${env.ID}</id><username>\${env.MAVEN_USERNAME}</username><password>\${env.MAVEN_PASSWORD}</password></server></servers></settings>" > ~/.m2/settings.xml
-#          RELEASE_REPO="\${env.ID}::default::\${env.RELEASE_URL}"
-#          SNAPSHOTS_REPO="\${env.ID}::default::\${env.SNAPSHOTS_URL}"
-#          mvn deploy -DaltReleaseDeploymentRepository="${RELEASE_REPO}" -DaltSnapshotDeploymentRepository="${SNAPSHOTS_REPO}" -DskipTests
           mvn deploy -P release -DskipTests
         env:
           ID: sonatype
-#          RELEASE_URL: https://oss.sonatype.org/service/local/staging/deploy/maven2
-#          SNAPSHOTS_URL: https://oss.sonatype.org/content/repositories/snapshots
           MAVEN_USERNAME: hocgin
           MAVEN_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
