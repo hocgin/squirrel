@@ -17,13 +17,13 @@ import java.util.Properties;
  * @author hocgin
  */
 public abstract class AbstractInterceptor implements Interceptor {
-    
+
     /**
      * 获取 Invocation 的 target
      *
      * @param target
      * @param <T>
-     * @return
+     * @return r
      */
     protected <T> T getTarget(Object target) {
         if (Proxy.isProxyClass(target.getClass())) {
@@ -32,16 +32,16 @@ public abstract class AbstractInterceptor implements Interceptor {
         }
         return (T) target;
     }
-    
+
     @Override
     public Object plugin(Object target) {
         return Plugin.wrap(target, this);
     }
-    
+
     @Override
     public void setProperties(Properties properties) {
     }
-    
+
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
         return invocation.proceed();

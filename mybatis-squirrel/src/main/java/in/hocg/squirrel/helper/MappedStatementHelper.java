@@ -19,17 +19,17 @@ import java.util.Objects;
  */
 @Slf4j
 public class MappedStatementHelper {
-    
+
     /**
      * Mapper Class 缓存
      */
     private static Cache MAPPER_CLASS_CACHE = new SoftCache(new PerpetualCache("MAPPER_CLASS_CACHE"));
-    
+
     /**
      * 解析 statementId 获取函数名
      *
      * @param statementId
-     * @return
+     * @return r
      */
     public static String getMethodName(String statementId) {
         if (isStatementId(statementId)) {
@@ -37,7 +37,7 @@ public class MappedStatementHelper {
         }
         return statementId.substring(statementId.lastIndexOf(Constants.COMMA) + 1);
     }
-    
+
     /**
      * 通过 statement id 获取对应的 Mapper 类
      *
@@ -49,12 +49,12 @@ public class MappedStatementHelper {
             throw SquirrelException.wrap("Statement Id: {} 格式错误", statementId);
         }
         String mapperClassName = statementId.substring(0, statementId.lastIndexOf(Constants.COMMA));
-        
+
         Class<?> mapperClass = ((Class<?>) MAPPER_CLASS_CACHE.getObject(statementId));
         if (Objects.nonNull(mapperClass)) {
             return mapperClass;
         }
-        
+
         try {
             // 从资源中获取匹配的 mapper 类
             mapperClass = Resources.classForName(mapperClassName);
@@ -62,19 +62,19 @@ public class MappedStatementHelper {
             log.error("{} 类通过类加载器没有找到", mapperClassName);
             throw SquirrelException.wrap("从资源中获取 Mapper 类出错 {}", e.getMessage());
         }
-        
+
         MAPPER_CLASS_CACHE.putObject(mapperClassName, mapperClass);
         return mapperClass;
     }
-    
+
     /**
      * @param statement
-     * @return
+     * @return r
      */
     public static String getInlineStatementId(MappedStatement statement) {
         return String.format("%s-Inline", statement.getId());
     }
-    
+
     /**
      * 判断 statement id 是否符合
      *

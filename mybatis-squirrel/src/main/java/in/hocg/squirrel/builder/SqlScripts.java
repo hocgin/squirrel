@@ -12,33 +12,33 @@ import lombok.experimental.UtilityClass;
  */
 @UtilityClass
 public class SqlScripts {
-    
+
     /**
      * xx = #{xx}
      *
-     * @param column
-     * @param parameterName
-     * @return
+     * @param column column
+     * @param parameterName parameterName
+     * @return r
      */
     public static String eq(@NonNull String column, @NonNull String parameterName) {
         return column + SqlKeyword.EQ.getValue() + parameter(parameterName);
     }
-    
+
     /**
      * xx = #{id}
      *
-     * @param keyProperties
-     * @return
+     * @param keyProperties keyProperties
+     * @return r
      */
     public static String idEq(@NonNull String keyProperties) {
         return eq(keyProperties, Constants.KEY_PARAMETER);
     }
-    
+
     /**
      * 参数 #{xx}
      *
-     * @param parameterName
-     * @return
+     * @param parameterName parameterName
+     * @return r
      */
     public static String parameter(@NonNull String parameterName) {
         return Constants.PARAMETER_PREFIX + parameterName + Constants.PARAMETER_SUFFIX;

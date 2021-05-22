@@ -29,22 +29,22 @@ import java.util.Objects;
 @Slf4j
 @UtilityClass
 public class ColumnUtility {
-    
-    
+
+
     /**
      * 加载列结构
      *
      * @param tableStruct
      * @param entityClass
-     * @return
+     * @return r
      */
     public static List<Column> loadColumnMetadata(Table tableStruct, Class<?> entityClass) {
         List<Column> columns = Lists.newArrayList();
-        
+
         List<Field> fields = ClassUtility.from(entityClass).getAllField();
         for (Field field : fields) {
             Column column = getMetadata(field);
-            
+
             // 如果该字段是 @Id
             if (column.getIsPk()) {
                 tableStruct.setKeyColumnName(column.getColumnName());
@@ -55,12 +55,12 @@ public class ColumnUtility {
         }
         return columns;
     }
-    
+
     /**
      * 获取并创建 KeyGenerator
      *
      * @param field
-     * @return
+     * @return r
      */
     private static KeyGenerator getAndNewKeyGenerator(Field field) {
         Class<? extends KeyGenerator> keyGenerator = getKeyGenerator(field);
@@ -71,12 +71,12 @@ public class ColumnUtility {
             throw SquirrelException.wrap("设置 {fieldName} 主键生成策略失败", field.getName());
         }
     }
-    
+
     /**
      * 从字段上的注解中获取主键生成策略
      *
      * @param field
-     * @return
+     * @return r
      */
     private static Class<? extends KeyGenerator> getKeyGenerator(Field field) {
         if (field.isAnnotationPresent(Id.class)) {
@@ -85,12 +85,12 @@ public class ColumnUtility {
         }
         throw SquirrelException.wrap("{field} 上未找到 @Id 注解", field.getName());
     }
-    
+
     /**
      * 获取字段结构
      *
      * @param field
-     * @return
+     * @return r
      */
     public static Column getMetadata(Field field) {
         return new Column()
@@ -101,12 +101,12 @@ public class ColumnUtility {
                 .setTypeHandler(getTypeHandler(field))
                 .setIsPk(isPk(field));
     }
-    
+
     /**
      * 获取字段的 Java 类型
      *
      * @param field
-     * @return
+     * @return r
      */
     public static JdbcType getJdbcType(Field field) {
         JdbcType jdbcType = null;
@@ -116,12 +116,12 @@ public class ColumnUtility {
         }
         return Objects.isNull(jdbcType) ? JdbcType.UNDEFINED : jdbcType;
     }
-    
+
     /**
      * 获取 TypeHandler
      *
      * @param field
-     * @return
+     * @return r
      */
     public static Class<? extends TypeHandler<?>> getTypeHandler(Field field) {
         if (field.isAnnotationPresent(in.hocg.squirrel.annotation.Column.class)) {
@@ -130,13 +130,13 @@ public class ColumnUtility {
         }
         return UnknownTypeHandler.class;
     }
-    
-    
+
+
     /**
      * 从字段上获取列名
      *
      * @param field
-     * @return
+     * @return r
      */
     public static String getColumnName(Field field) {
         String fieldName = null;
@@ -146,21 +146,21 @@ public class ColumnUtility {
         }
         return Strings.isBlank(fieldName) ? field.getName() : fieldName;
     }
-    
+
     /**
      * 判断字段是否是主键
      *
      * @param field
-     * @return
+     * @return r
      */
     public static Boolean isPk(Field field) {
         return field.isAnnotationPresent(Id.class);
     }
-    
+
     /**
      * 获取所有列名
      *
-     * @return
+     * @return r
      */
     public static String[] getColumnNames(List<Column> columnStruct) {
         if (LangUtility.isEmpty(columnStruct)) {
@@ -168,12 +168,12 @@ public class ColumnUtility {
         }
         return columnStruct.stream().map(Column::getColumnName).toArray(String[]::new);
     }
-    
+
     /**
      * 获取所有类型的参数名称
      *
      * @param columnStruct
-     * @return
+     * @return r
      */
     public static String[] getColumnParameters(List<Column> columnStruct) {
         if (LangUtility.isEmpty(columnStruct)) {
@@ -181,5 +181,5 @@ public class ColumnUtility {
         }
         return columnStruct.stream().map((c) -> Constants.BEAN_PARAMETER_PREFIX + c.getEl() + Constants.PARAMETER_SUFFIX).toArray(String[]::new);
     }
-    
+
 }

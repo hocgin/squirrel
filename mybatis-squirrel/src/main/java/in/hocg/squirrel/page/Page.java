@@ -15,66 +15,66 @@ import static java.util.stream.Collectors.toList;
  * @author hocgin
  */
 public interface Page<T> extends Serializable {
-    
+
     /**
      * 是否进行总数统计
      * - 进行总数统计会使用 COUNT 进行查询, 当数据量大的时候或者不需要使用总数时建议设置为 false
      *
-     * @return
+     * @return r
      */
     default boolean isSearchCount() {
         return true;
     }
-    
+
     /**
      * 设置当前页
      *
      * @param page
-     * @return
+     * @return r
      */
     Page<T> setPage(int page);
-    
+
     /**
      * 获取当前页
      *
-     * @return
+     * @return r
      */
     int getPage();
-    
+
     /**
      * 分页显示数量
      *
-     * @return
+     * @return r
      */
     long getSize();
-    
+
     /**
      * 设置分页显示数量
      *
      * @param size
-     * @return
+     * @return r
      */
     Page<T> setSize(long size);
-    
+
     /**
      * 查询数据总数
      *
-     * @return
+     * @return r
      */
     long getTotal();
-    
+
     /**
      * 设置数据总数
      *
      * @param total
-     * @return
+     * @return r
      */
     Page<T> setTotal(long total);
-    
+
     /**
      * 当前分页总页数
      *
-     * @return
+     * @return r
      */
     default long getTotalPage() {
         if (getSize() == 0) {
@@ -86,37 +86,37 @@ public interface Page<T> extends Serializable {
         }
         return pages;
     }
-    
+
     /**
      * 数据
      *
-     * @return
+     * @return r
      */
     List<T> getRecords();
-    
+
     /**
      * 数据
      *
      * @param records
-     * @return
+     * @return r
      */
     Page<T> setRecords(List<T> records);
-    
+
     /**
      * 计算在表上的偏移量
      *
-     * @return
+     * @return r
      */
     default long offset() {
         return getPage() > 0 ? (getPage() - 1) * getSize() : 0;
     }
-    
+
     /**
      * 类型转换和处理
      *
      * @param mapper
      * @param <R>
-     * @return
+     * @return r
      */
     default <R> Page<R> convert(Function<? super T, ? extends R> mapper) {
         List<R> collect = this.getRecords().stream().map(mapper).collect(toList());

@@ -20,17 +20,17 @@ import java.util.List;
 public interface ExampleMapper
         extends
         CrudMapper<Example> {
-    
+
     /**
      * 查找一条数据
      * - 测试 MyBatis 新特性，Optional 返回值
      *
-     * @return
+     * @return r
      */
     Pageable<Example> page(@Param("pageable") Page pageable);
-    
+
     List<Example> page2(Integer intt);
-    
+
     List<Example> page3(RowBounds rowBounds);
-    
+
 }

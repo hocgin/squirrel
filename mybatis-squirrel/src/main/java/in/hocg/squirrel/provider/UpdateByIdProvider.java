@@ -20,16 +20,16 @@ import java.util.List;
  */
 @Slf4j
 public class UpdateByIdProvider extends AbstractProvider {
-    
+
     public UpdateByIdProvider(Class<?> mapperClass, Class<?> entityClass, Method method) {
         super(mapperClass, entityClass, method);
     }
-    
+
     @Override
     public void build(MappedStatement statement) {
-        
+
         Table table = getTable();
-        
+
         String sql = XmlScripts.script(
                 XmlScripts.update(table.getTableName()),
                 XmlScripts.set(getSets()),
@@ -37,14 +37,14 @@ public class UpdateByIdProvider extends AbstractProvider {
                         XmlScripts.eq(table.getKeyColumnName(), Constants.BEAN_PARAMETER + Constants.COMMA + Constants.KEY_PARAMETER)
                 )
         );
-        
+
         setSqlSource(statement, sql);
     }
-    
+
     /**
      * xx = xx
      *
-     * @return
+     * @return r
      */
     private String[] getSets() {
         // 列信息

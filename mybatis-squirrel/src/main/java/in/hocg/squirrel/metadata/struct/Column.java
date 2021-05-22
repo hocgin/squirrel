@@ -21,47 +21,47 @@ import static in.hocg.squirrel.constant.Constants.COMMA;
 @Data
 @Accessors(chain = true)
 public class Column {
-    
+
     /**
      * 列名
      */
     private String columnName;
-    
+
     /**
      * 字段名
      */
     private String fieldName;
-    
+
     /**
      * Java 类型
      */
     private Class<?> javaType;
-    
+
     /**
      * Jdbc 类型
      */
     private JdbcType jdbcType;
-    
+
     /**
      * 类型处理器
      */
     private Class<? extends TypeHandler<?>> typeHandler;
-    
+
     /**
      * 指定小数点后保留的位数
      *
-     * @return
+     * @return r
      */
     private String numericScale;
-    
+
     /**
      * 是否是主键
      */
     private Boolean isPk = false;
-    
+
     /**
      * 获取参数 EL 形式
-     * @return
+     * @return r
      */
     public String getEl() {
         String el = this.fieldName;
@@ -76,12 +76,12 @@ public class Column {
         }
         return el;
     }
-    
+
     /**
      * 获取结果映射规则
      *
      * @param configuration
-     * @return
+     * @return r
      */
     public ResultMapping getResultMapping(final Configuration configuration) {
         ResultMapping.Builder builder = new ResultMapping.Builder(configuration, fieldName,

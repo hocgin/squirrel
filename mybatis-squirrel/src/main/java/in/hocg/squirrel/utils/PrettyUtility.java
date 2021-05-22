@@ -15,24 +15,24 @@ import java.util.StringTokenizer;
 @Slf4j
 @UtilityClass
 public class PrettyUtility {
-    
-    
+
+
     /**
      * 美化 SQL
      * @param boundSql
-     * @return
+     * @return r
      */
     public static String sql(BoundSql boundSql) {
         // fixme: 等待补充美化SQL..
         String sql = removeBreakingWhitespace(boundSql.getSql());
         return sql.replaceAll("[\\s]+", " ");
     }
-    
+
     /**
      * 移除多的空格
      *
      * @param original
-     * @return
+     * @return r
      */
     public static String removeBreakingWhitespace(String original) {
         StringTokenizer whitespaceStripper = new StringTokenizer(original);

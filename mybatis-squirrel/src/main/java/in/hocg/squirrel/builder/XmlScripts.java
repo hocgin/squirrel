@@ -23,43 +23,43 @@ public class XmlScripts {
     private static final String WHERE = "where";
     private static final String SET = "set";
     private static final String FOREACH = "foreach";
-    
+
     private static final HashMap<String, String> EMPTY = Maps.newHashMap();
-    
+
     /**
      * <script/>
      *
      * @param inner
-     * @return
+     * @return r
      */
     public static String script(String... inner) {
         return node(SCRIPT, inner);
     }
-    
+
     /**
      * <if/>
      *
      * @param test
      * @param inner
-     * @return
+     * @return r
      */
     public static String _if(@NonNull String test, String... inner) {
         HashMap<String, String> attrs = Maps.newHashMap();
         attrs.put("test", test);
         return node(IF, attrs, inner);
     }
-    
+
     /**
      * <if test="#{xx} != null"/>
      *
      * @param param
      * @param inner
-     * @return
+     * @return r
      */
     public static String ifNotNull(@NonNull String param, String... inner) {
         return _if(TextFormatter.format("{param} != null", param), inner);
     }
-    
+
     /**
      * <foreach/>
      *
@@ -68,7 +68,7 @@ public class XmlScripts {
      * @param separator
      * @param open
      * @param close
-     * @return
+     * @return r
      */
     public static String foreach(@NonNull String collection,
                                  @NonNull String item,
@@ -79,7 +79,7 @@ public class XmlScripts {
         attrs.put("collection", collection);
         attrs.put("item", item);
         attrs.put("separator", separator);
-        
+
         if (!Strings.isNullOrEmpty(open)) {
             attrs.put("open", open);
         }
@@ -89,15 +89,15 @@ public class XmlScripts {
         String inner = String.format("%s%s%s", Constants.PARAMETER_PREFIX, item, Constants.PARAMETER_SUFFIX);
         return node(FOREACH, attrs, inner);
     }
-    
-    
+
+
     /**
      * xx in()
      *
      * @param columnName
      * @param collection
      * @param item
-     * @return
+     * @return r
      */
     public static String in(String columnName,
                             String collection,
@@ -111,42 +111,42 @@ public class XmlScripts {
                         SqlKeyword.SPLIT_SUFFIX.getValue()
                 )
         );
-        
+
         return ifNotNull(collection, sql);
     }
-    
+
     /**
      * <where/>
      *
      * @param inner
-     * @return
+     * @return r
      */
     public static String where(String... inner) {
         return node(WHERE, EMPTY, inner);
     }
-    
+
     /**
      * <set/>
      *
      * @param inners
-     * @return
+     * @return r
      */
     public static String set(String... inners) {
         Optional<String> setOptional = Arrays.stream(inners)
                 .reduce((s, s2) -> s + s2);
         return node(SET, EMPTY, setOptional.orElse(""));
     }
-    
+
     public static String node(String tag, String... inner) {
         return node(tag, tag, EMPTY, inner);
     }
-    
+
     public static String node(String tag,
                               Map<String, String> attrs,
                               String... inner) {
         return node(tag, tag, attrs, inner);
     }
-    
+
     /**
      * 构建一个 xml 节点
      *
@@ -154,14 +154,14 @@ public class XmlScripts {
      * @param closeTag
      * @param attrs
      * @param inner
-     * @return
+     * @return r
      */
     public static String node(String openTag,
                               String closeTag,
                               Map<String, String> attrs,
                               String... inner) {
         final String nodeStr = "<{tag}{allAttr}>{allInner}</{tag}>";
-        
+
         String allAttrs = "";
         if (Objects.nonNull(attrs) && attrs.size() > 0) {
             allAttrs = " " + attrs.keySet().stream()
@@ -176,44 +176,44 @@ public class XmlScripts {
         }
         return TextFormatter.format(nodeStr, openTag, allAttrs, allInner, closeTag);
     }
-    
+
     /**
      * SELECT columns FROM tableName
      *
      * @param tableName
      * @param columns
-     * @return
+     * @return r
      */
     public static String select(@NonNull String tableName, @NonNull String[] columns) {
         return new SQL().SELECT(columns).FROM(tableName).toString();
     }
-    
+
     /**
      * UPDATE tableName
      *
      * @param tableName
-     * @return
+     * @return r
      */
     public static String update(String tableName) {
         return new SQL().UPDATE(tableName).toString();
     }
-    
+
     /**
      * DELETE tableName
      *
      * @param tableName
-     * @return
+     * @return r
      */
     public static String delete(String tableName) {
         return new SQL().DELETE_FROM(tableName).toString();
     }
-    
+
     /**
      * field = #{v}
      *
      * @param keyColumnName
      * @param fieldName
-     * @return
+     * @return r
      */
     public static String eq(@NonNull String keyColumnName,
                             @NonNull String fieldName) {
@@ -223,23 +223,23 @@ public class XmlScripts {
                 fieldName +
                 Constants.PARAMETER_SUFFIX;
     }
-    
+
     /**
      * sql
      *
      * @param sql
-     * @return
+     * @return r
      */
     public static String sql(@NonNull String sql) {
         return sql;
     }
-    
+
     /**
      * 计数
      *
      * @param tableName
      * @param column
-     * @return
+     * @return r
      */
     public static String count(String tableName, @NonNull String column) {
         return new SQL().SELECT(SqlKeyword.COUNT.getValue()

@@ -12,15 +12,15 @@ import java.util.Collection;
  */
 @Slf4j
 public class LangUtility {
-    
+
     /**
      * 判断集合是否为 NULL 或者 空
      *
      * @param c
-     * @return
+     * @return r
      */
     public static boolean isEmpty(Collection c) {
         return c == null || c.isEmpty();
     }
-    
+
 }

@@ -15,28 +15,28 @@ import java.util.Objects;
  * @author hocgin
  */
 public class EntityHelper {
-    
+
     /**
      * 实体类信息缓存 <Mapper类全名, 实体类>
      */
     private static final Map<String, Class<?>> ENTITY_CLASS_CACHE = Maps.newHashMap();
-    
-    
+
+
     /**
      * 从接口上获取实体的类型
      *
      * @param mapperClass
-     * @return
+     * @return r
      */
     public static Class<?> getEntityClass(Class<?> mapperClass) {
         return ENTITY_CLASS_CACHE.computeIfAbsent(mapperClass.getName(), (key) -> getMapperEntityClass(mapperClass));
     }
-    
+
     /**
      * 从接口上获取实体的类型
      *
      * @param mapperClass
-     * @return
+     * @return r
      */
     public static Class<?> getMapperEntityClass(Class<?> mapperClass) {
         Type[] types = mapperClass.getGenericInterfaces();
@@ -47,13 +47,13 @@ public class EntityHelper {
                 break;
             }
         }
-        
+
         if (Objects.isNull(targetType)) {
             throw SquirrelException.wrap("Mapper 接口文件: {} 中找不到实体泛型", mapperClass);
         }
-        
+
         Type[] actualTypeArguments = targetType.getActualTypeArguments();
         return (Class<?>) actualTypeArguments[0];
     }
-    
+
 }

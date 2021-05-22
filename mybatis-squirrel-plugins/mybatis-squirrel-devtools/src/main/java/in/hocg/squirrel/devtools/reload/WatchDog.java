@@ -39,7 +39,7 @@ public class WatchDog implements Runnable {
     private Configuration configuration;
     private int delaySeconds = 1;
     private int sleepSeconds = 1;
-    
+
     public WatchDog(Resource[] mapperLocations,
                     SqlSessionFactory sqlSessionFactory,
                     boolean enabled) {
@@ -49,7 +49,7 @@ public class WatchDog implements Runnable {
         this.configuration = sqlSessionFactory.getConfiguration();
         this.run();
     }
-    
+
     @Override
     public void run() {
         if (enabled) {
@@ -70,7 +70,7 @@ public class WatchDog implements Runnable {
             }
         }
     }
-    
+
     /**
      * 刷新 Mapper 文件
      *
@@ -113,8 +113,8 @@ public class WatchDog implements Runnable {
             ErrorContext.instance().reset();
         }
     }
-    
-    
+
+
     /**
      * 清除参数
      *
@@ -127,7 +127,7 @@ public class WatchDog implements Runnable {
             configuration.getParameterMaps().remove(namespace + "." + id);
         }
     }
-    
+
     /**
      * 清除 MappedStatement
      *
@@ -148,7 +148,7 @@ public class WatchDog implements Runnable {
         objectStrictMap.putAll(mappedStatementMap);
         SystemMetaObject.forObject(configuration).setValue("mappedStatements", objectStrictMap);
     }
-    
+
     /**
      * 清除 resultMap 节点
      *
@@ -163,7 +163,7 @@ public class WatchDog implements Runnable {
             clearResultMap(resultMapNode, namespace);
         }
     }
-    
+
     /**
      * 清除 resultMap 嵌套节点
      *
@@ -186,7 +186,7 @@ public class WatchDog implements Runnable {
             }
         }
     }
-    
+
     /**
      * 清除 selectKey 节点
      *
@@ -200,7 +200,7 @@ public class WatchDog implements Runnable {
             configuration.getKeyGeneratorNames().remove(namespace + "." + id + SelectKeyGenerator.SELECT_KEY_SUFFIX);
         }
     }
-    
+
     /**
      * 清除 SQL 节点
      *
@@ -214,11 +214,11 @@ public class WatchDog implements Runnable {
             configuration.getSqlFragments().remove(namespace + "." + id);
         }
     }
-    
+
     /**
      * 获取要监控的文件
      *
-     * @return
+     * @return r
      */
     private Set<String> getWatchPaths() {
         if (fileSet == null) {

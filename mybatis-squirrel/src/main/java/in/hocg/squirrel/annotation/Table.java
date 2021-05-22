@@ -15,7 +15,7 @@ public @interface Table {
     /**
      * 表名
      *
-     * @return
+     * @return r
      */
     String name();
 }

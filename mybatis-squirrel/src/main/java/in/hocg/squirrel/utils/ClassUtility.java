@@ -24,15 +24,15 @@ public class ClassUtility {
      */
     private static Map<Class, ClassUtility> CACHED = Maps.newHashMap();
     private final Class<?> clazz;
-    
+
     public static ClassUtility from(Class<?> clazz) {
         return CACHED.computeIfAbsent(clazz, ClassUtility::new);
     }
-    
+
     /**
      * 获取所有函数
      *
-     * @return
+     * @return r
      */
     public ArrayList<Method> getAllMethod() {
         ArrayList<Method> result = Lists.newArrayList();
@@ -42,19 +42,19 @@ public class ClassUtility {
             return result;
         }
         result.addAll(ClassUtility.from(superclass).getAllMethod());
-        
+
         return result;
     }
-    
+
     /**
      * 获取所有字段
      *
-     * @return
+     * @return r
      */
     public List<Field> getAllField() {
         ArrayList<Field> result = Lists.newArrayList();
         result.addAll(Arrays.asList(clazz.getDeclaredFields()));
-        
+
         Class<?> superclass = clazz.getSuperclass();
         if (Object.class.equals(superclass)) {
             return result;
@@ -62,23 +62,23 @@ public class ClassUtility {
         result.addAll(ClassUtility.from(superclass).getAllField());
         return result;
     }
-    
+
     /**
      * 获取所有字段，排除 @Transient
      *
-     * @return
+     * @return r
      */
     public List<Field> getAllFieldExcludeTransient() {
         return getAllField().stream()
                 .filter(field -> !Modifier.isTransient(field.getModifiers()))
                 .collect(Collectors.toList());
     }
-    
+
     /**
      * 查找字段
      *
      * @param fieldName
-     * @return
+     * @return r
      */
     public Field getField(String fieldName) {
         Field field = null;
@@ -95,12 +95,12 @@ public class ClassUtility {
         }
         return field;
     }
-    
+
     /**
      * 通过函数名称获取 Class 对应的函数
      *
      * @param methodName
-     * @return
+     * @return r
      */
     public Method getMethod(String methodName) {
         Method[] methods = clazz.getMethods();
@@ -109,17 +109,17 @@ public class ClassUtility {
                 return method;
             }
         }
-        
+
         throw SquirrelException.wrap("{class} 未找到函数名为 {methodName} 的函数", clazz, methodName);
     }
-    
+
     /**
      * 检查是否是基础类型
      * Integer => true
      * Long => true
      *
      * @param clazz
-     * @return
+     * @return r
      */
     public static boolean isPrimitive(Class<?> clazz) {
         try {
@@ -128,5 +128,5 @@ public class ClassUtility {
             return false;
         }
     }
-    
+
 }

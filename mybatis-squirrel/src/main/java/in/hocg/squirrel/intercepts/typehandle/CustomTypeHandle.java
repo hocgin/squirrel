@@ -18,7 +18,7 @@ public @interface CustomTypeHandle {
     /**
      * 类型处理器
      *
-     * @return
+     * @return r
      */
     Class<? extends TypeHandler<?>> typeHandler() default UnknownTypeHandler.class;
 }

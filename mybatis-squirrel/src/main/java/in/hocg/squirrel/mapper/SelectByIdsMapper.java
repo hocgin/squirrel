@@ -16,12 +16,12 @@ import java.util.List;
  * @author hocgin
  */
 public interface SelectByIdsMapper<T> {
-    
+
     /**
      * 使用主键查询多个
      *
      * @param id
-     * @return
+     * @return r
      */
     @SelectProvider(type = SelectByIdsProvider.class, method = AbstractProvider.PROVIDER_PROXY_METHOD)
     List<T> selectByIds(@Param(Constants.ARRAY_PARAMETER) Serializable... id);

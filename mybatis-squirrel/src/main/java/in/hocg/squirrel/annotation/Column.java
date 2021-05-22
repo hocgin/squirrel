@@ -16,25 +16,25 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface Column {
-    
+
     /**
      * 列名
      *
-     * @return
+     * @return r r
      */
     String name();
-    
+
     /**
      * 数据库类型
      *
-     * @return
+     * @return r
      */
     JdbcType jdbcType() default JdbcType.UNDEFINED;
-    
+
     /**
      * 类型处理器
      *
-     * @return
+     * @return r
      */
     Class<? extends TypeHandler<?>> typeHandler() default UnknownTypeHandler.class;
 }

@@ -41,9 +41,9 @@ import java.util.*;
         })
 })
 public class PageableInterceptor extends AbstractInterceptor {
-    
+
     private Dialect dialect;
-    
+
     @Override
     public Object plugin(Object target) {
         if (target instanceof Executor) {
@@ -51,14 +51,14 @@ public class PageableInterceptor extends AbstractInterceptor {
         }
         return target;
     }
-    
+
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
         Object[] args = invocation.getArgs();
         MappedStatement statement = (MappedStatement) args[0];
         Object parameter = args[1];
         Optional<Page<?>> optional = getPageable(parameter);
-        
+
         if (StatementType.CALLABLE.equals(statement.getStatementType())
                 || !optional.isPresent()) {
             return invocation.proceed();
@@ -75,35 +75,35 @@ public class PageableInterceptor extends AbstractInterceptor {
             cacheKey = (CacheKey) args[4];
             boundSql = (BoundSql) args[5];
         }
-        
+
         // 设置方言类型
         if (Objects.isNull(dialect)) {
             this.dialect = getDialect(executor.getTransaction().getConnection());
         }
         PageableBuilder builder = PageableBuilderFactory.getPageableBuilder(dialect);
-    
+
         Page<?> pageable = optional.get();
-        
+
         // 如果不需要获取总数
         if (pageable.isSearchCount()) {
             long total = getTotal(builder, statement, boundSql, parameter,
                     rowBounds, resultHandler, executor);
             pageable.setTotal(total);
         }
-        
+
         // 获取数据
         List records = getRecords(builder, statement, boundSql, cacheKey, parameter,
                 rowBounds, resultHandler, executor, pageable);
         pageable.setRecords(records);
-        
+
         return Collections.unmodifiableList(Collections.singletonList(pageable));
     }
-    
+
     /**
      * 获取方言类型
      *
      * @param connection
-     * @return
+     * @return r
      */
     private Dialect getDialect(Connection connection) {
         try {
@@ -113,7 +113,7 @@ public class PageableInterceptor extends AbstractInterceptor {
             return Dialect.Unknown;
         }
     }
-    
+
     /**
      * 获取查询结果
      *
@@ -124,7 +124,7 @@ public class PageableInterceptor extends AbstractInterceptor {
      * @param resultHandler
      * @param executor
      * @param pageable
-     * @return
+     * @return r
      * @throws java.sql.SQLException
      */
     private List<?> getRecords(PageableBuilder builder,
@@ -140,7 +140,7 @@ public class PageableInterceptor extends AbstractInterceptor {
         SystemMetaObject.forObject(boundSql).setValue(BoundSqlFields.SQL, selectSql);
         return executor.query(statement, parameter, rowBounds, resultHandler, cacheKey, boundSql);
     }
-    
+
     /**
      * 获取总数
      *
@@ -151,7 +151,7 @@ public class PageableInterceptor extends AbstractInterceptor {
      * @param rowBounds
      * @param resultHandler
      * @param executor
-     * @return
+     * @return r
      * @throws java.sql.SQLException
      */
     private long getTotal(PageableBuilder builder,
@@ -163,7 +163,7 @@ public class PageableInterceptor extends AbstractInterceptor {
                           Executor executor) throws java.sql.SQLException {
         Configuration configuration = statement.getConfiguration();
         String id = statement.getId() + "#count";
-        
+
         if (configuration.hasStatement(id)) {
             statement = configuration.getMappedStatement(id);
         } else {
@@ -180,15 +180,15 @@ public class PageableInterceptor extends AbstractInterceptor {
         List<Object> result = executor.query(statement, parameter, rowBounds, resultHandler);
         return result.isEmpty() ? 0L : ((Long) result.get(0));
     }
-    
+
     /**
      * 获取分页参数
      *
      * @param parameter
-     * @return
+     * @return r
      */
     private Optional<Page<?>> getPageable(Object parameter) {
-        
+
         // 多个函数参数
         if (parameter instanceof Map) {
             Map<String, Object> parameterMap = (Map<String, Object>) parameter;

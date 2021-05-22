@@ -32,47 +32,47 @@ import java.util.*;
 @Slf4j
 @Data
 public abstract class AbstractProvider implements BuildProvider {
-    
+
     /**
      * 代理函数名
      */
     public static final String PROVIDER_PROXY_METHOD = "method";
-    
+
     /**
      * 构建函数名
      */
     public static final String PROVIDER_BUILD_METHOD = "build";
-    
+
     /**
      * Mapper 类
      */
     private final Class<?> mapperClass;
-    
+
     /**
      * Mapper 的实体
      */
     private final Class<?> entityClass;
-    
+
     /**
      * 使用 Provider 的 Method
      */
     private final Method method;
-    
+
     /**
      * MyBaits内部Xml节点解析的语言驱动
      */
     private static final XMLLanguageDriver LANG_DRIVER = new XMLLanguageDriver();
-    
+
     /**
      * 表结构
      */
     private final Table table;
-    
+
     /**
      * 列结构
      */
     private final List<Column> columns;
-    
+
     public AbstractProvider(Class<?> mapperClass, Class<?> entityClass, Method method) {
         this.mapperClass = mapperClass;
         this.entityClass = entityClass;
@@ -80,11 +80,11 @@ public abstract class AbstractProvider implements BuildProvider {
         this.table = TableUtility.getTableMetadata(entityClass);
         this.columns = TableUtility.getColumnStruct(entityClass);
     }
-    
+
     public String method() {
         return "SQL";
     }
-    
+
     /**
      * 调用 AbstractProvider 构建自定义 MappedStatement
      *
@@ -98,8 +98,8 @@ public abstract class AbstractProvider implements BuildProvider {
             log.error("调用异常, Statement ID: {}, 函数名: {}, ERROR: {}", statement.getId(), AbstractProvider.PROVIDER_BUILD_METHOD, e);
         }
     }
-    
-    
+
+
     /**
      * 设置 SqlSource 参数
      *
@@ -110,7 +110,7 @@ public abstract class AbstractProvider implements BuildProvider {
         SqlSource sqlSource = LANG_DRIVER.createSqlSource(statement.getConfiguration(), sql.trim(), null);
         setSqlSource(statement, sqlSource);
     }
-    
+
     /**
      * 设置 SqlSource 参数
      *
@@ -121,7 +121,7 @@ public abstract class AbstractProvider implements BuildProvider {
         MetaObject metaObject = SystemMetaObject.forObject(statement);
         metaObject.setValue(MappedStatementFields.SQL_SOURCE, sqlSource);
     }
-    
+
     /**
      * 设置实体返回值
      *
@@ -132,7 +132,7 @@ public abstract class AbstractProvider implements BuildProvider {
         for (Column column : columns) {
             resultMappings.add(column.getResultMapping(statement.getConfiguration()));
         }
-        
+
         ResultMap resultMap = new ResultMap.Builder(statement.getConfiguration(),
                 getStatementId(statement),
                 this.entityClass,
@@ -141,7 +141,7 @@ public abstract class AbstractProvider implements BuildProvider {
         SystemMetaObject.forObject(statement)
                 .setValue(MappedStatementFields.RESULT_MAPS, Collections.unmodifiableList(Arrays.asList(resultMap)));
     }
-    
+
     /**
      * 设置指定类型的单返回值
      *
@@ -156,17 +156,17 @@ public abstract class AbstractProvider implements BuildProvider {
         SystemMetaObject.forObject(statement)
                 .setValue(MappedStatementFields.RESULT_MAPS, Collections.unmodifiableList(Arrays.asList(resultMap)));
     }
-    
+
     /**
      * 获取 MappedStatement Id
      *
      * @param statement
-     * @return
+     * @return r
      */
     private String getStatementId(MappedStatement statement) {
         return MappedStatementHelper.getInlineStatementId(statement);
     }
-    
+
     /**
      * 设置主键生成策略
      *
@@ -186,6 +186,6 @@ public abstract class AbstractProvider implements BuildProvider {
             metaObject.setValue(MappedStatementFields.KEY_GENERATOR, keyGenerator);
         }
     }
-    
-    
+
+
 }

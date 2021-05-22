@@ -13,11 +13,11 @@ import java.util.Collection;
  * @author hocgin
  */
 public interface SelectAllMapper<T> {
-    
+
     /**
      * 查询所有
      *
-     * @return
+     * @return r
      */
     @SelectProvider(type = SelectAllProvider.class, method = AbstractProvider.PROVIDER_PROXY_METHOD)
     Collection<T> selectAll();

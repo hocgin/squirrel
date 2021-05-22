@@ -21,12 +21,12 @@ import java.util.Objects;
  */
 @Slf4j
 public class ProviderHelper {
-    
+
     /**
      * 获取函数上面的 Provider.class 注解
      *
      * @param method
-     * @return
+     * @return r
      */
     public static Class<?> getProviderClass(Method method) {
         Class<?> providerClass = null;
@@ -41,27 +41,27 @@ public class ProviderHelper {
         }
         return providerClass;
     }
-    
+
     /**
      * 通过 statementId 获取 BaseProvider
      *
      * @param statementId
-     * @return
+     * @return r
      */
     public static AbstractProvider getMethodProvider(String statementId) {
         String methodName = MappedStatementHelper.getMethodName(statementId);
         Class<?> mapperClass = MappedStatementHelper.getMapperClass(statementId);
-        
+
         Class<?> entityClass = EntityHelper.getEntityClass(mapperClass);
-        
+
         Method method = ClassUtility.from(mapperClass).getMethod(methodName);
-        
+
         Class<?> providerClass = ProviderHelper.getProviderClass(method);
-        
+
         if (Objects.isNull(providerClass)) {
             throw SquirrelException.wrap("该函数 {}{} 没有对应的 Provider 实现", mapperClass.getName(), methodName);
         }
-        
+
         AbstractProvider provider;
         try {
             provider = (AbstractProvider) providerClass.getConstructor(Class.class, Class.class, Method.class)
@@ -70,7 +70,7 @@ public class ProviderHelper {
             log.error("创建 Provider(Class: {}, 参数: {}, {}, {}) 实例失败, 错误信息: {}", providerClass, mapperClass, entityClass, method, e);
             throw SquirrelException.wrap("获取 Provider 失败，Statement Id: {}, 参数: {}, {}, {}", statementId, mapperClass, entityClass, method);
         }
-        
+
         return provider;
     }
 }

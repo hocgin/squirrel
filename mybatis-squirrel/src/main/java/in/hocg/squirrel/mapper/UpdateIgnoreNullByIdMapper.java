@@ -13,12 +13,12 @@ import org.apache.ibatis.annotations.UpdateProvider;
  * @author hocgin
  */
 public interface UpdateIgnoreNullByIdMapper<T> {
-    
+
     /**
      * 更新
      *
      * @param entity
-     * @return
+     * @return r
      */
     @UpdateProvider(type = UpdateIgnoreNullByIdProvider.class, method = AbstractProvider.PROVIDER_PROXY_METHOD)
     int updateIgnoreNullById(@Param(Constants.BEAN_PARAMETER) T entity);

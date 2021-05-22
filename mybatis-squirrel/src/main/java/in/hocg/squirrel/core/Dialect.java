@@ -18,18 +18,18 @@ public enum Dialect {
     MariaDB(":mariadb:"),
     // 其他
     Unknown("?");
-    
+
     private String flag;
-    
+
     Dialect(String flag) {
         this.flag = flag;
     }
-    
+
     /**
      * 根据标识获取方言
      *
      * @param flag
-     * @return
+     * @return r
      */
     public static Dialect of(String flag, Dialect def) {
         for (Dialect dialect : Dialect.values()) {

@@ -16,12 +16,12 @@ import java.util.Optional;
  * @author hocgin
  */
 public interface SelectByIdMapper<T> {
-    
+
     /**
      * 查询单个
      *
      * @param id
-     * @return
+     * @return r
      */
     @SelectProvider(type = SelectByIdProvider.class, method = AbstractProvider.PROVIDER_PROXY_METHOD)
     Optional<T> selectById(@Param(Constants.KEY_PARAMETER) Serializable id);

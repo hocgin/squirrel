@@ -13,14 +13,14 @@ import java.util.Map;
  * @author hocgin
  */
 public class PageableBuilderFactory {
-    
+
     private static final Map<Dialect, PageableBuilder> CACHE = Maps.newHashMap();
-    
+
     /**
      * 获取分页SQL构建器
      *
      * @param dialect
-     * @return
+     * @return r
      */
     public static PageableBuilder getPageableBuilder(Dialect dialect) {
         return CACHE.computeIfAbsent(dialect, d -> {

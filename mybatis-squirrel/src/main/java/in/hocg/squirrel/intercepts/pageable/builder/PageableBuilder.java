@@ -9,25 +9,25 @@ import in.hocg.squirrel.utils.TextFormatter;
  * @author hocgin
  */
 public interface PageableBuilder {
-    
+
     /**
      * 构建计数 SQL
      *
      * @param sql
-     * @return
+     * @return r
      */
     default String buildCountSql(String sql) {
         // fixme: 后续优化掉..
         return TextFormatter.format("SELECT COUNT(1) FROM ({sql}) t", sql);
     }
-    
+
     /**
      * 构建分页 SQL
      *
      * @param sql
      * @param offset
      * @param size
-     * @return
+     * @return r
      */
     String buildPageableSql(String sql, long offset, long size);
 }
