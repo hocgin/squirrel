@@ -18,7 +18,7 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: '11'
-          server-id: sonatype
+          server-id: MAVEN_SERVER_ID
           server-username: MAVEN_USERNAME
           server-password: MAVEN_PASSWORD
           gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
@@ -28,6 +28,7 @@ jobs:
         run: |
           mvn deploy -P release -DskipTests -X
         env:
+          MAVEN_SERVER_ID: sonatype
           MAVEN_USERNAME: hocgin
           MAVEN_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
