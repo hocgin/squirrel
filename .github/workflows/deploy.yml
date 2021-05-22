@@ -26,11 +26,8 @@ jobs:
 
       - name: Deploy to Sonatype Package Registry
         run: |
-          mkdir -p ~/.m2
-          echo "<settings><servers><server><id>\${env.ID}</id><username>\${env.MAVEN_USERNAME}</username><password>\${env.MAVEN_PASSWORD}</password></server></servers></settings>" > ~/.m2/settings.xml
           mvn deploy -P release -DskipTests -X
         env:
-          ID: sonatype
           MAVEN_USERNAME: hocgin
           MAVEN_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
