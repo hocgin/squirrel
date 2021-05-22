@@ -18,11 +18,11 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: '11'
-          server-id: MAVEN_SERVER_ID
-          server-username: MAVEN_USERNAME
-          server-password: MAVEN_PASSWORD
+          server-id: sonatype
+          server-username: hocgin
+          server-password: ${{ secrets.SONATYPE_PASSWORD }}
           gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
-          gpg-passphrase: MAVEN_GPG_PASSPHRASE
+          gpg-passphrase: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
 
       - name: Deploy to Sonatype Package Registry
         run: |
