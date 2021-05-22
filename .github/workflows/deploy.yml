@@ -1,4 +1,4 @@
-name: Release
+name: Publish Package
 
 on:
   workflow_dispatch:
@@ -18,7 +18,7 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: '11'
-          server-id: sonatype
+          server-id: MAVEN_SERVER_ID
           server-username: MAVEN_USERNAME
           server-password: MAVEN_PASSWORD
           gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
@@ -26,8 +26,13 @@ jobs:
 
       - name: Publish Package Registry
         run: |
-          mvn --batch-mode deploy -DskipTests
+          SNAPSHOT_REPO="\${env.MAVEN_SERVER_ID}::default::\${env.SNAPSHOT_URL}"
+          RELEASE_REPO="\${env.MAVEN_SERVER_ID}::default::\${env.RELEASE_URL}"
+          mvn --batch-mode deploy -DaltDeploymentRepository="${RELEASE_REPO}" -DaltSnapshotDeploymentRepository="${SNAPSHOT_REPO}" -DskipTests
         env:
+          SNAPSHOT_URL: https://oss.sonatype.org/content/repositories/snapshots
+          RELEASE_URL: https://oss.sonatype.org/service/local/staging/deploy/maven2
+          MAVEN_SERVER_ID: sonatype
           MAVEN_USERNAME: hocgin
           MAVEN_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
