@@ -21,6 +21,8 @@ jobs:
           server-id: sonatype
           server-username: MAVEN_USERNAME
           server-password: MAVEN_PASSWORD
+          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
       - name: Deploy to Sonatype Package Registry
         run: |
@@ -28,4 +30,5 @@ jobs:
         env:
           MAVEN_USERNAME: hocgin
           MAVEN_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
 
