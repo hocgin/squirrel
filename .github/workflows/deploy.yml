@@ -24,7 +24,7 @@ jobs:
 
       - name: Deploy to Sonatype Package Registry
         run: |
-          mvn --batch-mode deploy -DskipTests -X
+          mvn --batch-mode deploy -DskipTests
         env:
           MAVEN_USERNAME: hocgin
           MAVEN_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
